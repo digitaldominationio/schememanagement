@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category-wise Coverage - Scheme Monitoring System</title>
+    <link rel="stylesheet" href="../../static/css/main.css">
+    <link rel="stylesheet" href="../../static/css/components.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"><div class="sidebar-logo-icon">&#128202;</div><div class="sidebar-logo-text"><h1>Scheme Monitoring System</h1></div></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <div class="nav-item">
+                        <a href="../dashboard.html" class="nav-link">
+                            <span class="nav-icon">🏠</span>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Financial Monitoring</div>
+                    <div class="nav-item">
+                        <a href="../financial/fund_allocation.html" class="nav-link">
+                            <span class="nav-icon">💰</span>
+                            <span>Fund Allocation & Release</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../financial/expenditure.html" class="nav-link">
+                            <span class="nav-icon">📉</span>
+                            <span>Expenditure (Panchayat-wise)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../financial/uc_generation.html" class="nav-link">
+                            <span class="nav-icon">📄</span>
+                            <span>UC Generation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../financial/pfms_status.html" class="nav-link">
+                            <span class="nav-icon">🏦</span>
+                            <span>PFMS / Treasury Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Beneficiary Management</div>
+                    <div class="nav-item">
+                        <a href="registration.html" class="nav-link">
+                            <span class="nav-icon">👥</span>
+                            <span>Registration & Validation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="category_coverage.html" class="nav-link active">
+                            <span class="nav-icon">📊</span>
+                            <span>Category-wise Coverage</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="benefit_delivery.html" class="nav-link">
+                            <span class="nav-icon">🚚</span>
+                            <span>Benefit Delivery Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Inspection & Verification</div>
+                    <div class="nav-item">
+                        <a href="../inspection/field_inspection.html" class="nav-link">
+                            <span class="nav-icon">🔎</span>
+                            <span>Field Inspection</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../inspection/mobile_reports.html" class="nav-link">
+                            <span class="nav-icon">📱</span>
+                            <span>Mobile Inspection Reports</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../inspection/third_party_verification.html" class="nav-link">
+                            <span class="nav-icon">✅</span>
+                            <span>3rd Party Verification</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Reports & MIS</div>
+                    <div class="nav-item">
+                        <a href="../reports/mis_reports.html" class="nav-link">
+                            <span class="nav-icon">📑</span>
+                            <span>MIS Reports (M/Q/Y)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../reports/physical_financial.html" class="nav-link">
+                            <span class="nav-icon">📈</span>
+                            <span>Physical vs Financial</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+             <header class="header">
+                <div class="header-left" style="gap: 1.5rem;">
+                    <button class="menu-toggle" onclick="toggleSidebar()" style="color: #1a237e;">☰</button>
+                    <div class="header-branding"><span class="header-gov-text">Government of Odisha</span><h2 class="header-title-text">Scheme Monitoring System</h2></div>
+                </div>
+                 <div class="header-right">
+                    <div class="header-search" style="background: #f8f9fa; border: 1px solid #dee2e6; position: relative;">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" id="globalSearchInput" placeholder="Search schemes, files..." style="background: transparent;"><div class="search-results-dropdown" id="searchResultsDropdown"></div>
+                    </div>
+                    <div class="header-notifications"><button class="notification-btn" id="notificationBtn" style="color: #1a237e;">🔔<span class="notification-badge">5</span></button><div class="notification-dropdown" id="notificationDropdown"><div class="notification-header"><h3>Notifications</h3><button class="mark-read-btn">Mark all as read</button></div><div class="notification-list"><div class="notification-item unread"><div class="notification-icon">📝</div><div class="notification-content"><p><strong>New UC Generated</strong><br>Bhubaneswar Block submitted UC for ₹5L.</p><span class="notification-time">2 mins ago</span></div></div><div class="notification-item unread"><div class="notification-icon">💰</div><div class="notification-content"><p><strong>Fund Released</strong><br>₹2.5 Cr released for Rural Housing Scheme.</p><span class="notification-time">1 hour ago</span></div></div><div class="notification-item"><div class="notification-icon">⚠️</div><div class="notification-content"><p><strong>Pending Inspection</strong><br>Cuttack District inspection overdue by 3 days.</p><span class="notification-time">5 hours ago</span></div></div></div><div class="notification-footer"><a href="#" class="view-all-btn">View All Notifications</a></div></div></div>
+                    <div class="user-profile" style="border-left: 1px solid #dee2e6; padding-left: 1rem;">
+                        <div class="user-avatar" style="background: #1a237e; color: white;">AU</div>
+                        <div class="user-info">
+                            <h4 style="color: #333;">Admin User</h4>
+                            <p>State Nodal Officer</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="page-content">
+                <div class="page-header">
+                    <h1 class="page-title">Category-wise Coverage</h1>
+                    <p class="page-description">Beneficiary coverage analytics by social category</p>
+                </div>
+
+                <!-- Category Coverage Header -->
+                <div class="card mb-3" style="background: linear-gradient(135deg, #00695c 0%, #00897b 100%); color: white; border: none;">
+                    <div class="card-body" style="padding: 2rem;">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                                <div style="width: 72px; height: 72px; background: rgba(255,255,255,0.2); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; backdrop-filter: blur(10px);">
+                                    📊
+                                </div>
+                                <div>
+                                    <h2 style="margin: 0; font-size: 1.75rem; font-weight: 700; color: white;">Category-wise Coverage Analysis</h2>
+                                    <p style="margin: 0.5rem 0 0 0; opacity: 0.95; font-size: 1rem;">Social Category Distribution & Inclusion Metrics</p>
+                                </div>
+                            </div>
+                            
+                            <div style="text-align: right;">
+                                <div style="font-size: 0.875rem; opacity: 0.9; margin-bottom: 0.25rem;">Total Beneficiaries</div>
+                                <div style="font-size: 2.5rem; font-weight: 700;">2,45,678</div>
+                                <div style="font-size: 0.875rem; opacity: 0.9;">Across all categories</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Breakdown Cards -->
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                    <!-- SC Category -->
+                    <div class="card" style="border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #e91e63, #f06292); padding: 1rem; color: white;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <h3 style="margin: 0; font-size: 1.125rem; font-weight: 600;">SC</h3>
+                                <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                                    👥
+                                </div>
+                            </div>
+                            <div style="font-size: 0.875rem; opacity: 0.95;">Scheduled Caste</div>
+                        </div>
+                        <div class="card-body" style="padding: 1.5rem;">
+                            <div style="text-align: center; margin-bottom: 1rem;">
+                                <div style="font-size: 2.5rem; font-weight: 700; color: #e91e63; margin-bottom: 0.25rem;">48,567</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Beneficiaries</div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: #e91e63;">19.8%</div>
+                                <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem;">of Total Coverage</div>
+                            </div>
+                            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.5rem;">
+                                    <span style="color: var(--gray-600);">Target</span>
+                                    <span style="font-weight: 600;">50,000</span>
+                                </div>
+                                <div style="width: 100%; height: 6px; background: #f0f0f0; border-radius: 3px; overflow: hidden;">
+                                    <div style="width: 97.1%; height: 100%; background: linear-gradient(to right, #e91e63, #f06292);"></div>
+                                </div>
+                                <div style="text-align: right; font-size: 0.75rem; color: #4caf50; margin-top: 0.25rem; font-weight: 600;">97.1% Achieved</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ST Category -->
+                    <div class="card" style="border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #ff9800, #ffb74d); padding: 1rem; color: white;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <h3 style="margin: 0; font-size: 1.125rem; font-weight: 600;">ST</h3>
+                                <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                                    🏞️
+                                </div>
+                            </div>
+                            <div style="font-size: 0.875rem; opacity: 0.95;">Scheduled Tribe</div>
+                        </div>
+                        <div class="card-body" style="padding: 1.5rem;">
+                            <div style="text-align: center; margin-bottom: 1rem;">
+                                <div style="font-size: 2.5rem; font-weight: 700; color: #ff9800; margin-bottom: 0.25rem;">32,145</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Beneficiaries</div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: #ff9800;">13.1%</div>
+                                <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem;">of Total Coverage</div>
+                            </div>
+                            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.5rem;">
+                                    <span style="color: var(--gray-600);">Target</span>
+                                    <span style="font-weight: 600;">35,000</span>
+                                </div>
+                                <div style="width: 100%; height: 6px; background: #f0f0f0; border-radius: 3px; overflow: hidden;">
+                                    <div style="width: 91.8%; height: 100%; background: linear-gradient(to right, #ff9800, #ffb74d);"></div>
+                                </div>
+                                <div style="text-align: right; font-size: 0.75rem; color: #4caf50; margin-top: 0.25rem; font-weight: 600;">91.8% Achieved</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- OBC Category -->
+                    <div class="card" style="border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #2196f3, #64b5f6); padding: 1rem; color: white;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <h3 style="margin: 0; font-size: 1.125rem; font-weight: 600;">OBC</h3>
+                                <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                                    👨‍👩‍👧‍👦
+                                </div>
+                            </div>
+                            <div style="font-size: 0.875rem; opacity: 0.95;">Other Backward Class</div>
+                        </div>
+                        <div class="card-body" style="padding: 1.5rem;">
+                            <div style="text-align: center; margin-bottom: 1rem;">
+                                <div style="font-size: 2.5rem; font-weight: 700; color: #2196f3; margin-bottom: 0.25rem;">98,234</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Beneficiaries</div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: #2196f3;">40.0%</div>
+                                <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem;">of Total Coverage</div>
+                            </div>
+                            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.5rem;">
+                                    <span style="color: var(--gray-600);">Target</span>
+                                    <span style="font-weight: 600;">95,000</span>
+                                </div>
+                                <div style="width: 100%; height: 6px; background: #f0f0f0; border-radius: 3px; overflow: hidden;">
+                                    <div style="width: 100%; height: 100%; background: linear-gradient(to right, #2196f3, #64b5f6);"></div>
+                                </div>
+                                <div style="text-align: right; font-size: 0.75rem; color: #4caf50; margin-top: 0.25rem; font-weight: 600;">103.4% Achieved ✓</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- General Category -->
+                    <div class="card" style="border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, #9c27b0, #ba68c8); padding: 1rem; color: white;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <h3 style="margin: 0; font-size: 1.125rem; font-weight: 600;">General</h3>
+                                <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                                    🌐
+                                </div>
+                            </div>
+                            <div style="font-size: 0.875rem; opacity: 0.95;">General Category</div>
+                        </div>
+                        <div class="card-body" style="padding: 1.5rem;">
+                            <div style="text-align: center; margin-bottom: 1rem;">
+                                <div style="font-size: 2.5rem; font-weight: 700; color: #9c27b0; margin-bottom: 0.25rem;">66,732</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Beneficiaries</div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 0.75rem; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: #9c27b0;">27.1%</div>
+                                <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem;">of Total Coverage</div>
+                            </div>
+                            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.5rem;">
+                                    <span style="color: var(--gray-600);">Target</span>
+                                    <span style="font-weight: 600;">70,000</span>
+                                </div>
+                                <div style="width: 100%; height: 6px; background: #f0f0f0; border-radius: 3px; overflow: hidden;">
+                                    <div style="width: 95.3%; height: 100%; background: linear-gradient(to right, #9c27b0, #ba68c8);"></div>
+                                </div>
+                                <div style="text-align: right; font-size: 0.75rem; color: #4caf50; margin-top: 0.25rem; font-weight: 600;">95.3% Achieved</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters Section -->
+                <div class="card mb-3">
+                    <div class="card-header" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-bottom: 2px solid #e0e0e0;">
+                        <h3 class="card-title" style="margin: 0;">Filter Districts</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Select District</label>
+                                <select class="form-control form-select" id="districtFilter">
+                                    <option value="">All Districts (30)</option>
+                                    <optgroup label="Major Districts">
+                                        <option value="khordha">Khordha</option>
+                                        <option value="cuttack">Cuttack</option>
+                                        <option value="puri">Puri</option>
+                                        <option value="ganjam">Ganjam</option>
+                                        <option value="balasore">Balasore</option>
+                                    </optgroup>
+                                    <optgroup label="Other Districts">
+                                        <option value="angul">Angul</option>
+                                        <option value="bargarh">Bargarh</option>
+                                        <option value="bhadrak">Bhadrak</option>
+                                        <option value="bolangir">Bolangir</option>
+                                        <option value="boudh">Boudh</option>
+                                        <option value="deogarh">Deogarh</option>
+                                        <option value="dhenkanal">Dhenkanal</option>
+                                        <option value="gajapati">Gajapati</option>
+                                        <option value="jagatsinghpur">Jagatsinghpur</option>
+                                        <option value="jajpur">Jajpur</option>
+                                        <option value="jharsuguda">Jharsuguda</option>
+                                        <option value="kalahandi">Kalahandi</option>
+                                        <option value="kandhamal">Kandhamal</option>
+                                        <option value="kendrapara">Kendrapara</option>
+                                        <option value="kendujhar">Kendujhar</option>
+                                        <option value="koraput">Koraput</option>
+                                        <option value="malkangiri">Malkangiri</option>
+                                        <option value="mayurbhanj">Mayurbhanj</option>
+                                        <option value="nabarangpur">Nabarangpur</option>
+                                        <option value="nayagarh">Nayagarh</option>
+                                        <option value="nuapada">Nuapada</option>
+                                        <option value="rayagada">Rayagada</option>
+                                        <option value="sambalpur">Sambalpur</option>
+                                        <option value="sonepur">Sonepur</option>
+                                        <option value="sundargarh">Sundargarh</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Category Filter</label>
+                                <select class="form-control form-select" id="categoryFilter">
+                                    <option value="">All Categories</option>
+                                    <option value="sc">SC - Scheduled Caste</option>
+                                    <option value="st">ST - Scheduled Tribe</option>
+                                    <option value="obc">OBC - Other Backward Class</option>
+                                    <option value="general">General Category</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Coverage Range</label>
+                                <select class="form-control form-select" id="coverageFilter">
+                                    <option value="">All Coverage Levels</option>
+                                    <option value="high">High (95% - 100%+)</option>
+                                    <option value="medium">Medium (85% - 95%)</option>
+                                    <option value="low">Low (Below 85%)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+                            <button class="btn btn-primary" style="flex: 0 0 auto;">
+                                <span style="margin-right: 0.5rem;">🔍</span> Apply Filters
+                            </button>
+                            <button class="btn btn-secondary" style="flex: 0 0 auto;">
+                                <span style="margin-right: 0.5rem;">🔄</span> Reset
+                            </button>
+                            <button class="btn btn-success" style="flex: 0 0 auto; margin-left: auto;">
+                                <span style="margin-right: 0.5rem;">📥</span> Export Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- District-wise Breakdown -->
+                <div class="card">
+                    <div class="card-header" style="background: #f8f9fa; border-bottom: 2px solid #e0e0e0;">
+                        <h3 class="card-title" style="margin: 0;">District-wise Category Distribution</h3>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-container" style="overflow-x: auto;">
+                            <table class="data-table" style="width: 100%; border-collapse: collapse; margin: 0;">
+                                <thead>
+                                    <tr style="background: linear-gradient(135deg, #00695c 0%, #00897b 100%); color: white;">
+                                        <th style="padding: 1rem 1.5rem; text-align: left; font-weight: 600; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 3px solid #004d40;">District</th>
+                                        <th style="padding: 1rem 1.5rem; text-align: center; font-weight: 600; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 3px solid #004d40;">SC</th>
+                                        <th style="padding: 1rem 1.5rem; text-align: center; font-weight: 600; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 3px solid #004d40;">ST</th>
+                                        <th style="padding: 1rem 1.5rem; text-align: center; font-weight: 600; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 3px solid #004d40;">OBC</th>
+                                        <th style="padding: 1rem 1.5rem; text-align: center; font-weight: 600; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 3px solid #004d40;">General</th>
+                                        <th style="padding: 1rem 1.5rem; text-align: center; font-weight: 600; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 3px solid #004d40;">Total</th>
+                                        <th style="padding: 1rem 1.5rem; text-align: center; font-weight: 600; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 3px solid #004d40;">Coverage %</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="district-row" data-district="khordha" data-sc="8456" data-st="4231" data-obc="15678" data-general="10234" data-total="38599" data-coverage="98.5" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Khordha</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">8,456</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">4,231</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">15,678</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">10,234</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">38,599</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">98.5%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="cuttack" data-sc="7234" data-st="5678" data-obc="14567" data-general="9876" data-total="37355" data-coverage="96.2" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Cuttack</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">7,234</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">5,678</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">14,567</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">9,876</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">37,355</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">96.2%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="puri" data-sc="6789" data-st="3456" data-obc="13234" data-general="8765" data-total="32244" data-coverage="89.7" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Puri</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">6,789</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">3,456</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">13,234</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">8,765</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">32,244</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-warning" style="font-size: 0.875rem; padding: 0.5rem 1rem;">89.7%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="ganjam" data-sc="9123" data-st="6234" data-obc="18456" data-general="12345" data-total="46158" data-coverage="99.1" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Ganjam</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">9,123</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">6,234</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">18,456</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">12,345</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">46,158</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">99.1%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="balasore" data-sc="5678" data-st="4123" data-obc="11234" data-general="7654" data-total="28689" data-coverage="94.8" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Balasore</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">5,678</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">4,123</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">11,234</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">7,654</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">28,689</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">94.8%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="angul" data-sc="1234" data-st="987" data-obc="2456" data-general="1678" data-total="6355" data-coverage="92.3" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Angul</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">1,234</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">987</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">2,456</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">1,678</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">6,355</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">92.3%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="bargarh" data-sc="1456" data-st="1123" data-obc="2789" data-general="1890" data-total="7258" data-coverage="96.8" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Bargarh</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">1,456</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">1,123</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">2,789</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">1,890</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">7,258</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">96.8%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="bhadrak" data-sc="1123" data-st="765" data-obc="2234" data-general="1456" data-total="5578" data-coverage="88.4" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Bhadrak</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">1,123</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">765</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">2,234</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">1,456</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">5,578</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-warning" style="font-size: 0.875rem; padding: 0.5rem 1rem;">88.4%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="bolangir" data-sc="1567" data-st="1234" data-obc="2901" data-general="1987" data-total="7689" data-coverage="94.2" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Bolangir</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">1,567</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">1,234</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">2,901</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">1,987</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">7,689</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">94.2%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="boudh" data-sc="678" data-st="456" data-obc="1234" data-general="890" data-total="3258" data-coverage="91.7" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Boudh</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">678</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">456</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">1,234</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">890</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">3,258</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">91.7%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="deogarh" data-sc="567" data-st="345" data-obc="1123" data-general="765" data-total="2800" data-coverage="93.5" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Deogarh</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">567</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">345</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">1,123</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">765</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">2,800</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">93.5%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="dhenkanal" data-sc="1345" data-st="876" data-obc="2567" data-general="1789" data-total="6577" data-coverage="95.1" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Dhenkanal</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">1,345</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">876</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">2,567</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">1,789</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">6,577</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">95.1%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="gajapati" data-sc="789" data-st="1456" data-obc="1567" data-general="1123" data-total="4935" data-coverage="87.2" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Gajapati</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">789</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">1,456</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">1,567</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">1,123</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">4,935</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-warning" style="font-size: 0.875rem; padding: 0.5rem 1rem;">87.2%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="jagatsinghpur" data-sc="1234" data-st="678" data-obc="2345" data-general="1567" data-total="5824" data-coverage="97.3" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Jagatsinghpur</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">1,234</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">678</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">2,345</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">1,567</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">5,824</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">97.3%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="jajpur" data-sc="1678" data-st="987" data-obc="3123" data-general="2234" data-total="8022" data-coverage="98.7" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Jajpur</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">1,678</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">987</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">3,123</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">2,234</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">8,022</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">98.7%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="jharsuguda" data-sc="876" data-st="567" data-obc="1789" data-general="1234" data-total="4466" data-coverage="90.1" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Jharsuguda</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">876</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">567</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">1,789</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">1,234</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">4,466</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">90.1%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="kalahandi" data-sc="1789" data-st="1456" data-obc="3234" data-general="2456" data-total="8935" data-coverage="96.4" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Kalahandi</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">1,789</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">1,456</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">3,234</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">2,456</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">8,935</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">96.4%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="kandhamal" data-sc="987" data-st="1678" data-obc="1890" data-general="1345" data-total="5900" data-coverage="89.5" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Kandhamal</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">987</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">1,678</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">1,890</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">1,345</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">5,900</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-warning" style="font-size: 0.875rem; padding: 0.5rem 1rem;">89.5%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="kendrapara" data-sc="1456" data-st="789" data-obc="2678" data-general="1890" data-total="6813" data-coverage="95.8" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Kendrapara</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">1,456</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">789</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">2,678</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">1,890</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">6,813</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">95.8%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="kendujhar" data-sc="1567" data-st="1890" data-obc="2901" data-general="2123" data-total="8481" data-coverage="93.9" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Kendujhar</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">1,567</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">1,890</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">2,901</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">2,123</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">8,481</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">93.9%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="koraput" data-sc="1234" data-st="1987" data-obc="2456" data-general="1789" data-total="7466" data-coverage="91.2" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Koraput</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">1,234</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">1,987</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">2,456</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">1,789</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">7,466</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">91.2%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="malkangiri" data-sc="678" data-st="1345" data-obc="1123" data-general="876" data-total="4022" data-coverage="88.9" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Malkangiri</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">678</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">1,345</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">1,123</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">876</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">4,022</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-warning" style="font-size: 0.875rem; padding: 0.5rem 1rem;">88.9%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="mayurbhanj" data-sc="2123" data-st="1789" data-obc="3901" data-general="2789" data-total="10602" data-coverage="97.8" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Mayurbhanj</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">2,123</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">1,789</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">3,901</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">2,789</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">10,602</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">97.8%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="nabarangpur" data-sc="1123" data-st="1567" data-obc="2234" data-general="1678" data-total="6602" data-coverage="92.6" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Nabarangpur</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">1,123</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">1,567</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">2,234</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">1,678</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">6,602</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">92.6%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="nayagarh" data-sc="1345" data-st="876" data-obc="2567" data-general="1890" data-total="6678" data-coverage="94.7" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Nayagarh</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">1,345</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">876</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">2,567</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">1,890</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">6,678</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">94.7%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="nuapada" data-sc="987" data-st="765" data-obc="1890" data-general="1345" data-total="4987" data-coverage="90.8" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Nuapada</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">987</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">765</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">1,890</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">1,345</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">4,987</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">90.8%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="rayagada" data-sc="1456" data-st="1678" data-obc="2789" data-general="2123" data-total="8046" data-coverage="93.3" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Rayagada</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">1,456</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">1,678</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">2,789</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">2,123</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">8,046</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">93.3%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="sambalpur" data-sc="1789" data-st="1234" data-obc="3345" data-general="2456" data-total="8824" data-coverage="98.2" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Sambalpur</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">1,789</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">1,234</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">3,345</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">2,456</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">8,824</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">98.2%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="sonepur" data-sc="876" data-st="654" data-obc="1678" data-general="1234" data-total="4442" data-coverage="91.4" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Sonepur</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">876</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">654</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">1,678</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">1,234</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">4,442</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">91.4%</span></td>
+                                    </tr>
+                                    <tr class="district-row" data-district="sundargarh" data-sc="1890" data-st="1567" data-obc="3567" data-general="2678" data-total="9702" data-coverage="99.3" style="border-bottom: 1px solid #e0e0e0; transition: background 0.2s;">
+                                        <td style="padding: 1.25rem 1.5rem; font-weight: 600; font-size: 1rem; color: #1a237e;">Sundargarh</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #e91e63; font-weight: 600;">1,890</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #ff9800; font-weight: 600;">1,567</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #2196f3; font-weight: 600;">3,567</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 0.9375rem; color: #9c27b0; font-weight: 600;">2,678</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center; font-size: 1.125rem; font-weight: 700; color: #1a237e;">9,702</td>
+                                        <td style="padding: 1.25rem 1.5rem; text-align: center;"><span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">99.3%</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Add hover effect styling -->
+                        <style>
+                            .data-table tbody tr:hover {
+                                background: #f5f5f5 !important;
+                            }
+                        </style>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Filter JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const districtFilter = document.getElementById('districtFilter');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const coverageFilter = document.getElementById('coverageFilter');
+            const applyBtn = document.querySelector('.btn-primary');
+            const resetBtn = document.querySelector('.btn-secondary');
+            const exportBtn = document.querySelector('.btn-success');
+            const districtRows = document.querySelectorAll('.district-row');
+
+            // Apply filters function
+            function applyFilters() {
+                const selectedDistrict = districtFilter.value.toLowerCase();
+                const selectedCategory = categoryFilter.value.toLowerCase();
+                const selectedCoverage = coverageFilter.value.toLowerCase();
+
+                let visibleCount = 0;
+
+                districtRows.forEach(row => {
+                    let showRow = true;
+
+                    // District filter
+                    if (selectedDistrict && row.dataset.district !== selectedDistrict) {
+                        showRow = false;
+                    }
+
+                    // Category filter (check if category has significant representation)
+                    if (selectedCategory && showRow) {
+                        const categoryValue = parseInt(row.dataset[selectedCategory]);
+                        const totalValue = parseInt(row.dataset.total);
+                        const categoryPercentage = (categoryValue / totalValue) * 100;
+                        
+                        // Show districts where this category represents at least 15% of total
+                        if (categoryPercentage < 15) {
+                            showRow = false;
+                        }
+                    }
+
+                    // Coverage filter
+                    if (selectedCoverage && showRow) {
+                        const coverage = parseFloat(row.dataset.coverage);
+                        
+                        if (selectedCoverage === 'high' && coverage < 95) {
+                            showRow = false;
+                        } else if (selectedCoverage === 'medium' && (coverage < 85 || coverage >= 95)) {
+                            showRow = false;
+                        } else if (selectedCoverage === 'low' && coverage >= 85) {
+                            showRow = false;
+                        }
+                    }
+
+                    // Show or hide row
+                    if (showRow) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                // Update filter button text with count
+                applyBtn.innerHTML = `<span style="margin-right: 0.5rem;">🔍</span> Showing ${visibleCount} District${visibleCount !== 1 ? 's' : ''}`;
+            }
+
+            // Reset filters function
+            function resetFilters() {
+                districtFilter.value = '';
+                categoryFilter.value = '';
+                coverageFilter.value = '';
+                
+                districtRows.forEach(row => {
+                    row.style.display = '';
+                });
+
+                applyBtn.innerHTML = '<span style="margin-right: 0.5rem;">🔍</span> Apply Filters';
+            }
+
+            // Export data function
+            function exportData() {
+                const visibleRows = Array.from(districtRows).filter(row => row.style.display !== 'none');
+                
+                if (visibleRows.length === 0) {
+                    alert('No data to export! Please adjust your filters.');
+                    return;
+                }
+
+                let csvContent = 'District,SC,ST,OBC,General,Total,Coverage %\\n';
+                
+                visibleRows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    const rowData = [
+                        cells[0].textContent.trim(),
+                        cells[1].textContent.trim().replace(/,/g, ''),
+                        cells[2].textContent.trim().replace(/,/g, ''),
+                        cells[3].textContent.trim().replace(/,/g, ''),
+                        cells[4].textContent.trim().replace(/,/g, ''),
+                        cells[5].textContent.trim().replace(/,/g, ''),
+                        cells[6].textContent.trim().replace(/%/g, '')
+                    ];
+                    csvContent += rowData.join(',') + '\\n';
+                });
+
+                // Create download link
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                
+                link.setAttribute('href', url);
+                link.setAttribute('download', 'category_coverage_data.csv');
+                link.style.visibility = 'hidden';
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            // Event listeners
+            applyBtn.addEventListener('click', applyFilters);
+            resetBtn.addEventListener('click', resetFilters);
+            exportBtn.addEventListener('click', exportData);
+
+            // Apply filters on Enter key
+            [districtFilter, categoryFilter, coverageFilter].forEach(filter => {
+                filter.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        applyFilters();
+                    }
+                });
+            });
+        });
+    </script>
+    
+    <script src="../../static/js/main.js"></script>
+</body>
+</html>

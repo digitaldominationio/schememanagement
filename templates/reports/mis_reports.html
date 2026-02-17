@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIS Reports - Scheme Monitoring System</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../../static/css/main.css">
+    <link rel="stylesheet" href="../../static/css/components.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"><div class="sidebar-logo-icon">&#128202;</div><div class="sidebar-logo-text"><h1>Scheme Monitoring System</h1></div></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <div class="nav-item">
+                        <a href="../dashboard.html" class="nav-link">
+                            <span class="nav-icon">🏠</span>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Financial Monitoring</div>
+                    <div class="nav-item">
+                        <a href="../financial/fund_allocation.html" class="nav-link">
+                            <span class="nav-icon">💰</span>
+                            <span>Fund Allocation & Release</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../financial/expenditure.html" class="nav-link">
+                            <span class="nav-icon">📉</span>
+                            <span>Expenditure (Panchayat-wise)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../financial/uc_generation.html" class="nav-link">
+                            <span class="nav-icon">📄</span>
+                            <span>UC Generation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../financial/pfms_status.html" class="nav-link">
+                            <span class="nav-icon">🏦</span>
+                            <span>PFMS / Treasury Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Beneficiary Management</div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/registration.html" class="nav-link">
+                            <span class="nav-icon">👥</span>
+                            <span>Registration & Validation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/category_coverage.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span>Category-wise Coverage</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/benefit_delivery.html" class="nav-link">
+                            <span class="nav-icon">🚚</span>
+                            <span>Benefit Delivery Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Inspection & Verification</div>
+                    <div class="nav-item">
+                        <a href="../inspection/field_inspection.html" class="nav-link">
+                            <span class="nav-icon">🔎</span>
+                            <span>Field Inspection</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../inspection/mobile_reports.html" class="nav-link">
+                            <span class="nav-icon">📱</span>
+                            <span>Mobile Inspection Reports</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../inspection/third_party_verification.html" class="nav-link">
+                            <span class="nav-icon">✅</span>
+                            <span>3rd Party Verification</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Reports & MIS</div>
+                    <div class="nav-item">
+                        <a href="mis_reports.html" class="nav-link active">
+                            <span class="nav-icon">📑</span>
+                            <span>MIS Reports (M/Q/Y)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="physical_financial.html" class="nav-link">
+                            <span class="nav-icon">📈</span>
+                            <span>Physical vs Financial</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div class="header-left" style="gap: 1.5rem;">
+                    <button class="menu-toggle" onclick="toggleSidebar()" style="color: #1a237e;">☰</button>
+                    <div class="header-branding"><span class="header-gov-text">Government of Odisha</span><h2 class="header-title-text">Scheme Monitoring System</h2></div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="header-search" style="background: #f8f9fa; border: 1px solid #dee2e6; position: relative;">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" id="globalSearchInput" placeholder="Search schemes, files..." style="background: transparent;"><div class="search-results-dropdown" id="searchResultsDropdown"></div>
+                    </div>
+                    <div class="header-notifications"><button class="notification-btn" id="notificationBtn" style="color: #1a237e;">🔔<span class="notification-badge">5</span></button><div class="notification-dropdown" id="notificationDropdown"><div class="notification-header"><h3>Notifications</h3><button class="mark-read-btn">Mark all as read</button></div><div class="notification-list"><div class="notification-item unread"><div class="notification-icon">📝</div><div class="notification-content"><p><strong>New UC Generated</strong><br>Bhubaneswar Block submitted UC for ₹5L.</p><span class="notification-time">2 mins ago</span></div></div><div class="notification-item unread"><div class="notification-icon">💰</div><div class="notification-content"><p><strong>Fund Released</strong><br>₹2.5 Cr released for Rural Housing Scheme.</p><span class="notification-time">1 hour ago</span></div></div><div class="notification-item"><div class="notification-icon">⚠️</div><div class="notification-content"><p><strong>Pending Inspection</strong><br>Cuttack District inspection overdue by 3 days.</p><span class="notification-time">5 hours ago</span></div></div></div><div class="notification-footer"><a href="#" class="view-all-btn">View All Notifications</a></div></div></div>
+                    <div class="user-profile" style="border-left: 1px solid #dee2e6; padding-left: 1rem;">
+                        <div class="user-avatar" style="background: #1a237e; color: white;">AU</div>
+                        <div class="user-info">
+                            <h4 style="color: #333;">Admin User</h4>
+                            <p>State Nodal Officer</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="page-content">
+                <div class="page-header">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h1 class="page-title">MIS Reports</h1>
+                            <p class="page-description">Generate and view Management Information System reports</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="openModal('generateReportModal')">
+                            📊 Generate New Report
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Report Categories -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Monthly Reports</span>
+                            <div class="stat-icon">📅</div>
+                        </div>
+                        <div class="stat-value">36</div>
+                        <div class="stat-footer">
+                            <span class="text-gray">Last 12 months</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card success">
+                        <div class="stat-header">
+                            <span class="stat-label">Quarterly Reports</span>
+                            <div class="stat-icon">📈</div>
+                        </div>
+                        <div class="stat-value">12</div>
+                        <div class="stat-footer">
+                            <span class="text-gray">Last 4 quarters</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card warning">
+                        <div class="stat-header">
+                            <span class="stat-label">Annual Reports</span>
+                            <div class="stat-icon">📊</div>
+                        </div>
+                        <div class="stat-value">3</div>
+                        <div class="stat-footer">
+                            <span class="text-gray">FY 2023-24 to 2025-26</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Custom Reports</span>
+                            <div class="stat-icon">⚙</div>
+                        </div>
+                        <div class="stat-value">24</div>
+                        <div class="stat-footer">
+                            <span class="text-gray">User generated</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Report Templates -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Quick Report Templates</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                            <div style="padding: 1.25rem; border: 2px solid var(--gray-200); border-radius: var(--border-radius-lg); cursor: pointer; transition: all var(--transition-fast);" onmouseover="this.style.borderColor='var(--primary-color)'" onmouseout="this.style.borderColor='var(--gray-200)'" onclick="generateQuickReport('financial')">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                                    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary-color), var(--primary-light)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white;">
+                                        💰
+                                    </div>
+                                    <h4 style="font-size: 1rem; font-weight: 600;">Financial Summary</h4>
+                                </div>
+                                <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Fund allocation, release, and utilization summary</p>
+                                <span class="badge badge-primary">Monthly</span>
+                            </div>
+                            
+                            <div style="padding: 1.25rem; border: 2px solid var(--gray-200); border-radius: var(--border-radius-lg); cursor: pointer; transition: all var(--transition-fast);" onmouseover="this.style.borderColor='var(--success)'" onmouseout="this.style.borderColor='var(--gray-200)'" onclick="generateQuickReport('beneficiary')">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                                    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--success), var(--secondary-light)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white;">
+                                        👥
+                                    </div>
+                                    <h4 style="font-size: 1rem; font-weight: 600;">Beneficiary Report</h4>
+                                </div>
+                                <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Category-wise beneficiary coverage and status</p>
+                                <span class="badge badge-success">Monthly</span>
+                            </div>
+                            
+                            <div style="padding: 1.25rem; border: 2px solid var(--gray-200); border-radius: var(--border-radius-lg); cursor: pointer; transition: all var(--transition-fast);" onmouseover="this.style.borderColor='var(--warning)'" onmouseout="this.style.borderColor='var(--gray-200)'" onclick="generateQuickReport('inspection')">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                                    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--warning), #fbbf24); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white;">
+                                        🔍
+                                    </div>
+                                    <h4 style="font-size: 1rem; font-weight: 600;">Inspection Report</h4>
+                                </div>
+                                <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Field inspection and compliance summary</p>
+                                <span class="badge badge-warning">Quarterly</span>
+                            </div>
+                            
+                            <div style="padding: 1.25rem; border: 2px solid var(--gray-200); border-radius: var(--border-radius-lg); cursor: pointer; transition: all var(--transition-fast);" onmouseover="this.style.borderColor='var(--info)'" onmouseout="this.style.borderColor='var(--gray-200)'" onclick="generateQuickReport('performance')">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                                    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--info), #60a5fa); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white;">
+                                        📈
+                                    </div>
+                                    <h4 style="font-size: 1rem; font-weight: 600;">Performance Report</h4>
+                                </div>
+                                <p style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Scheme-wise performance indicators</p>
+                                <span class="badge badge-info">Annual</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report Filters -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Report Type</label>
+                                <select class="form-control form-select" id="reportTypeFilter">
+                                    <option value="">All Types</option>
+                                    <option value="financial">Financial</option>
+                                    <option value="beneficiary">Beneficiary</option>
+                                    <option value="inspection">Inspection</option>
+                                    <option value="performance">Performance</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Period</label>
+                                <select class="form-control form-select" id="periodFilter">
+                                    <option value="">All Periods</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="annual">Annual</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Financial Year</label>
+                                <select class="form-control form-select" id="fyFilter">
+                                    <option value="2025-26">2025-26</option>
+                                    <option value="2024-25">2024-25</option>
+                                    <option value="2023-24">2023-24</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">District</label>
+                                <select class="form-control form-select" id="districtFilter">
+                                    <option value="">All Districts</option>
+                                    <option value="dist1">District A</option>
+                                    <option value="dist2">District B</option>
+                                    <option value="dist3">District C</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Generated Reports Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Generated Reports</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-sm btn-outline">
+                                🔄 Refresh
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-container">
+                            <table class="table" id="reportsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Report ID</th>
+                                        <th>Report Name</th>
+                                        <th>Type</th>
+                                        <th>Period</th>
+                                        <th>Generated Date</th>
+                                        <th>Generated By</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>REP-2025-001</strong></td>
+                                        <td>Financial Summary - January 2026</td>
+                                        <td><span class="badge badge-primary">Financial</span></td>
+                                        <td>Monthly</td>
+                                        <td>01-Feb-2026</td>
+                                        <td>Admin User</td>
+                                        <td><span class="badge badge-success">Ready</span></td>
+                                        <td>
+                                            <div style="display: flex; gap: 0.25rem;">
+                                                <button class="btn btn-sm btn-outline" onclick="viewReport('REP-2025-001')">👁 View</button>
+                                                <button class="btn btn-sm btn-outline" onclick="downloadReport('REP-2025-001', 'pdf')">📄 PDF</button>
+                                                <button class="btn btn-sm btn-outline" onclick="downloadReport('REP-2025-001', 'excel')">📊 Excel</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>REP-2025-002</strong></td>
+                                        <td>Beneficiary Report - Q3 2025-26</td>
+                                        <td><span class="badge badge-success">Beneficiary</span></td>
+                                        <td>Quarterly</td>
+                                        <td>31-Jan-2026</td>
+                                        <td>Admin User</td>
+                                        <td><span class="badge badge-success">Ready</span></td>
+                                        <td>
+                                            <div style="display: flex; gap: 0.25rem;">
+                                                <button class="btn btn-sm btn-outline" onclick="viewReport('REP-2025-002')">👁 View</button>
+                                                <button class="btn btn-sm btn-outline" onclick="downloadReport('REP-2025-002', 'pdf')">📄 PDF</button>
+                                                <button class="btn btn-sm btn-outline" onclick="downloadReport('REP-2025-002', 'excel')">📊 Excel</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>REP-2025-003</strong></td>
+                                        <td>Inspection Summary - December 2025</td>
+                                        <td><span class="badge badge-warning">Inspection</span></td>
+                                        <td>Monthly</td>
+                                        <td>05-Jan-2026</td>
+                                        <td>Admin User</td>
+                                        <td><span class="badge badge-success">Ready</span></td>
+                                        <td>
+                                            <div style="display: flex; gap: 0.25rem;">
+                                                <button class="btn btn-sm btn-outline" onclick="viewReport('REP-2025-003')">👁 View</button>
+                                                <button class="btn btn-sm btn-outline" onclick="downloadReport('REP-2025-003', 'pdf')">📄 PDF</button>
+                                                <button class="btn btn-sm btn-outline" onclick="downloadReport('REP-2025-003', 'excel')">📊 Excel</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>REP-2025-004</strong></td>
+                                        <td>Performance Report - FY 2024-25</td>
+                                        <td><span class="badge badge-info">Performance</span></td>
+                                        <td>Annual</td>
+                                        <td>15-Apr-2025</td>
+                                        <td>System Admin</td>
+                                        <td><span class="badge badge-success">Ready</span></td>
+                                        <td>
+                                            <div style="display: flex; gap: 0.25rem;">
+                                                <button class="btn btn-sm btn-outline" onclick="viewReport('REP-2025-004')">👁 View</button>
+                                                <button class="btn btn-sm btn-outline" onclick="downloadReport('REP-2025-004', 'pdf')">📄 PDF</button>
+                                                <button class="btn btn-sm btn-outline" onclick="downloadReport('REP-2025-004', 'excel')">📊 Excel</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>REP-2025-005</strong></td>
+                                        <td>Custom Report - District A Analysis</td>
+                                        <td><span class="badge badge-primary">Custom</span></td>
+                                        <td>Custom</td>
+                                        <td>10-Jan-2026</td>
+                                        <td>District Officer</td>
+                                        <td><span class="badge badge-warning">Processing</span></td>
+                                        <td>
+                                            <div style="display: flex; gap: 0.25rem;">
+                                                <button class="btn btn-sm btn-outline" disabled>👁 View</button>
+                                                <button class="btn btn-sm btn-outline" disabled>📄 PDF</button>
+                                                <button class="btn btn-sm btn-outline" disabled>📊 Excel</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="text-gray">Showing 1-5 of 75 reports</span>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-sm btn-outline">Previous</button>
+                                <button class="btn btn-sm btn-primary">1</button>
+                                <button class="btn btn-sm btn-outline">2</button>
+                                <button class="btn btn-sm btn-outline">3</button>
+                                <button class="btn btn-sm btn-outline">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Generate Report Modal -->
+    <div id="generateReportModal" class="modal-overlay">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Generate New Report</h3>
+                <button class="modal-close" onclick="closeModal('generateReportModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <form id="generateReportForm">
+                    <div class="form-group">
+                        <label class="form-label required">Report Type</label>
+                        <select class="form-control form-select" name="report_type" required>
+                            <option value="">Select Report Type</option>
+                            <option value="financial">Financial Summary</option>
+                            <option value="beneficiary">Beneficiary Report</option>
+                            <option value="inspection">Inspection Report</option>
+                            <option value="performance">Performance Report</option>
+                            <option value="custom">Custom Report</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Period</label>
+                            <select class="form-control form-select" name="period" required>
+                                <option value="">Select Period</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="quarterly">Quarterly</option>
+                                <option value="annual">Annual</option>
+                                <option value="custom">Custom Date Range</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Financial Year</label>
+                            <select class="form-control form-select" name="fy" required>
+                                <option value="2025-26">2025-26</option>
+                                <option value="2024-25">2024-25</option>
+                                <option value="2023-24">2023-24</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row" id="customDateRange" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">From Date</label>
+                            <input type="date" class="form-control" name="from_date">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">To Date</label>
+                            <input type="date" class="form-control" name="to_date">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Level</label>
+                        <select class="form-control form-select" name="level">
+                            <option value="state">State Level</option>
+                            <option value="district">District Level</option>
+                            <option value="block">Block Level</option>
+                            <option value="panchayat">Panchayat Level</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">District (Optional)</label>
+                        <select class="form-control form-select" name="district">
+                            <option value="">All Districts</option>
+                            <option value="dist1">District A</option>
+                            <option value="dist2">District B</option>
+                            <option value="dist3">District C</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Scheme (Optional)</label>
+                        <select class="form-control form-select" name="scheme">
+                            <option value="">All Schemes</option>
+                            <option value="mgnrega">MGNREGA</option>
+                            <option value="pmay">PMAY</option>
+                            <option value="sbm">Swachh Bharat Mission</option>
+                            <option value="pmgsy">PMGSY</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Output Format</label>
+                        <div style="display: flex; gap: 1rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="format_pdf" value="pdf" checked>
+                                <span>PDF</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="format_excel" value="excel" checked>
+                                <span>Excel</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="format_csv" value="csv">
+                                <span>CSV</span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('generateReportModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitGenerateReport()">Generate Report</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../../static/js/main.js"></script>
+    <script>
+    function generateQuickReport(type) {
+        SchemeMonitoring.showToast('Generating ' + type + ' report...', 'info');
+        // In production, trigger report generation
+    }
+
+    function viewReport(id) {
+        SchemeMonitoring.showToast('Opening report: ' + id, 'info');
+        // In production, open report viewer
+    }
+
+    function downloadReport(id, format) {
+        SchemeMonitoring.showToast('Downloading report as ' + format.toUpperCase(), 'success');
+        // In production, trigger download
+    }
+
+    function submitGenerateReport() {
+        if (SchemeMonitoring.validateForm('generateReportForm')) {
+            SchemeMonitoring.showToast('Report generation started. You will be notified when ready.', 'success');
+            closeModal('generateReportModal');
+            SchemeMonitoring.clearForm('generateReportForm');
+        } else {
+            SchemeMonitoring.showToast('Please fill all required fields', 'error');
+        }
+    }
+
+    // Show/hide custom date range
+    document.querySelector('[name="period"]').addEventListener('change', function(e) {
+        const customDateRange = document.getElementById('customDateRange');
+        if (e.target.value === 'custom') {
+            customDateRange.style.display = 'grid';
+        } else {
+            customDateRange.style.display = 'none';
+        }
+    });
+    </script>
+</body>
+</html>

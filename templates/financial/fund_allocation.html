@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fund Allocation - Scheme Monitoring System">
+    <title>Fund Allocation - Scheme Monitoring System</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../../static/css/main.css">
+    <link rel="stylesheet" href="../../static/css/components.css">
+    <link rel="stylesheet" href="../../static/css/modal.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"><div class="sidebar-logo-icon">&#128202;</div><div class="sidebar-logo-text"><h1>Scheme Monitoring System</h1></div></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <div class="nav-item">
+                        <a href="../dashboard.html" class="nav-link">
+                            <span class="nav-icon">🏠</span>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Financial Monitoring</div>
+                    <div class="nav-item">
+                        <a href="fund_allocation.html" class="nav-link active">
+                            <span class="nav-icon">💰</span>
+                            <span>Fund Allocation & Release</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="expenditure.html" class="nav-link">
+                            <span class="nav-icon">📉</span>
+                            <span>Expenditure (Panchayat-wise)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="uc_generation.html" class="nav-link">
+                            <span class="nav-icon">📄</span>
+                            <span>UC Generation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="pfms_status.html" class="nav-link">
+                            <span class="nav-icon">🏦</span>
+                            <span>PFMS / Treasury Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Beneficiary Management</div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/registration.html" class="nav-link">
+                            <span class="nav-icon">👥</span>
+                            <span>Registration & Validation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/category_coverage.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span>Category-wise Coverage</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/benefit_delivery.html" class="nav-link">
+                            <span class="nav-icon">🚚</span>
+                            <span>Benefit Delivery Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Inspection & Verification</div>
+                    <div class="nav-item">
+                        <a href="../inspection/field_inspection.html" class="nav-link">
+                            <span class="nav-icon">🔎</span>
+                            <span>Field Inspection</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../inspection/mobile_reports.html" class="nav-link">
+                            <span class="nav-icon">📱</span>
+                            <span>Mobile Inspection Reports</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../inspection/third_party_verification.html" class="nav-link">
+                            <span class="nav-icon">✅</span>
+                            <span>3rd Party Verification</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Reports & MIS</div>
+                    <div class="nav-item">
+                        <a href="../reports/mis_reports.html" class="nav-link">
+                            <span class="nav-icon">📑</span>
+                            <span>MIS Reports (M/Q/Y)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../reports/physical_financial.html" class="nav-link">
+                            <span class="nav-icon">📈</span>
+                            <span>Physical vs Financial</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div class="header-left" style="gap: 1.5rem;">
+                    <button class="menu-toggle" onclick="toggleSidebar()" style="color: #1a237e;">☰</button>
+                    <div class="header-branding"><span class="header-gov-text">Government of Odisha</span><h2 class="header-title-text">Scheme Monitoring System</h2></div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="header-search" style="background: #f8f9fa; border: 1px solid #dee2e6; position: relative;">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" id="globalSearchInput" placeholder="Search schemes, files..." style="background: transparent;"><div class="search-results-dropdown" id="searchResultsDropdown"></div>
+                    </div>
+                    <div class="header-notifications"><button class="notification-btn" id="notificationBtn" style="color: #1a237e;">🔔<span class="notification-badge">5</span></button><div class="notification-dropdown" id="notificationDropdown"><div class="notification-header"><h3>Notifications</h3><button class="mark-read-btn">Mark all as read</button></div><div class="notification-list"><div class="notification-item unread"><div class="notification-icon">📝</div><div class="notification-content"><p><strong>New UC Generated</strong><br>Bhubaneswar Block submitted UC for ₹5L.</p><span class="notification-time">2 mins ago</span></div></div><div class="notification-item unread"><div class="notification-icon">💰</div><div class="notification-content"><p><strong>Fund Released</strong><br>₹2.5 Cr released for Rural Housing Scheme.</p><span class="notification-time">1 hour ago</span></div></div><div class="notification-item"><div class="notification-icon">⚠️</div><div class="notification-content"><p><strong>Pending Inspection</strong><br>Cuttack District inspection overdue by 3 days.</p><span class="notification-time">5 hours ago</span></div></div></div><div class="notification-footer"><a href="#" class="view-all-btn">View All Notifications</a></div></div></div>
+                    <div class="user-profile" style="border-left: 1px solid #dee2e6; padding-left: 1rem;">
+                        <div class="user-avatar" style="background: #1a237e; color: white;">AU</div>
+                        <div class="user-info">
+                            <h4 style="color: #333;">Admin User</h4>
+                            <p>State Nodal Officer</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="page-content">
+                <div class="page-header">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h1 class="page-title">Fund Allocation</h1>
+                            <p class="page-description">Manage and track fund allocation across schemes and panchayats</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="openModal('allocationModal')">
+                            ➕ New Allocation
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Total Budget</span>
+                            <div class="stat-icon">💰</div>
+                        </div>
+                        <div class="stat-value">₹2,450 Cr</div>
+                        <div class="stat-footer">
+                            <span class="text-gray">Current FY 2025-26</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card success">
+                        <div class="stat-header">
+                            <span class="stat-label">Allocated</span>
+                            <div class="stat-icon">✓</div>
+                        </div>
+                        <div class="stat-value">₹2,100 Cr</div>
+                        <div class="stat-footer">
+                            <span class="text-gray">85.7% of total budget</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card warning">
+                        <div class="stat-header">
+                            <span class="stat-label">Pending Allocation</span>
+                            <div class="stat-icon">⏳</div>
+                        </div>
+                        <div class="stat-value">₹350 Cr</div>
+                        <div class="stat-footer">
+                            <span class="text-gray">14.3% remaining</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Total Schemes</span>
+                            <div class="stat-icon">📋</div>
+                        </div>
+                        <div class="stat-value">247</div>
+                        <div class="stat-footer">
+                            <span class="text-gray">Active schemes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Scheme</label>
+                                <select class="form-control form-select" id="schemeFilter">
+                                    <option value="">All Schemes</option>
+                                    <option value="scheme1">MGNREGA</option>
+                                    <option value="scheme2">PMAY</option>
+                                    <option value="scheme3">Swachh Bharat Mission</option>
+                                    <option value="scheme4">PMGSY</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">District</label>
+                                <select class="form-control form-select" id="districtFilter">
+                                    <option value="">All Districts</option>
+                                    <option value="dist1">District A</option>
+                                    <option value="dist2">District B</option>
+                                    <option value="dist3">District C</option>
+                                    <option value="dist4">District D</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Block</label>
+                                <select class="form-control form-select" id="blockFilter">
+                                    <option value="">All Blocks</option>
+                                    <option value="block1">Block 1</option>
+                                    <option value="block2">Block 2</option>
+                                    <option value="block3">Block 3</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Financial Year</label>
+                                <select class="form-control form-select" id="fyFilter">
+                                    <option value="2025-26">2025-26</option>
+                                    <option value="2024-25">2024-25</option>
+                                    <option value="2023-24">2023-24</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Allocation Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Fund Allocation Records</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-sm btn-outline" onclick="exportTableToCSV('allocationTable', 'fund-allocation.csv')">
+                                📥 Export CSV
+                            </button>
+                            <button class="btn btn-sm btn-outline" onclick="SchemeMonitoring.exportToExcel('allocationTable')">
+                                📊 Export Excel
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-container">
+                            <table class="table" id="allocationTable">
+                                <thead>
+                                    <tr>
+                                        <th>Allocation ID</th>
+                                        <th>Scheme Name</th>
+                                        <th>District</th>
+                                        <th>Block</th>
+                                        <th>Panchayat</th>
+                                        <th>Allocated Amount</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>FA-2025-001</strong></td>
+                                        <td>MGNREGA</td>
+                                        <td>District A</td>
+                                        <td>Block 1</td>
+                                        <td>Panchayat A1</td>
+                                        <td><strong>₹25,00,000</strong></td>
+                                        <td>15-Jan-2026</td>
+                                        <td><span class="badge badge-success">Approved</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewAllocation('FA-2025-001')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>FA-2025-002</strong></td>
+                                        <td>PMAY</td>
+                                        <td>District B</td>
+                                        <td>Block 2</td>
+                                        <td>Panchayat B2</td>
+                                        <td><strong>₹45,00,000</strong></td>
+                                        <td>12-Jan-2026</td>
+                                        <td><span class="badge badge-success">Approved</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewAllocation('FA-2025-002')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>FA-2025-003</strong></td>
+                                        <td>Swachh Bharat Mission</td>
+                                        <td>District C</td>
+                                        <td>Block 3</td>
+                                        <td>Panchayat C3</td>
+                                        <td><strong>₹15,00,000</strong></td>
+                                        <td>10-Jan-2026</td>
+                                        <td><span class="badge badge-warning">Pending</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewAllocation('FA-2025-003')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>FA-2025-004</strong></td>
+                                        <td>PMGSY</td>
+                                        <td>District D</td>
+                                        <td>Block 4</td>
+                                        <td>Panchayat D4</td>
+                                        <td><strong>₹75,00,000</strong></td>
+                                        <td>08-Jan-2026</td>
+                                        <td><span class="badge badge-success">Approved</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewAllocation('FA-2025-004')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>FA-2025-005</strong></td>
+                                        <td>MGNREGA</td>
+                                        <td>District E</td>
+                                        <td>Block 5</td>
+                                        <td>Panchayat E5</td>
+                                        <td><strong>₹32,00,000</strong></td>
+                                        <td>05-Jan-2026</td>
+                                        <td><span class="badge badge-danger">Rejected</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewAllocation('FA-2025-005')">View</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="text-gray">Showing 1-5 of 247 records</span>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-sm btn-outline">Previous</button>
+                                <button class="btn btn-sm btn-primary">1</button>
+                                <button class="btn btn-sm btn-outline">2</button>
+                                <button class="btn btn-sm btn-outline">3</button>
+                                <button class="btn btn-sm btn-outline">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    
+    <!-- Scripts -->
+    <script src="../../static/js/main.js"></script>
+    <script src="../../static/js/modal.js"></script>
+    <script>
+    // Allocation data
+    const allocations = {
+        'FA-2025-001': {
+            id: 'FA-2025-001',
+            scheme: 'MGNREGA',
+            district: 'Khordha',
+            block: 'Bhubaneswar',
+            panchayat: 'Patia',
+            amount: '₹25,00,000',
+            date: '15-Jan-2026',
+            status: 'Approved',
+            approvedBy: 'District Collector',
+            purpose: 'Rural employment generation and infrastructure development',
+            beneficiaries: 450,
+            duration: '6 months',
+            releaseDate: '20-Jan-2026',
+            completionTarget: '20-Jul-2026'
+        },
+        'FA-2025-002': {
+            id: 'FA-2025-002',
+            scheme: 'PMAY',
+            district: 'Cuttack',
+            block: 'Cuttack Sadar',
+            panchayat: 'Badambadi',
+            amount: '₹45,00,000',
+            date: '12-Jan-2026',
+            status: 'Approved',
+            approvedBy: 'State Nodal Officer',
+            purpose: 'Construction of affordable housing units for economically weaker sections',
+            beneficiaries: 75,
+            duration: '12 months',
+            releaseDate: '18-Jan-2026',
+            completionTarget: '18-Jan-2027'
+        },
+        'FA-2025-003': {
+            id: 'FA-2025-003',
+            scheme: 'Swachh Bharat Mission',
+            district: 'Puri',
+            block: 'Satyabadi',
+            panchayat: 'Sukal',
+            amount: '₹15,00,000',
+            date: '10-Jan-2026',
+            status: 'Pending',
+            approvedBy: 'Pending Approval',
+            purpose: 'Construction of individual household latrines and community sanitation facilities',
+            beneficiaries: 200,
+            duration: '4 months',
+            releaseDate: 'Pending',
+            completionTarget: 'TBD'
+        },
+        'FA-2025-004': {
+            id: 'FA-2025-004',
+            scheme: 'PMGSY',
+            district: 'Ganjam',
+            block: 'Berhampur',
+            panchayat: 'Gopalpur',
+            amount: '₹75,00,000',
+            date: '08-Jan-2026',
+            status: 'Approved',
+            approvedBy: 'Chief Engineer',
+            purpose: 'Construction and upgradation of rural roads connecting villages to main highways',
+            beneficiaries: 1200,
+            duration: '18 months',
+            releaseDate: '15-Jan-2026',
+            completionTarget: '15-Jul-2027'
+        },
+        'FA-2025-005': {
+            id: 'FA-2025-005',
+            scheme: 'MGNREGA',
+            district: 'Balasore',
+            block: 'Jaleswar',
+            panchayat: 'Bhograi',
+            amount: '₹32,00,000',
+            date: '05-Jan-2026',
+            status: 'Rejected',
+            approvedBy: 'N/A',
+            purpose: 'Water conservation and watershed development',
+            beneficiaries: 0,
+            duration: 'N/A',
+            releaseDate: 'N/A',
+            completionTarget: 'N/A'
+        }
+    };
+    
+
+    function viewAllocation(id) {
+        const allocation = allocations[id];
+        if (!allocation) {
+            SchemeMonitoring.showToast('Allocation not found', 'error');
+            return;
+        }
+        
+        const statusClass = allocation.status === 'Approved' ? 'success' : 
+                           allocation.status === 'Pending' ? 'warning' : 'danger';
+        
+        // Populate modal content
+        const content = `
+            <div style="background: linear-gradient(135deg, #1a237e 0%, #283593 100%); color: white; padding: 1.5rem; border-radius: 0; margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h3 style="margin: 0 0 0.5rem 0; font-size: 1.5rem;">${allocation.id}</h3>
+                        <p style="margin: 0; opacity: 0.9;">${allocation.scheme}</p>
+                    </div>
+                    <div>
+                        <span class="badge badge-${statusClass}" style="font-size: 1rem; padding: 0.5rem 1rem;">${allocation.status}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; border-left: 4px solid #2196f3;">
+                    <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.25rem;">Allocated Amount</div>
+                    <div style="font-size: 1.5rem; font-weight: 700; color: #1a237e;">${allocation.amount}</div>
+                </div>
+                <div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; border-left: 4px solid #4caf50;">
+                    <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.25rem;">Beneficiaries</div>
+                    <div style="font-size: 1.5rem; font-weight: 700; color: #1a237e;">${allocation.beneficiaries}</div>
+                </div>
+            </div>
+            
+            <div style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                <h4 style="margin: 0 0 1rem 0; color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 0.5rem;">Location Details</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <div style="font-size: 0.875rem; color: #666;">District</div>
+                        <div style="font-weight: 600; color: #333;">${allocation.district}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.875rem; color: #666;">Block</div>
+                        <div style="font-weight: 600; color: #333;">${allocation.block}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.875rem; color: #666;">Panchayat</div>
+                        <div style="font-weight: 600; color: #333;">${allocation.panchayat}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.875rem; color: #666;">Allocation Date</div>
+                        <div style="font-weight: 600; color: #333;">${allocation.date}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                <h4 style="margin: 0 0 1rem 0; color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 0.5rem;">Project Details</h4>
+                <div style="margin-bottom: 1rem;">
+                    <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.25rem;">Purpose</div>
+                    <div style="color: #333; line-height: 1.6;">${allocation.purpose}</div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <div style="font-size: 0.875rem; color: #666;">Duration</div>
+                        <div style="font-weight: 600; color: #333;">${allocation.duration}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.875rem; color: #666;">Approved By</div>
+                        <div style="font-weight: 600; color: #333;">${allocation.approvedBy}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem;">
+                <h4 style="margin: 0 0 1rem 0; color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 0.5rem;">Timeline</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <div style="font-size: 0.875rem; color: #666;">Release Date</div>
+                        <div style="font-weight: 600; color: #333;">${allocation.releaseDate}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.875rem; color: #666;">Completion Target</div>
+                        <div style="font-weight: 600; color: #333;">${allocation.completionTarget}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('allocationDetailsContent').innerHTML = content;
+        openModal('viewAllocationModal');
+    }
+    
+    function downloadAllocationPDF() {
+        SchemeMonitoring.showToast('PDF download started...', 'success');
+        // In production, generate and download PDF
+    }
+    
+
+    function submitAllocation() {
+        if (SchemeMonitoring.validateForm('allocationForm')) {
+            // Submit form via AJAX
+            SchemeMonitoring.showToast('Fund allocation submitted successfully!', 'success');
+            closeModal('allocationModal');
+            SchemeMonitoring.clearForm('allocationForm');
+        } else {
+            SchemeMonitoring.showToast('Please fill all required fields', 'error');
+        }
+    }
+
+    // Filter functionality
+    document.querySelectorAll('#schemeFilter, #districtFilter, #blockFilter, #fyFilter').forEach(select => {
+        select.addEventListener('change', () => {
+            // Filter table based on selections
+            console.log('Filtering table...');
+        });
+    });
+    </script>
+    <!-- New Allocation Modal -->
+    <div id="allocationModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 class="modal-title">New Fund Allocation</h3>
+                <button class="modal-close" onclick="closeModal('allocationModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <form id="allocationForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Scheme</label>
+                            <select class="form-control form-select" name="scheme" required>
+                                <option value="">Select Scheme</option>
+                                <option value="mgnrega">MGNREGA</option>
+                                <option value="pmay">PMAY</option>
+                                <option value="sbm">Swachh Bharat Mission</option>
+                                <option value="pmgsy">PMGSY</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Financial Year</label>
+                            <select class="form-control form-select" name="fy" required>
+                                <option value="2025-26">2025-26</option>
+                                <option value="2024-25">2024-25</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">District</label>
+                            <select class="form-control form-select" name="district" required>
+                                <option value="">Select District</option>
+                                <option value="dist1">District A</option>
+                                <option value="dist2">District B</option>
+                                <option value="dist3">District C</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Block</label>
+                            <select class="form-control form-select" name="block" required>
+                                <option value="">Select Block</option>
+                                <option value="block1">Block 1</option>
+                                <option value="block2">Block 2</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Panchayat</label>
+                        <select class="form-control form-select" name="panchayat" required>
+                            <option value="">Select Panchayat</option>
+                            <option value="panch1">Panchayat 1</option>
+                            <option value="panch2">Panchayat 2</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Allocation Amount (₹)</label>
+                            <input type="number" class="form-control" name="amount" placeholder="Enter amount" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Allocation Date</label>
+                            <input type="date" class="form-control" name="date" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Remarks</label>
+                        <textarea class="form-control" name="remarks" rows="3" placeholder="Enter any remarks or notes"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Supporting Documents</label>
+                        <input type="file" class="form-control" name="documents" multiple>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('allocationModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitAllocation()">Submit Allocation</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- View Allocation Modal -->
+    <div id="viewAllocationModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Allocation Details</h2>
+                <button class="modal-close" onclick="closeModal('viewAllocationModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="allocationDetailsContent">
+                    <!-- Content will be populated dynamically -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('viewAllocationModal')">Close</button>
+                <button class="btn btn-primary" onclick="downloadAllocationPDF()">Download PDF</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beneficiary Registration - Scheme Monitoring System</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../../static/css/main.css">
+    <link rel="stylesheet" href="../../static/css/components.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"><div class="sidebar-logo-icon">&#128202;</div><div class="sidebar-logo-text"><h1>Scheme Monitoring System</h1></div></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <div class="nav-item">
+                        <a href="../dashboard.html" class="nav-link">
+                            <span class="nav-icon">🏠</span>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Financial Monitoring</div>
+                    <div class="nav-item">
+                        <a href="../financial/fund_allocation.html" class="nav-link">
+                            <span class="nav-icon">💰</span>
+                            <span>Fund Allocation & Release</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../financial/expenditure.html" class="nav-link">
+                            <span class="nav-icon">📉</span>
+                            <span>Expenditure (Panchayat-wise)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../financial/uc_generation.html" class="nav-link">
+                            <span class="nav-icon">📄</span>
+                            <span>UC Generation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../financial/pfms_status.html" class="nav-link">
+                            <span class="nav-icon">🏦</span>
+                            <span>PFMS / Treasury Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Beneficiary Management</div>
+                    <div class="nav-item">
+                        <a href="registration.html" class="nav-link active">
+                            <span class="nav-icon">👥</span>
+                            <span>Registration & Validation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="category_coverage.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span>Category-wise Coverage</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="benefit_delivery.html" class="nav-link">
+                            <span class="nav-icon">🚚</span>
+                            <span>Benefit Delivery Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Inspection & Verification</div>
+                    <div class="nav-item">
+                        <a href="../inspection/field_inspection.html" class="nav-link">
+                            <span class="nav-icon">🔎</span>
+                            <span>Field Inspection</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../inspection/mobile_reports.html" class="nav-link">
+                            <span class="nav-icon">📱</span>
+                            <span>Mobile Inspection Reports</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../inspection/third_party_verification.html" class="nav-link">
+                            <span class="nav-icon">✅</span>
+                            <span>3rd Party Verification</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Reports & MIS</div>
+                    <div class="nav-item">
+                        <a href="../reports/mis_reports.html" class="nav-link">
+                            <span class="nav-icon">📑</span>
+                            <span>MIS Reports (M/Q/Y)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../reports/physical_financial.html" class="nav-link">
+                            <span class="nav-icon">📈</span>
+                            <span>Physical vs Financial</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div class="header-left" style="gap: 1.5rem;">
+                    <button class="menu-toggle" onclick="toggleSidebar()" style="color: #1a237e;">☰</button>
+                    <div class="header-branding"><span class="header-gov-text">Government of Odisha</span><h2 class="header-title-text">Scheme Monitoring System</h2></div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="header-search" style="background: #f8f9fa; border: 1px solid #dee2e6; position: relative;">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" id="globalSearchInput" placeholder="Search schemes, files..." style="background: transparent;"><div class="search-results-dropdown" id="searchResultsDropdown"></div>
+                    </div>
+                    <div class="header-notifications"><button class="notification-btn" id="notificationBtn" style="color: #1a237e;">🔔<span class="notification-badge">5</span></button><div class="notification-dropdown" id="notificationDropdown"><div class="notification-header"><h3>Notifications</h3><button class="mark-read-btn">Mark all as read</button></div><div class="notification-list"><div class="notification-item unread"><div class="notification-icon">📝</div><div class="notification-content"><p><strong>New UC Generated</strong><br>Bhubaneswar Block submitted UC for ₹5L.</p><span class="notification-time">2 mins ago</span></div></div><div class="notification-item unread"><div class="notification-icon">💰</div><div class="notification-content"><p><strong>Fund Released</strong><br>₹2.5 Cr released for Rural Housing Scheme.</p><span class="notification-time">1 hour ago</span></div></div><div class="notification-item"><div class="notification-icon">⚠️</div><div class="notification-content"><p><strong>Pending Inspection</strong><br>Cuttack District inspection overdue by 3 days.</p><span class="notification-time">5 hours ago</span></div></div></div><div class="notification-footer"><a href="#" class="view-all-btn">View All Notifications</a></div></div></div>
+                    <div class="user-profile" style="border-left: 1px solid #dee2e6; padding-left: 1rem;">
+                        <div class="user-avatar" style="background: #1a237e; color: white;">AU</div>
+                        <div class="user-info">
+                            <h4 style="color: #333;">Admin User</h4>
+                            <p>State Nodal Officer</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="page-content">
+                <div class="page-header">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h1 class="page-title">Beneficiary Registration</h1>
+                            <p class="page-description">Register and manage scheme beneficiaries</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="openModal('beneficiaryModal')">
+                            ➕ Register New Beneficiary
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Total Beneficiaries</span>
+                            <div class="stat-icon">👥</div>
+                        </div>
+                        <div class="stat-value">1,24,567</div>
+                        <div class="stat-footer">
+                            <span class="stat-change positive">↑ 5.8%</span>
+                            <span class="text-gray">vs last month</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card success">
+                        <div class="stat-header">
+                            <span class="stat-label">Validated</span>
+                            <div class="stat-icon">✓</div>
+                        </div>
+                        <div class="stat-value">1,18,234</div>
+                        <div class="stat-footer">
+                            <span class="text-gray">94.9% validation rate</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card warning">
+                        <div class="stat-header">
+                            <span class="stat-label">Pending Validation</span>
+                            <div class="stat-icon">⏳</div>
+                        </div>
+                        <div class="stat-value">6,333</div>
+                        <div class="stat-footer">
+                            <span class="text-gray">Requires attention</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card danger">
+                        <div class="stat-header">
+                            <span class="stat-label">Rejected</span>
+                            <div class="stat-icon">✕</div>
+                        </div>
+                        <div class="stat-value">1,245</div>
+                        <div class="stat-footer">
+                            <span class="text-gray">1.0% rejection rate</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category-wise Distribution -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Category-wise Distribution</h3>
+                        </div>
+                        <div class="card-body">
+                            <div style="padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                <!-- Donut Chart -->
+                                <div style="position: relative; width: 240px; height: 240px; margin-bottom: 2rem;">
+                                    <!-- Donut SVG -->
+                                    <svg viewBox="0 0 100 100" style="transform: rotate(-90deg); width: 100%; height: 100%;">
+                                        <!-- General: 36.3% (45,234 / 124,567) - Purple -->
+                                        <circle cx="50" cy="50" r="40" fill="none" stroke="#9c27b0" stroke-width="20" 
+                                                stroke-dasharray="90.8 251.2" stroke-dashoffset="0" 
+                                                style="transition: stroke-width 0.3s, opacity 0.3s;" 
+                                                onmouseover="this.style.strokeWidth='22'; this.style.opacity='0.8';" 
+                                                onmouseout="this.style.strokeWidth='20'; this.style.opacity='1';"/>
+                                        
+                                        <!-- SC: 25.8% (32,145 / 124,567) - Pink -->
+                                        <circle cx="50" cy="50" r="40" fill="none" stroke="#e91e63" stroke-width="20" 
+                                                stroke-dasharray="64.6 277.4" stroke-dashoffset="-90.8" 
+                                                style="transition: stroke-width 0.3s, opacity 0.3s;" 
+                                                onmouseover="this.style.strokeWidth='22'; this.style.opacity='0.8';" 
+                                                onmouseout="this.style.strokeWidth='20'; this.style.opacity='1';"/>
+                                        
+                                        <!-- ST: 23.2% (28,890 / 124,567) - Orange -->
+                                        <circle cx="50" cy="50" r="40" fill="none" stroke="#ff9800" stroke-width="20" 
+                                                stroke-dasharray="58.1 283.9" stroke-dashoffset="-155.4" 
+                                                style="transition: stroke-width 0.3s, opacity 0.3s;" 
+                                                onmouseover="this.style.strokeWidth='22'; this.style.opacity='0.8';" 
+                                                onmouseout="this.style.strokeWidth='20'; this.style.opacity='1';"/>
+                                        
+                                        <!-- OBC: 14.7% (18,298 / 124,567) - Blue -->
+                                        <circle cx="50" cy="50" r="40" fill="none" stroke="#2196f3" stroke-width="20" 
+                                                stroke-dasharray="36.8 305.2" stroke-dashoffset="-213.5" 
+                                                style="transition: stroke-width 0.3s, opacity 0.3s;" 
+                                                onmouseover="this.style.strokeWidth='22'; this.style.opacity='0.8';" 
+                                                onmouseout="this.style.strokeWidth='20'; this.style.opacity='1';"/>
+                                    </svg>
+                                    
+                                    <!-- Center Text -->
+                                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                                        <div style="font-size: 1.75rem; font-weight: 700; color: #1a237e; line-height: 1;">1,24,567</div>
+                                        <div style="font-size: 0.75rem; color: #666; margin-top: 0.25rem;">Total</div>
+                                    </div>
+                                </div>
+
+                                <!-- Legend -->
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%;">
+                                    <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: #f3e5f5; border-radius: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform='translateX(0)'">
+                                        <div style="width: 16px; height: 16px; background: #9c27b0; border-radius: 3px; flex-shrink: 0;"></div>
+                                        <div style="flex: 1;">
+                                            <div style="font-size: 0.75rem; color: #666;">General</div>
+                                            <div style="font-weight: 700; color: #1a237e;">36.3%</div>
+                                        </div>
+                                    </div>
+
+                                    <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: #fce4ec; border-radius: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform='translateX(0)'">
+                                        <div style="width: 16px; height: 16px; background: #e91e63; border-radius: 3px; flex-shrink: 0;"></div>
+                                        <div style="flex: 1;">
+                                            <div style="font-size: 0.75rem; color: #666;">SC</div>
+                                            <div style="font-weight: 700; color: #1a237e;">25.8%</div>
+                                        </div>
+                                    </div>
+
+                                    <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: #fff3e0; border-radius: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform='translateX(0)'">
+                                        <div style="width: 16px; height: 16px; background: #ff9800; border-radius: 3px; flex-shrink: 0;"></div>
+                                        <div style="flex: 1;">
+                                            <div style="font-size: 0.75rem; color: #666;">ST</div>
+                                            <div style="font-weight: 700; color: #1a237e;">23.2%</div>
+                                        </div>
+                                    </div>
+
+                                    <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: #e3f2fd; border-radius: 8px; transition: transform 0.2s;" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform='translateX(0)'">
+                                        <div style="width: 16px; height: 16px; background: #2196f3; border-radius: 3px; flex-shrink: 0;"></div>
+                                        <div style="flex: 1;">
+                                            <div style="font-size: 0.75rem; color: #666;">OBC</div>
+                                            <div style="font-weight: 700; color: #1a237e;">14.7%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Category Summary</h3>
+                        </div>
+                        <div class="card-body">
+                            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: var(--border-radius);">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 12px; height: 12px; background: var(--primary-color); border-radius: 50%;"></div>
+                                        <span>General</span>
+                                    </div>
+                                    <strong>45,234</strong>
+                                </div>
+                                
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: var(--border-radius);">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 12px; height: 12px; background: var(--success); border-radius: 50%;"></div>
+                                        <span>SC</span>
+                                    </div>
+                                    <strong>32,145</strong>
+                                </div>
+                                
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: var(--border-radius);">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 12px; height: 12px; background: var(--warning); border-radius: 50%;"></div>
+                                        <span>ST</span>
+                                    </div>
+                                    <strong>28,890</strong>
+                                </div>
+                                
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: var(--border-radius);">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 12px; height: 12px; background: var(--info); border-radius: 50%;"></div>
+                                        <span>OBC</span>
+                                    </div>
+                                    <strong>18,298</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search and Filters -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Search</label>
+                                <input type="text" class="form-control" id="searchBeneficiary" placeholder="Search by name, ID, or Aadhaar">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Scheme</label>
+                                <select class="form-control form-select" id="schemeFilter">
+                                    <option value="">All Schemes</option>
+                                    <option value="scheme1">MGNREGA</option>
+                                    <option value="scheme2">PMAY</option>
+                                    <option value="scheme3">Swachh Bharat Mission</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Category</label>
+                                <select class="form-control form-select" id="categoryFilter">
+                                    <option value="">All Categories</option>
+                                    <option value="general">General</option>
+                                    <option value="sc">SC</option>
+                                    <option value="st">ST</option>
+                                    <option value="obc">OBC</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Status</label>
+                                <select class="form-control form-select" id="statusFilter">
+                                    <option value="">All Status</option>
+                                    <option value="validated">Validated</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="rejected">Rejected</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Beneficiary Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Registered Beneficiaries</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-sm btn-outline" onclick="exportTableToCSV('beneficiaryTable', 'beneficiaries.csv')">
+                                📥 Export CSV
+                            </button>
+                            <button class="btn btn-sm btn-outline" onclick="SchemeMonitoring.exportToExcel('beneficiaryTable')">
+                                📊 Export Excel
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-container">
+                            <table class="table" id="beneficiaryTable">
+                                <thead>
+                                    <tr>
+                                        <th>Beneficiary ID</th>
+                                        <th>Name</th>
+                                        <th>Aadhaar</th>
+                                        <th>Category</th>
+                                        <th>Scheme</th>
+                                        <th>District</th>
+                                        <th>Registration Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>BEN-2025-001</strong></td>
+                                        <td>Rajesh Kumar</td>
+                                        <td>XXXX-XXXX-1234</td>
+                                        <td><span class="badge badge-primary">General</span></td>
+                                        <td>MGNREGA</td>
+                                        <td>District A</td>
+                                        <td>15-Jan-2026</td>
+                                        <td><span class="badge badge-success">Validated</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewBeneficiary('BEN-2025-001')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>BEN-2025-002</strong></td>
+                                        <td>Sunita Devi</td>
+                                        <td>XXXX-XXXX-5678</td>
+                                        <td><span class="badge badge-success">SC</span></td>
+                                        <td>PMAY</td>
+                                        <td>District B</td>
+                                        <td>14-Jan-2026</td>
+                                        <td><span class="badge badge-success">Validated</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewBeneficiary('BEN-2025-002')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>BEN-2025-003</strong></td>
+                                        <td>Ramesh Patel</td>
+                                        <td>XXXX-XXXX-9012</td>
+                                        <td><span class="badge badge-warning">ST</span></td>
+                                        <td>Swachh Bharat Mission</td>
+                                        <td>District C</td>
+                                        <td>13-Jan-2026</td>
+                                        <td><span class="badge badge-warning">Pending</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewBeneficiary('BEN-2025-003')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>BEN-2025-004</strong></td>
+                                        <td>Meena Sharma</td>
+                                        <td>XXXX-XXXX-3456</td>
+                                        <td><span class="badge badge-info">OBC</span></td>
+                                        <td>PMGSY</td>
+                                        <td>District D</td>
+                                        <td>12-Jan-2026</td>
+                                        <td><span class="badge badge-success">Validated</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewBeneficiary('BEN-2025-004')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>BEN-2025-005</strong></td>
+                                        <td>Amit Singh</td>
+                                        <td>XXXX-XXXX-7890</td>
+                                        <td><span class="badge badge-primary">General</span></td>
+                                        <td>MGNREGA</td>
+                                        <td>District E</td>
+                                        <td>11-Jan-2026</td>
+                                        <td><span class="badge badge-danger">Rejected</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewBeneficiary('BEN-2025-005')">View</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="text-gray">Showing 1-5 of 1,24,567 records</span>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-sm btn-outline">Previous</button>
+                                <button class="btn btn-sm btn-primary">1</button>
+                                <button class="btn btn-sm btn-outline">2</button>
+                                <button class="btn btn-sm btn-outline">3</button>
+                                <button class="btn btn-sm btn-outline">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Beneficiary Modal -->
+    <div id="beneficiaryModal" class="modal-overlay">
+        <div class="modal" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Register New Beneficiary</h3>
+                <button class="modal-close" onclick="closeModal('beneficiaryModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <form id="beneficiaryForm">
+                    <h4 style="margin-bottom: 1rem; color: var(--gray-700);">Personal Information</h4>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Full Name</label>
+                            <input type="text" class="form-control" name="name" placeholder="Enter full name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Father's/Husband's Name</label>
+                            <input type="text" class="form-control" name="guardian_name" placeholder="Enter name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Aadhaar Number</label>
+                            <input type="text" class="form-control" name="aadhaar" placeholder="XXXX-XXXX-XXXX" maxlength="14" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Mobile Number</label>
+                            <input type="tel" class="form-control" name="mobile" placeholder="10-digit mobile number" maxlength="10" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Date of Birth</label>
+                            <input type="date" class="form-control" name="dob" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Gender</label>
+                            <select class="form-control form-select" name="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Category</label>
+                        <select class="form-control form-select" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="general">General</option>
+                            <option value="sc">SC</option>
+                            <option value="st">ST</option>
+                            <option value="obc">OBC</option>
+                        </select>
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem; color: var(--gray-700);">Address Information</h4>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">District</label>
+                            <select class="form-control form-select" name="district" required>
+                                <option value="">Select District</option>
+                                <option value="dist1">District A</option>
+                                <option value="dist2">District B</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Block</label>
+                            <select class="form-control form-select" name="block" required>
+                                <option value="">Select Block</option>
+                                <option value="block1">Block 1</option>
+                                <option value="block2">Block 2</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Panchayat</label>
+                        <select class="form-control form-select" name="panchayat" required>
+                            <option value="">Select Panchayat</option>
+                            <option value="panch1">Panchayat 1</option>
+                            <option value="panch2">Panchayat 2</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Village/Ward</label>
+                        <input type="text" class="form-control" name="village" placeholder="Enter village/ward name" required>
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem; color: var(--gray-700);">Scheme Information</h4>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Scheme</label>
+                        <select class="form-control form-select" name="scheme" required>
+                            <option value="">Select Scheme</option>
+                            <option value="mgnrega">MGNREGA</option>
+                            <option value="pmay">PMAY</option>
+                            <option value="sbm">Swachh Bharat Mission</option>
+                            <option value="pmgsy">PMGSY</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Bank Account Number</label>
+                        <input type="text" class="form-control" name="bank_account" placeholder="Enter bank account number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">IFSC Code</label>
+                        <input type="text" class="form-control" name="ifsc" placeholder="Enter IFSC code">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Upload Documents</label>
+                        <input type="file" class="form-control" name="documents" multiple>
+                        <small class="text-gray">Upload Aadhaar, Bank Passbook, Category Certificate (if applicable)</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('beneficiaryModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitBeneficiary()">Register Beneficiary</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../../static/js/main.js"></script>
+    <script>
+    function viewBeneficiary(id) {
+        SchemeMonitoring.showToast('Viewing beneficiary: ' + id, 'info');
+    }
+
+    function submitBeneficiary() {
+        if (SchemeMonitoring.validateForm('beneficiaryForm')) {
+            SchemeMonitoring.showToast('Beneficiary registered successfully!', 'success');
+            closeModal('beneficiaryModal');
+            SchemeMonitoring.clearForm('beneficiaryForm');
+        } else {
+            SchemeMonitoring.showToast('Please fill all required fields', 'error');
+        }
+    }
+
+    // Search functionality
+    document.getElementById('searchBeneficiary').addEventListener('input', function(e) {
+        SchemeMonitoring.filterTable('beneficiaryTable', e.target.value);
+    });
+    </script>
+</body>
+</html>

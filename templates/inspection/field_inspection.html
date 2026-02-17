@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Field Inspection - Scheme Monitoring System</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../../static/css/main.css">
+    <link rel="stylesheet" href="../../static/css/components.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"><div class="sidebar-logo-icon">&#128202;</div><div class="sidebar-logo-text"><h1>Scheme Monitoring System</h1></div></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <div class="nav-item">
+                        <a href="../dashboard.html" class="nav-link">
+                            <span class="nav-icon">🏠</span>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Financial Monitoring</div>
+                    <div class="nav-item">
+                        <a href="../financial/fund_allocation.html" class="nav-link">
+                            <span class="nav-icon">💰</span>
+                            <span>Fund Allocation & Release</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../financial/expenditure.html" class="nav-link">
+                            <span class="nav-icon">📉</span>
+                            <span>Expenditure (Panchayat-wise)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../financial/uc_generation.html" class="nav-link">
+                            <span class="nav-icon">📄</span>
+                            <span>UC Generation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../financial/pfms_status.html" class="nav-link">
+                            <span class="nav-icon">🏦</span>
+                            <span>PFMS / Treasury Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Beneficiary Management</div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/registration.html" class="nav-link">
+                            <span class="nav-icon">👥</span>
+                            <span>Registration & Validation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/category_coverage.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span>Category-wise Coverage</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/benefit_delivery.html" class="nav-link">
+                            <span class="nav-icon">🚚</span>
+                            <span>Benefit Delivery Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Inspection & Verification</div>
+                    <div class="nav-item">
+                        <a href="field_inspection.html" class="nav-link active">
+                            <span class="nav-icon">🔎</span>
+                            <span>Field Inspection</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="mobile_reports.html" class="nav-link">
+                            <span class="nav-icon">📱</span>
+                            <span>Mobile Inspection Reports</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="third_party_verification.html" class="nav-link">
+                            <span class="nav-icon">✅</span>
+                            <span>3rd Party Verification</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Reports & MIS</div>
+                    <div class="nav-item">
+                        <a href="../reports/mis_reports.html" class="nav-link">
+                            <span class="nav-icon">📑</span>
+                            <span>MIS Reports (M/Q/Y)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../reports/physical_financial.html" class="nav-link">
+                            <span class="nav-icon">📈</span>
+                            <span>Physical vs Financial</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div class="header-left" style="gap: 1.5rem;">
+                    <button class="menu-toggle" onclick="toggleSidebar()" style="color: #1a237e;">☰</button>
+                    <div class="header-branding"><span class="header-gov-text">Government of Odisha</span><h2 class="header-title-text">Scheme Monitoring System</h2></div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="header-search" style="background: #f8f9fa; border: 1px solid #dee2e6; position: relative;">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" id="globalSearchInput" placeholder="Search schemes, files..." style="background: transparent;"><div class="search-results-dropdown" id="searchResultsDropdown"></div>
+                    </div>
+                    <div class="header-notifications"><button class="notification-btn" id="notificationBtn" style="color: #1a237e;">🔔<span class="notification-badge">5</span></button><div class="notification-dropdown" id="notificationDropdown"><div class="notification-header"><h3>Notifications</h3><button class="mark-read-btn">Mark all as read</button></div><div class="notification-list"><div class="notification-item unread"><div class="notification-icon">📝</div><div class="notification-content"><p><strong>New UC Generated</strong><br>Bhubaneswar Block submitted UC for ₹5L.</p><span class="notification-time">2 mins ago</span></div></div><div class="notification-item unread"><div class="notification-icon">💰</div><div class="notification-content"><p><strong>Fund Released</strong><br>₹2.5 Cr released for Rural Housing Scheme.</p><span class="notification-time">1 hour ago</span></div></div><div class="notification-item"><div class="notification-icon">⚠️</div><div class="notification-content"><p><strong>Pending Inspection</strong><br>Cuttack District inspection overdue by 3 days.</p><span class="notification-time">5 hours ago</span></div></div></div><div class="notification-footer"><a href="#" class="view-all-btn">View All Notifications</a></div></div></div>
+                    <div class="user-profile" style="border-left: 1px solid #dee2e6; padding-left: 1rem;">
+                        <div class="user-avatar" style="background: #1a237e; color: white;">AU</div>
+                        <div class="user-info">
+                            <h4 style="color: #333;">Admin User</h4>
+                            <p>State Nodal Officer</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="page-content">
+                <div class="page-header">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h1 class="page-title">Field Inspection Reports</h1>
+                            <p class="page-description">Manage and track field inspection activities</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="openModal('inspectionModal')">
+                            ➕ New Inspection Report
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Total Inspections</span>
+                            <div class="stat-icon">🔍</div>
+                        </div>
+                        <div class="stat-value">1,847</div>
+                        <div class="stat-footer">
+                            <span class="stat-change positive">↑ 12%</span>
+                            <span class="text-gray">vs last month</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card success">
+                        <div class="stat-header">
+                            <span class="stat-label">Completed</span>
+                            <div class="stat-icon">✓</div>
+                        </div>
+                        <div class="stat-value">1,654</div>
+                        <div class="stat-footer">
+                            <span class="text-gray">89.5% completion rate</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card warning">
+                        <div class="stat-header">
+                            <span class="stat-label">In Progress</span>
+                            <div class="stat-icon">⏳</div>
+                        </div>
+                        <div class="stat-value">145</div>
+                        <div class="stat-footer">
+                            <span class="text-gray">7.9% ongoing</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card danger">
+                        <div class="stat-header">
+                            <span class="stat-label">Issues Found</span>
+                            <div class="stat-icon">⚠</div>
+                        </div>
+                        <div class="stat-value">48</div>
+                        <div class="stat-footer">
+                            <span class="text-gray">2.6% with issues</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inspection Type Distribution -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Monthly Inspection Trend</h3>
+                        </div>
+                        <div class="card-body">
+                            <div style="padding: 1.5rem;">
+                                <!-- Chart Legend -->
+                                <div style="display: flex; justify-content: flex-end; gap: 1.5rem; margin-bottom: 1.5rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 16px; height: 16px; background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%); border-radius: 3px;"></div>
+                                        <span style="font-size: 0.875rem; color: #666;">Completed</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 16px; height: 16px; background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); border-radius: 3px;"></div>
+                                        <span style="font-size: 0.875rem; color: #666;">In Progress</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 16px; height: 16px; background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); border-radius: 3px;"></div>
+                                        <span style="font-size: 0.875rem; color: #666;">Issues Found</span>
+                                    </div>
+                                </div>
+
+                                <!-- Bar Chart -->
+                                <div style="display: flex; align-items: flex-end; justify-content: space-between; height: 250px; gap: 1rem; padding: 0 1rem;">
+                                    <!-- September -->
+                                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%;">
+                                        <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; width: 100%; gap: 2px;">
+                                            <div style="background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%); height: 68%; border-radius: 6px 6px 0 0; position: relative; transition: transform 0.2s;" onmouseover="this.style.transform='scaleY(1.05)'" onmouseout="this.style.transform='scaleY(1)'">
+                                                <div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: 600; color: #1976d2; white-space: nowrap;">245</div>
+                                            </div>
+                                            <div style="background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); height: 8%; border-radius: 0;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'"></div>
+                                            <div style="background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); height: 4%; border-radius: 0 0 6px 6px;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'"></div>
+                                        </div>
+                                        <div style="margin-top: 0.75rem; font-size: 0.875rem; font-weight: 600; color: #666;">Sep</div>
+                                    </div>
+
+                                    <!-- October -->
+                                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%;">
+                                        <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; width: 100%; gap: 2px;">
+                                            <div style="background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%); height: 75%; border-radius: 6px 6px 0 0; position: relative; transition: transform 0.2s;" onmouseover="this.style.transform='scaleY(1.05)'" onmouseout="this.style.transform='scaleY(1)'">
+                                                <div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: 600; color: #1976d2; white-space: nowrap;">268</div>
+                                            </div>
+                                            <div style="background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); height: 10%; border-radius: 0;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'"></div>
+                                            <div style="background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); height: 5%; border-radius: 0 0 6px 6px;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'"></div>
+                                        </div>
+                                        <div style="margin-top: 0.75rem; font-size: 0.875rem; font-weight: 600; color: #666;">Oct</div>
+                                    </div>
+
+                                    <!-- November -->
+                                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%;">
+                                        <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; width: 100%; gap: 2px;">
+                                            <div style="background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%); height: 82%; border-radius: 6px 6px 0 0; position: relative; transition: transform 0.2s;" onmouseover="this.style.transform='scaleY(1.05)'" onmouseout="this.style.transform='scaleY(1)'">
+                                                <div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: 600; color: #1976d2; white-space: nowrap;">294</div>
+                                            </div>
+                                            <div style="background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); height: 9%; border-radius: 0;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'"></div>
+                                            <div style="background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); height: 3%; border-radius: 0 0 6px 6px;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'"></div>
+                                        </div>
+                                        <div style="margin-top: 0.75rem; font-size: 0.875rem; font-weight: 600; color: #666;">Nov</div>
+                                    </div>
+
+                                    <!-- December -->
+                                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%;">
+                                        <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; width: 100%; gap: 2px;">
+                                            <div style="background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%); height: 88%; border-radius: 6px 6px 0 0; position: relative; transition: transform 0.2s;" onmouseover="this.style.transform='scaleY(1.05)'" onmouseout="this.style.transform='scaleY(1)'">
+                                                <div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: 600; color: #1976d2; white-space: nowrap;">315</div>
+                                            </div>
+                                            <div style="background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); height: 7%; border-radius: 0;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'"></div>
+                                            <div style="background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); height: 2%; border-radius: 0 0 6px 6px;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'"></div>
+                                        </div>
+                                        <div style="margin-top: 0.75rem; font-size: 0.875rem; font-weight: 600; color: #666;">Dec</div>
+                                    </div>
+
+                                    <!-- January -->
+                                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%;">
+                                        <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; width: 100%; gap: 2px;">
+                                            <div style="background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%); height: 95%; border-radius: 6px 6px 0 0; position: relative; transition: transform 0.2s;" onmouseover="this.style.transform='scaleY(1.05)'" onmouseout="this.style.transform='scaleY(1)'">
+                                                <div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: 600; color: #1976d2; white-space: nowrap;">342</div>
+                                            </div>
+                                            <div style="background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); height: 6%; border-radius: 0;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'"></div>
+                                            <div style="background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); height: 2%; border-radius: 0 0 6px 6px;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'"></div>
+                                        </div>
+                                        <div style="margin-top: 0.75rem; font-size: 0.875rem; font-weight: 600; color: #666;">Jan</div>
+                                    </div>
+
+                                    <!-- February -->
+                                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%;">
+                                        <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; width: 100%; gap: 2px;">
+                                            <div style="background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%); height: 100%; border-radius: 6px 6px 0 0; position: relative; transition: transform 0.2s; box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);" onmouseover="this.style.transform='scaleY(1.05)'" onmouseout="this.style.transform='scaleY(1)'">
+                                                <div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: 600; color: #1976d2; white-space: nowrap;">358</div>
+                                            </div>
+                                            <div style="background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); height: 5%; border-radius: 0;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'"></div>
+                                            <div style="background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); height: 1.5%; border-radius: 0 0 6px 6px;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'"></div>
+                                        </div>
+                                        <div style="margin-top: 0.75rem; font-size: 0.875rem; font-weight: 600; color: #1976d2;">Feb</div>
+                                    </div>
+                                </div>
+
+                                <!-- Trend Indicator -->
+                                <div style="margin-top: 1.5rem; padding: 1rem; background: #e3f2fd; border-radius: 8px; border-left: 4px solid #2196f3;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span style="font-size: 1.25rem;">📈</span>
+                                        <span style="font-weight: 600; color: #1976d2;">Upward Trend:</span>
+                                        <span style="color: #666;">Inspections increased by 46% over the last 6 months</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Compliance Status</h3>
+                        </div>
+                        <div class="card-body">
+                            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span style="font-size: 0.875rem; font-weight: 600;">Fully Compliant</span>
+                                        <span style="font-size: 0.875rem; font-weight: 600; color: var(--success);">82%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar success" style="width: 82%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span style="font-size: 0.875rem; font-weight: 600;">Partially Compliant</span>
+                                        <span style="font-size: 0.875rem; font-weight: 600; color: var(--warning);">15%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar warning" style="width: 15%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span style="font-size: 0.875rem; font-weight: 600;">Non-Compliant</span>
+                                        <span style="font-size: 0.875rem; font-weight: 600; color: var(--danger);">3%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar danger" style="width: 3%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Inspection Type</label>
+                                <select class="form-control form-select" id="typeFilter">
+                                    <option value="">All Types</option>
+                                    <option value="routine">Routine Inspection</option>
+                                    <option value="surprise">Surprise Inspection</option>
+                                    <option value="third-party">Third-party Verification</option>
+                                    <option value="mobile">Mobile Inspection</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">District</label>
+                                <select class="form-control form-select" id="districtFilter">
+                                    <option value="">All Districts</option>
+                                    <option value="dist1">District A</option>
+                                    <option value="dist2">District B</option>
+                                    <option value="dist3">District C</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Status</label>
+                                <select class="form-control form-select" id="statusFilter">
+                                    <option value="">All Status</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="in-progress">In Progress</option>
+                                    <option value="scheduled">Scheduled</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Date Range</label>
+                                <input type="date" class="form-control" id="dateFrom">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inspection Reports Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Inspection Reports</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-sm btn-outline" onclick="exportTableToCSV('inspectionTable', 'inspections.csv')">
+                                📥 Export CSV
+                            </button>
+                            <button class="btn btn-sm btn-outline" onclick="SchemeMonitoring.exportToPDF('inspectionTable')">
+                                📄 Export PDF
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-container">
+                            <table class="table" id="inspectionTable">
+                                <thead>
+                                    <tr>
+                                        <th>Inspection ID</th>
+                                        <th>Type</th>
+                                        <th>Scheme</th>
+                                        <th>Location</th>
+                                        <th>Inspector</th>
+                                        <th>Date</th>
+                                        <th>Compliance</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>INS-2025-001</strong></td>
+                                        <td><span class="badge badge-primary">Routine</span></td>
+                                        <td>MGNREGA</td>
+                                        <td>Panchayat A1, District A</td>
+                                        <td>Rajesh Kumar</td>
+                                        <td>15-Jan-2026</td>
+                                        <td><span class="badge badge-success">Compliant</span></td>
+                                        <td><span class="badge badge-success">Completed</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewInspection('INS-2025-001')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>INS-2025-002</strong></td>
+                                        <td><span class="badge badge-warning">Surprise</span></td>
+                                        <td>PMAY</td>
+                                        <td>Panchayat B2, District B</td>
+                                        <td>Sunita Devi</td>
+                                        <td>14-Jan-2026</td>
+                                        <td><span class="badge badge-warning">Partial</span></td>
+                                        <td><span class="badge badge-success">Completed</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewInspection('INS-2025-002')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>INS-2025-003</strong></td>
+                                        <td><span class="badge badge-info">Mobile</span></td>
+                                        <td>Swachh Bharat Mission</td>
+                                        <td>Panchayat C3, District C</td>
+                                        <td>Amit Singh</td>
+                                        <td>13-Jan-2026</td>
+                                        <td><span class="badge badge-success">Compliant</span></td>
+                                        <td><span class="badge badge-warning">In Progress</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewInspection('INS-2025-003')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>INS-2025-004</strong></td>
+                                        <td><span class="badge badge-success">Third-party</span></td>
+                                        <td>PMGSY</td>
+                                        <td>Panchayat D4, District D</td>
+                                        <td>External Agency</td>
+                                        <td>12-Jan-2026</td>
+                                        <td><span class="badge badge-danger">Non-Compliant</span></td>
+                                        <td><span class="badge badge-success">Completed</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewInspection('INS-2025-004')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>INS-2025-005</strong></td>
+                                        <td><span class="badge badge-primary">Routine</span></td>
+                                        <td>MGNREGA</td>
+                                        <td>Panchayat E5, District E</td>
+                                        <td>Meena Sharma</td>
+                                        <td>18-Jan-2026</td>
+                                        <td><span class="badge badge-info">Scheduled</span></td>
+                                        <td><span class="badge badge-info">Scheduled</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewInspection('INS-2025-005')">View</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="text-gray">Showing 1-5 of 1,847 records</span>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-sm btn-outline">Previous</button>
+                                <button class="btn btn-sm btn-primary">1</button>
+                                <button class="btn btn-sm btn-outline">2</button>
+                                <button class="btn btn-sm btn-outline">3</button>
+                                <button class="btn btn-sm btn-outline">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Inspection Modal -->
+    <div id="inspectionModal" class="modal-overlay">
+        <div class="modal" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3 class="modal-title">New Inspection Report</h3>
+                <button class="modal-close" onclick="closeModal('inspectionModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <form id="inspectionForm">
+                    <h4 style="margin-bottom: 1rem; color: var(--gray-700);">Inspection Details</h4>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Inspection Type</label>
+                            <select class="form-control form-select" name="type" required>
+                                <option value="">Select Type</option>
+                                <option value="routine">Routine Inspection</option>
+                                <option value="surprise">Surprise Inspection</option>
+                                <option value="third-party">Third-party Verification</option>
+                                <option value="mobile">Mobile Inspection</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Inspection Date</label>
+                            <input type="date" class="form-control" name="date" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Scheme</label>
+                        <select class="form-control form-select" name="scheme" required>
+                            <option value="">Select Scheme</option>
+                            <option value="mgnrega">MGNREGA</option>
+                            <option value="pmay">PMAY</option>
+                            <option value="sbm">Swachh Bharat Mission</option>
+                            <option value="pmgsy">PMGSY</option>
+                        </select>
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem; color: var(--gray-700);">Location Details</h4>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">District</label>
+                            <select class="form-control form-select" name="district" required>
+                                <option value="">Select District</option>
+                                <option value="dist1">District A</option>
+                                <option value="dist2">District B</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Block</label>
+                            <select class="form-control form-select" name="block" required>
+                                <option value="">Select Block</option>
+                                <option value="block1">Block 1</option>
+                                <option value="block2">Block 2</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Panchayat</label>
+                        <select class="form-control form-select" name="panchayat" required>
+                            <option value="">Select Panchayat</option>
+                            <option value="panch1">Panchayat 1</option>
+                            <option value="panch2">Panchayat 2</option>
+                        </select>
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem; color: var(--gray-700);">Inspector Information</h4>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Inspector Name</label>
+                            <input type="text" class="form-control" name="inspector_name" placeholder="Enter inspector name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Inspector ID</label>
+                            <input type="text" class="form-control" name="inspector_id" placeholder="Enter inspector ID" required>
+                        </div>
+                    </div>
+                    
+                    <h4 style="margin: 1.5rem 0 1rem; color: var(--gray-700);">Inspection Findings</h4>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Compliance Status</label>
+                        <select class="form-control form-select" name="compliance" required>
+                            <option value="">Select Status</option>
+                            <option value="compliant">Fully Compliant</option>
+                            <option value="partial">Partially Compliant</option>
+                            <option value="non-compliant">Non-Compliant</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Observations</label>
+                        <textarea class="form-control" name="observations" rows="4" placeholder="Enter detailed observations" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Recommendations</label>
+                        <textarea class="form-control" name="recommendations" rows="3" placeholder="Enter recommendations"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Upload Photos/Documents</label>
+                        <input type="file" class="form-control" name="documents" multiple accept="image/*,.pdf">
+                        <small class="text-gray">Upload inspection photos and supporting documents</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">GPS Coordinates</label>
+                        <div class="form-row">
+                            <input type="text" class="form-control" name="latitude" placeholder="Latitude">
+                            <input type="text" class="form-control" name="longitude" placeholder="Longitude">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('inspectionModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitInspection()">Submit Report</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../../static/js/main.js"></script>
+    <script>
+    function viewInspection(id) {
+        SchemeMonitoring.showToast('Viewing inspection: ' + id, 'info');
+    }
+
+    function submitInspection() {
+        if (SchemeMonitoring.validateForm('inspectionForm')) {
+            SchemeMonitoring.showToast('Inspection report submitted successfully!', 'success');
+            closeModal('inspectionModal');
+            SchemeMonitoring.clearForm('inspectionForm');
+        } else {
+            SchemeMonitoring.showToast('Please fill all required fields', 'error');
+        }
+    }
+    </script>
+</body>
+</html>

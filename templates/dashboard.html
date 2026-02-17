@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Scheme Monitoring System - Comprehensive monitoring and management platform">
+    <title>Dashboard - Scheme Monitoring System</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="../static/css/components.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"><div class="sidebar-logo-icon">&#128202;</div><div class="sidebar-logo-text"><h1>Scheme Monitoring System</h1></div></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <div class="nav-item">
+                        <a href="dashboard.html" class="nav-link active">
+                            <span class="nav-icon">🏠</span>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Financial Monitoring</div>
+                    <div class="nav-item">
+                        <a href="financial/fund_allocation.html" class="nav-link">
+                            <span class="nav-icon">💰</span>
+                            <span>Fund Allocation & Release</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="financial/expenditure.html" class="nav-link">
+                            <span class="nav-icon">📉</span>
+                            <span>Expenditure (Panchayat-wise)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="financial/uc_generation.html" class="nav-link">
+                            <span class="nav-icon">📄</span>
+                            <span>UC Generation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="financial/pfms_status.html" class="nav-link">
+                            <span class="nav-icon">🏦</span>
+                            <span>PFMS / Treasury Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Beneficiary Management</div>
+                    <div class="nav-item">
+                        <a href="beneficiary/registration.html" class="nav-link">
+                            <span class="nav-icon">👥</span>
+                            <span>Registration & Validation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="beneficiary/category_coverage.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span>Category-wise Coverage</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="beneficiary/benefit_delivery.html" class="nav-link">
+                            <span class="nav-icon">🚚</span>
+                            <span>Benefit Delivery Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Inspection & Verification</div>
+                    <div class="nav-item">
+                        <a href="inspection/field_inspection.html" class="nav-link">
+                            <span class="nav-icon">🔎</span>
+                            <span>Field Inspection</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="inspection/mobile_reports.html" class="nav-link">
+                            <span class="nav-icon">📱</span>
+                            <span>Mobile Inspection Reports</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="inspection/third_party_verification.html" class="nav-link">
+                            <span class="nav-icon">✅</span>
+                            <span>3rd Party Verification</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Reports & MIS</div>
+                    <div class="nav-item">
+                        <a href="reports/mis_reports.html" class="nav-link">
+                            <span class="nav-icon">📑</span>
+                            <span>MIS Reports (M/Q/Y)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="reports/physical_financial.html" class="nav-link">
+                            <span class="nav-icon">📈</span>
+                            <span>Physical vs Financial</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div class="header-left" style="gap: 1.5rem;">
+                    <button class="menu-toggle" onclick="toggleSidebar()" style="color: #1a237e;">☰</button>
+                    <div class="header-branding"><span class="header-gov-text">Government of Odisha</span><h2 class="header-title-text">Scheme Monitoring System</h2></div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="header-search" style="background: #f8f9fa; border: 1px solid #dee2e6; position: relative;">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" id="globalSearchInput" placeholder="Search schemes, files..." style="background: transparent;"><div class="search-results-dropdown" id="searchResultsDropdown"></div>
+                    </div>
+                    <div class="header-notifications">
+                        <button class="notification-btn" id="notificationBtn" style="color: #1a237e;">🔔<span class="notification-badge">5</span></button>
+                        <div class="notification-dropdown" id="notificationDropdown">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                <button class="mark-read-btn">Mark all as read</button>
+                            </div>
+                            <div class="notification-list">
+                                <div class="notification-item unread">
+                                    <div class="notification-icon">📝</div>
+                                    <div class="notification-content">
+                                        <p><strong>New UC Generated</strong><br>Bhubaneswar Block submitted UC for ₹5L.</p>
+                                        <span class="notification-time">2 mins ago</span>
+                                    </div>
+                                </div>
+                                <div class="notification-item unread">
+                                    <div class="notification-icon">💰</div>
+                                    <div class="notification-content">
+                                        <p><strong>Fund Released</strong><br>₹2.5 Cr released for Rural Housing Scheme.</p>
+                                        <span class="notification-time">1 hour ago</span>
+                                    </div>
+                                </div>
+                                <div class="notification-item">
+                                    <div class="notification-icon">⚠️</div>
+                                    <div class="notification-content">
+                                        <p><strong>Pending Inspection</strong><br>Cuttack District inspection overdue by 3 days.</p>
+                                        <span class="notification-time">5 hours ago</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="notification-footer">
+                                <a href="#" class="view-all-btn">View All Notifications</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-profile" style="border-left: 1px solid #dee2e6; padding-left: 1rem;">
+                        <div class="user-avatar" style="background: #1a237e; color: white;">AU</div>
+                        <div class="user-info">
+                            <h4 style="color: #333;">Admin User</h4>
+                            <p>State Nodal Officer</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="page-content">
+                <div class="page-header">
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-description">Overview of all scheme monitoring activities</p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Physical Progress</span>
+                            <div class="stat-icon">🏗️</div>
+                        </div>
+                        <div class="stat-value">84.5%</div>
+                        <div class="stat-footer">
+                            <span class="stat-change positive">↑ 12%</span>
+                            <span class="text-gray">Projects Completed</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card success">
+                        <div class="stat-header">
+                            <span class="stat-label">Financial Utilization</span>
+                            <div class="stat-icon">💰</div>
+                        </div>
+                        <div class="stat-value">₹1,875 Cr</div>
+                        <div class="stat-footer">
+                            <span class="stat-change positive">76.5%</span>
+                            <span class="text-gray">of Allocated Funds</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card warning">
+                        <div class="stat-header">
+                            <span class="stat-label">Pending UCs</span>
+                            <div class="stat-icon">📄</div>
+                        </div>
+                        <div class="stat-value">142</div>
+                        <div class="stat-footer">
+                            <span class="stat-change negative">↓ 5.2%</span>
+                            <span class="text-gray">Needs Attention</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card danger">
+                        <div class="stat-header">
+                            <span class="stat-label">Beneficiaries Covered</span>
+                            <div class="stat-icon">👥</div>
+                        </div>
+                        <div class="stat-value">1,24,567</div>
+                        <div class="stat-footer">
+                            <span class="stat-change positive">↑ 5.8%</span>
+                            <span class="text-gray">Scheme Saturation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Grid -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Scheme Performance Overview</h3>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-sm btn-outline">Monthly</button>
+                                <button class="btn btn-sm btn-primary">Quarterly</button>
+                                <button class="btn btn-sm btn-outline">Annual</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div style="height: 300px; display: flex; align-items: center; justify-content: center; background: var(--gray-50); border-radius: var(--border-radius);">
+                                <!-- Simple CSS Bar Chart -->
+                                <div style="width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: space-around; padding-top: 2rem;">
+                                    <div style="text-align: center; width: 10%;">
+                                        <div style="height: 120px; background: var(--primary-light); border-radius: 4px 4px 0 0; margin: 0 auto; width: 60%; position: relative;" title="₹450 Cr"></div>
+                                        <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--gray-600);">Jan</div>
+                                    </div>
+                                    <div style="text-align: center; width: 10%;">
+                                        <div style="height: 180px; background: var(--primary-color); border-radius: 4px 4px 0 0; margin: 0 auto; width: 60%; position: relative;" title="₹620 Cr"></div>
+                                        <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--gray-600);">Feb</div>
+                                    </div>
+                                    <div style="text-align: center; width: 10%;">
+                                        <div style="height: 150px; background: var(--primary-light); border-radius: 4px 4px 0 0; margin: 0 auto; width: 60%; position: relative;" title="₹510 Cr"></div>
+                                        <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--gray-600);">Mar</div>
+                                    </div>
+                                    <div style="text-align: center; width: 10%;">
+                                        <div style="height: 200px; background: var(--primary-dark); border-radius: 4px 4px 0 0; margin: 0 auto; width: 60%; position: relative;" title="₹780 Cr"></div>
+                                        <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--gray-600);">Apr</div>
+                                    </div>
+                                    <div style="text-align: center; width: 10%;">
+                                        <div style="height: 160px; background: var(--primary-light); border-radius: 4px 4px 0 0; margin: 0 auto; width: 60%; position: relative;" title="₹540 Cr"></div>
+                                        <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--gray-600);">May</div>
+                                    </div>
+                                    <div style="text-align: center; width: 10%;">
+                                        <div style="height: 220px; background: var(--secondary-color); border-radius: 4px 4px 0 0; margin: 0 auto; width: 60%; position: relative;" title="₹890 Cr"></div>
+                                        <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--gray-600);">Jun</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Quick Actions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                <button class="btn btn-primary" onclick="window.location.href='financial/fund_allocation.html'">💰 Allocate Funds</button>
+                                <button class="btn btn-success" onclick="window.location.href='beneficiary/registration.html'">👥 Register Beneficiary</button>
+                                <button class="btn btn-outline" onclick="window.location.href='inspection/field_inspection.html'">🔎 New Inspection</button>
+                                <button class="btn btn-outline" onclick="window.location.href='reports/mis_reports.html'">📊 View Reports</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- District-wise Performance -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">District-wise Performance</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-sm btn-outline" onclick="SchemeMonitoring.exportTableToCSV('districtTable', 'district-performance.csv')">📥 Export CSV</button>
+                            <button class="btn btn-sm btn-outline" onclick="SchemeMonitoring.exportToPDF('districtTable')">📄 Export PDF</button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-container">
+                            <table class="table" id="districtTable">
+                                <thead>
+                                    <tr>
+                                        <th>District</th>
+                                        <th>Total Schemes</th>
+                                        <th>Allocated (₹ Cr)</th>
+                                        <th>Utilized (₹ Cr)</th>
+                                        <th>Utilization %</th>
+                                        <th>Beneficiaries</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>District A</strong></td>
+                                        <td>45</td>
+                                        <td>450</td>
+                                        <td>385</td>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <div class="progress" style="flex: 1;">
+                                                    <div class="progress-bar success" style="width: 85.5%"></div>
+                                                </div>
+                                                <span style="font-size: 0.875rem; font-weight: 600;">85.5%</span>
+                                            </div>
+                                        </td>
+                                        <td>25,430</td>
+                                        <td><span class="badge badge-success">On Track</span></td>
+                                        <td><button class="btn btn-sm btn-outline" onclick="viewDistrict('District A')">View</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>District B</strong></td>
+                                        <td>38</td>
+                                        <td>380</td>
+                                        <td>295</td>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <div class="progress" style="flex: 1;">
+                                                    <div class="progress-bar success" style="width: 77.6%"></div>
+                                                </div>
+                                                <span style="font-size: 0.875rem; font-weight: 600;">77.6%</span>
+                                            </div>
+                                        </td>
+                                        <td>18,765</td>
+                                        <td><span class="badge badge-success">On Track</span></td>
+                                        <td><button class="btn btn-sm btn-outline" onclick="viewDistrict('District B')">View</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>District C</strong></td>
+                                        <td>52</td>
+                                        <td>520</td>
+                                        <td>350</td>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <div class="progress" style="flex: 1;">
+                                                    <div class="progress-bar warning" style="width: 67.3%"></div>
+                                                </div>
+                                                <span style="font-size: 0.875rem; font-weight: 600;">67.3%</span>
+                                            </div>
+                                        </td>
+                                        <td>32,145</td>
+                                        <td><span class="badge badge-warning">Needs Attention</span></td>
+                                        <td><button class="btn btn-sm btn-outline" onclick="viewDistrict('District C')">View</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="../static/js/main.js"></script>
+    <script>
+        function viewDistrict(districtName) {
+            SchemeMonitoring.showToast(`Loading data for ${districtName}...`, 'info');
+            setTimeout(() => {
+                window.location.href = 'financial/expenditure.html';
+            }, 800);
+        }
+    </script>
+</body>
+</html>

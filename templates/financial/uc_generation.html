@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="UC Generation - Scheme Monitoring System">
+    <title>UC Generation - Scheme Monitoring System</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../../static/css/main.css">
+    <link rel="stylesheet" href="../../static/css/components.css">
+    <link rel="stylesheet" href="../../static/css/modal.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"><div class="sidebar-logo-icon">&#128202;</div><div class="sidebar-logo-text"><h1>Scheme Monitoring System</h1></div></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <div class="nav-item">
+                        <a href="../dashboard.html" class="nav-link">
+                            <span class="nav-icon">🏠</span>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Financial Monitoring</div>
+                    <div class="nav-item">
+                        <a href="fund_allocation.html" class="nav-link">
+                            <span class="nav-icon">💰</span>
+                            <span>Fund Allocation & Release</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="expenditure.html" class="nav-link">
+                            <span class="nav-icon">📉</span>
+                            <span>Expenditure (Panchayat-wise)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="uc_generation.html" class="nav-link active">
+                            <span class="nav-icon">📄</span>
+                            <span>UC Generation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="pfms_status.html" class="nav-link">
+                            <span class="nav-icon">🏦</span>
+                            <span>PFMS / Treasury Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Beneficiary Management</div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/registration.html" class="nav-link">
+                            <span class="nav-icon">👥</span>
+                            <span>Registration & Validation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/category_coverage.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span>Category-wise Coverage</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/benefit_delivery.html" class="nav-link">
+                            <span class="nav-icon">🚚</span>
+                            <span>Benefit Delivery Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Inspection & Verification</div>
+                    <div class="nav-item">
+                        <a href="../inspection/field_inspection.html" class="nav-link">
+                            <span class="nav-icon">🔎</span>
+                            <span>Field Inspection</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../inspection/mobile_reports.html" class="nav-link">
+                            <span class="nav-icon">📱</span>
+                            <span>Mobile Inspection Reports</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../inspection/third_party_verification.html" class="nav-link">
+                            <span class="nav-icon">✅</span>
+                            <span>3rd Party Verification</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Reports & MIS</div>
+                    <div class="nav-item">
+                        <a href="../reports/mis_reports.html" class="nav-link">
+                            <span class="nav-icon">📑</span>
+                            <span>MIS Reports (M/Q/Y)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../reports/physical_financial.html" class="nav-link">
+                            <span class="nav-icon">📈</span>
+                            <span>Physical vs Financial</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div class="header-left" style="gap: 1.5rem;">
+                    <button class="menu-toggle" onclick="toggleSidebar()" style="color: #1a237e;">☰</button>
+                    <div class="header-branding"><span class="header-gov-text">Government of Odisha</span><h2 class="header-title-text">Scheme Monitoring System</h2></div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="header-search" style="background: #f8f9fa; border: 1px solid #dee2e6; position: relative;">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" id="globalSearchInput" placeholder="Search schemes, files..." style="background: transparent;"><div class="search-results-dropdown" id="searchResultsDropdown"></div>
+                    </div>
+                    <div class="header-notifications"><button class="notification-btn" id="notificationBtn" style="color: #1a237e;">🔔<span class="notification-badge">5</span></button><div class="notification-dropdown" id="notificationDropdown"><div class="notification-header"><h3>Notifications</h3><button class="mark-read-btn">Mark all as read</button></div><div class="notification-list"><div class="notification-item unread"><div class="notification-icon">📝</div><div class="notification-content"><p><strong>New UC Generated</strong><br>Bhubaneswar Block submitted UC for ₹5L.</p><span class="notification-time">2 mins ago</span></div></div><div class="notification-item unread"><div class="notification-icon">💰</div><div class="notification-content"><p><strong>Fund Released</strong><br>₹2.5 Cr released for Rural Housing Scheme.</p><span class="notification-time">1 hour ago</span></div></div><div class="notification-item"><div class="notification-icon">⚠️</div><div class="notification-content"><p><strong>Pending Inspection</strong><br>Cuttack District inspection overdue by 3 days.</p><span class="notification-time">5 hours ago</span></div></div></div><div class="notification-footer"><a href="#" class="view-all-btn">View All Notifications</a></div></div></div>
+                    <div class="user-profile" style="border-left: 1px solid #dee2e6; padding-left: 1rem;">
+                        <div class="user-avatar" style="background: #1a237e; color: white;">AU</div>
+                        <div class="user-info">
+                            <h4 style="color: #333;">Admin User</h4>
+                            <p>State Nodal Officer</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="page-content">
+                <div class="page-header">
+                    <h1 class="page-title">Utilization Certificate (UC) Generation</h1>
+                    <p class="page-description">Generate and manage UCs for allocated funds</p>
+                </div>
+
+                <!-- Workflow Steps Indicator -->
+                <div class="card mb-3" style="background: linear-gradient(to right, #f8f9fa 0%, #ffffff 100%); border: 2px solid #e0e0e0;">
+                    <div class="card-body" style="padding: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; position: relative;">
+                            <!-- Progress Line -->
+                            <div style="position: absolute; top: 24px; left: 10%; right: 10%; height: 3px; background: linear-gradient(to right, #4caf50 0%, #4caf50 33%, #2196f3 33%, #2196f3 66%, #e0e0e0 66%, #e0e0e0 100%); z-index: 0;"></div>
+                            
+                            <!-- Step 1 -->
+                            <div style="flex: 1; text-align: center; position: relative; z-index: 1;">
+                                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #4caf50, #66bb6a); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; color: white; font-weight: 700; box-shadow: 0 4px 12px rgba(76,175,80,0.3);">
+                                    ✓
+                                </div>
+                                <div style="font-weight: 600; font-size: 0.875rem; margin-bottom: 0.25rem;">Data Entry</div>
+                                <div style="font-size: 0.75rem; color: var(--gray-600);">1,098 Completed</div>
+                            </div>
+                            
+                            <!-- Step 2 -->
+                            <div style="flex: 1; text-align: center; position: relative; z-index: 1;">
+                                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #2196f3, #42a5f5); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; color: white; font-weight: 700; box-shadow: 0 4px 12px rgba(33,150,243,0.3);">
+                                    2
+                                </div>
+                                <div style="font-weight: 600; font-size: 0.875rem; margin-bottom: 0.25rem;">Verification</div>
+                                <div style="font-size: 0.75rem; color: var(--gray-600);">87 In Progress</div>
+                            </div>
+                            
+                            <!-- Step 3 -->
+                            <div style="flex: 1; text-align: center; position: relative; z-index: 1;">
+                                <div style="width: 48px; height: 48px; background: #e0e0e0; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; color: var(--gray-600); font-weight: 700;">
+                                    3
+                                </div>
+                                <div style="font-weight: 600; font-size: 0.875rem; margin-bottom: 0.25rem;">Approval</div>
+                                <div style="font-size: 0.75rem; color: var(--gray-600);">Awaiting</div>
+                            </div>
+                            
+                            <!-- Step 4 -->
+                            <div style="flex: 1; text-align: center; position: relative; z-index: 1;">
+                                <div style="width: 48px; height: 48px; background: #e0e0e0; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; color: var(--gray-600); font-weight: 700;">
+                                    4
+                                </div>
+                                <div style="font-weight: 600; font-size: 0.875rem; margin-bottom: 0.25rem;">Generation</div>
+                                <div style="font-size: 0.75rem; color: var(--gray-600);">Final Step</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- UC Statistics Summary -->
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                    <div class="card" style="background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%); border-left: 4px solid #2196f3;">
+                        <div class="card-body" style="padding: 1.25rem; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 700; color: #2196f3; margin-bottom: 0.5rem;">1,247</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-700); font-weight: 500;">Total UCs Generated</div>
+                            <div style="margin-top: 0.5rem; font-size: 0.75rem; color: #4caf50;">↑ 12% This Quarter</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%); border-left: 4px solid #ff9800;">
+                        <div class="card-body" style="padding: 1.25rem; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 700; color: #ff9800; margin-bottom: 0.5rem;">87</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-700); font-weight: 500;">Pending Approval</div>
+                            <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--gray-600);">Awaiting Verification</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%); border-left: 4px solid #4caf50;">
+                        <div class="card-body" style="padding: 1.25rem; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 700; color: #4caf50; margin-bottom: 0.5rem;">88.1%</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-700); font-weight: 500;">Approval Rate</div>
+                            <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--gray-600);">1,098 Approved</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%); border-left: 4px solid #f44336;">
+                        <div class="card-body" style="padding: 1.25rem; text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 700; color: #f44336; margin-bottom: 0.5rem;">62</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-700); font-weight: 500;">Rejected</div>
+                            <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--gray-600);">Requires Revision</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Generate New UC Section -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Generate New UC</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Scheme *</label>
+                                <select class="form-control form-select" id="ucScheme" required>
+                                    <option value="">Select Scheme</option>
+                                    <option value="scheme1">MGNREGA</option>
+                                    <option value="scheme2">PMAY</option>
+                                    <option value="scheme3">Swachh Bharat Mission</option>
+                                    <option value="scheme4">PMGSY</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">District *</label>
+                                <select class="form-control form-select" id="ucDistrict" required>
+                                    <option value="">Select District</option>
+                                    <option value="dist1">Khordha</option>
+                                    <option value="dist2">Cuttack</option>
+                                    <option value="dist3">Puri</option>
+                                    <option value="dist4">Ganjam</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Block *</label>
+                                <select class="form-control form-select" id="ucBlock" required>
+                                    <option value="">Select Block</option>
+                                    <option value="block1">Bhubaneswar</option>
+                                    <option value="block2">Jatni</option>
+                                    <option value="block3">Balipatna</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Amount Utilized (₹) *</label>
+                                <input type="number" class="form-control" id="ucAmount" placeholder="Enter amount" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Period *</label>
+                                <select class="form-control form-select" id="ucPeriod" required>
+                                    <option value="">Select Period</option>
+                                    <option value="q1-2025">Q1 2025-26</option>
+                                    <option value="q2-2025">Q2 2025-26</option>
+                                    <option value="q3-2025">Q3 2025-26</option>
+                                    <option value="q4-2025">Q4 2025-26</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="display: flex; align-items: flex-end;">
+                                <button class="btn btn-primary" onclick="generateUC()">
+                                    📄 Generate UC
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Scheme</label>
+                                <select class="form-control form-select" id="filterScheme">
+                                    <option value="">All Schemes</option>
+                                    <option value="scheme1">MGNREGA</option>
+                                    <option value="scheme2">PMAY</option>
+                                    <option value="scheme3">Swachh Bharat Mission</option>
+                                    <option value="scheme4">PMGSY</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">District</label>
+                                <select class="form-control form-select" id="filterDistrict">
+                                    <option value="">All Districts</option>
+                                    <option value="dist1">Khordha</option>
+                                    <option value="dist2">Cuttack</option>
+                                    <option value="dist3">Puri</option>
+                                    <option value="dist4">Ganjam</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Status</label>
+                                <select class="form-control form-select" id="filterStatus">
+                                    <option value="">All Status</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="approved">Approved</option>
+                                    <option value="rejected">Rejected</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Financial Year</label>
+                                <select class="form-control form-select" id="filterFY">
+                                    <option value="2025-26">2025-26</option>
+                                    <option value="2024-25">2024-25</option>
+                                    <option value="2023-24">2023-24</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- UC Records Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">UC Records</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-sm btn-outline" onclick="exportTableToCSV('ucTable', 'uc-records.csv')">
+                                📥 Export CSV
+                            </button>
+                            <button class="btn btn-sm btn-outline" onclick="SchemeMonitoring.exportToExcel('ucTable')">
+                                📊 Export Excel
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-container">
+                            <table class="table" id="ucTable">
+                                <thead>
+                                    <tr>
+                                        <th>UC Number</th>
+                                        <th>Scheme Name</th>
+                                        <th>District</th>
+                                        <th>Block</th>
+                                        <th>Amount (₹)</th>
+                                        <th>Period</th>
+                                        <th>Generated On</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge badge-outline">UC-2025-1247</span></td>
+                                        <td>MGNREGA</td>
+                                        <td>Khordha</td>
+                                        <td>Bhubaneswar</td>
+                                        <td><strong>₹12,50,000</strong></td>
+                                        <td>Q4 2025-26</td>
+                                        <td>16-Feb-2026</td>
+                                        <td><span class="badge badge-success">Approved</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewUC('UC-2025-1247')">View</button>
+                                            <button class="btn btn-sm btn-outline" onclick="downloadUC('UC-2025-1247')">📥 Download</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-outline">UC-2025-1246</span></td>
+                                        <td>PMAY</td>
+                                        <td>Cuttack</td>
+                                        <td>Cuttack Sadar</td>
+                                        <td><strong>₹8,75,000</strong></td>
+                                        <td>Q4 2025-26</td>
+                                        <td>15-Feb-2026</td>
+                                        <td><span class="badge badge-warning">Pending</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewUC('UC-2025-1246')">View</button>
+                                            <button class="btn btn-sm btn-outline" onclick="downloadUC('UC-2025-1246')">📥 Download</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-outline">UC-2025-1245</span></td>
+                                        <td>Swachh Bharat Mission</td>
+                                        <td>Puri</td>
+                                        <td>Puri Sadar</td>
+                                        <td><strong>₹5,25,000</strong></td>
+                                        <td>Q3 2025-26</td>
+                                        <td>14-Feb-2026</td>
+                                        <td><span class="badge badge-success">Approved</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewUC('UC-2025-1245')">View</button>
+                                            <button class="btn btn-sm btn-outline" onclick="downloadUC('UC-2025-1245')">📥 Download</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-outline">UC-2025-1244</span></td>
+                                        <td>PMGSY</td>
+                                        <td>Ganjam</td>
+                                        <td>Berhampur</td>
+                                        <td><strong>₹15,00,000</strong></td>
+                                        <td>Q3 2025-26</td>
+                                        <td>13-Feb-2026</td>
+                                        <td><span class="badge badge-danger">Rejected</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewUC('UC-2025-1244')">View</button>
+                                            <button class="btn btn-sm btn-primary" onclick="reviseUC('UC-2025-1244')">Revise</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-outline">UC-2025-1243</span></td>
+                                        <td>MGNREGA</td>
+                                        <td>Khordha</td>
+                                        <td>Jatni</td>
+                                        <td><strong>₹9,50,000</strong></td>
+                                        <td>Q3 2025-26</td>
+                                        <td>12-Feb-2026</td>
+                                        <td><span class="badge badge-warning">Pending</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewUC('UC-2025-1243')">View</button>
+                                            <button class="btn btn-sm btn-outline" onclick="downloadUC('UC-2025-1243')">📥 Download</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="../../static/js/main.js"></script>
+    <script src="../../static/js/modal.js"></script>
+</body>
+</html>

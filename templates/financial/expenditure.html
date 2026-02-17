@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Expenditure Monitoring - Scheme Monitoring System">
+    <title>Expenditure Monitoring - Scheme Monitoring System</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../../static/css/main.css">
+    <link rel="stylesheet" href="../../static/css/components.css">
+    <link rel="stylesheet" href="../../static/css/modal.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"><div class="sidebar-logo-icon">&#128202;</div><div class="sidebar-logo-text"><h1>Scheme Monitoring System</h1></div></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <div class="nav-item">
+                        <a href="../dashboard.html" class="nav-link">
+                            <span class="nav-icon">🏠</span>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Financial Monitoring</div>
+                    <div class="nav-item">
+                        <a href="fund_allocation.html" class="nav-link">
+                            <span class="nav-icon">💰</span>
+                            <span>Fund Allocation & Release</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="expenditure.html" class="nav-link active">
+                            <span class="nav-icon">📉</span>
+                            <span>Expenditure (Panchayat-wise)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="uc_generation.html" class="nav-link">
+                            <span class="nav-icon">📄</span>
+                            <span>UC Generation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="pfms_status.html" class="nav-link">
+                            <span class="nav-icon">🏦</span>
+                            <span>PFMS / Treasury Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Beneficiary Management</div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/registration.html" class="nav-link">
+                            <span class="nav-icon">👥</span>
+                            <span>Registration & Validation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/category_coverage.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span>Category-wise Coverage</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/benefit_delivery.html" class="nav-link">
+                            <span class="nav-icon">🚚</span>
+                            <span>Benefit Delivery Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Inspection & Verification</div>
+                    <div class="nav-item">
+                        <a href="../inspection/field_inspection.html" class="nav-link">
+                            <span class="nav-icon">🔎</span>
+                            <span>Field Inspection</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../inspection/mobile_reports.html" class="nav-link">
+                            <span class="nav-icon">📱</span>
+                            <span>Mobile Inspection Reports</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../inspection/third_party_verification.html" class="nav-link">
+                            <span class="nav-icon">✅</span>
+                            <span>3rd Party Verification</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Reports & MIS</div>
+                    <div class="nav-item">
+                        <a href="../reports/mis_reports.html" class="nav-link">
+                            <span class="nav-icon">📑</span>
+                            <span>MIS Reports (M/Q/Y)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../reports/physical_financial.html" class="nav-link">
+                            <span class="nav-icon">📈</span>
+                            <span>Physical vs Financial</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div class="header-left" style="gap: 1.5rem;">
+                    <button class="menu-toggle" onclick="toggleSidebar()" style="color: #1a237e;">☰</button>
+                    <div class="header-branding"><span class="header-gov-text">Government of Odisha</span><h2 class="header-title-text">Scheme Monitoring System</h2></div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="header-search" style="background: #f8f9fa; border: 1px solid #dee2e6; position: relative;">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" id="globalSearchInput" placeholder="Search schemes, files..." style="background: transparent;"><div class="search-results-dropdown" id="searchResultsDropdown"></div>
+                    </div>
+                    <div class="header-notifications"><button class="notification-btn" id="notificationBtn" style="color: #1a237e;">🔔<span class="notification-badge">5</span></button><div class="notification-dropdown" id="notificationDropdown"><div class="notification-header"><h3>Notifications</h3><button class="mark-read-btn">Mark all as read</button></div><div class="notification-list"><div class="notification-item unread"><div class="notification-icon">📝</div><div class="notification-content"><p><strong>New UC Generated</strong><br>Bhubaneswar Block submitted UC for ₹5L.</p><span class="notification-time">2 mins ago</span></div></div><div class="notification-item unread"><div class="notification-icon">💰</div><div class="notification-content"><p><strong>Fund Released</strong><br>₹2.5 Cr released for Rural Housing Scheme.</p><span class="notification-time">1 hour ago</span></div></div><div class="notification-item"><div class="notification-icon">⚠️</div><div class="notification-content"><p><strong>Pending Inspection</strong><br>Cuttack District inspection overdue by 3 days.</p><span class="notification-time">5 hours ago</span></div></div></div><div class="notification-footer"><a href="#" class="view-all-btn">View All Notifications</a></div></div></div>
+                    <div class="user-profile" style="border-left: 1px solid #dee2e6; padding-left: 1rem;">
+                        <div class="user-avatar" style="background: #1a237e; color: white;">AU</div>
+                        <div class="user-info">
+                            <h4 style="color: #333;">Admin User</h4>
+                            <p>State Nodal Officer</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="page-content">
+                <div class="page-header">
+                    <h1 class="page-title">Expenditure Monitoring</h1>
+                    <p class="page-description">Track scheme-wise and Panchayat-wise expenditure</p>
+                </div>
+
+
+                <!-- Government-Style Summary Banner -->
+                <div class="card mb-3" style="background: linear-gradient(135deg, #1a237e 0%, #283593 100%); color: white; border: none;">
+                    <div class="card-body" style="padding: 2rem;">
+                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; align-items: center;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                    <div style="width: 56px; height: 56px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                                        📉
+                                    </div>
+                                    <div>
+                                        <h2 style="margin: 0; font-size: 1.5rem; font-weight: 700; color: white;">Expenditure Monitoring</h2>
+                                        <p style="margin: 0.25rem 0 0 0; opacity: 0.9; font-size: 0.875rem;">Panchayat-wise Financial Tracking System</p>
+                                    </div>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.15); padding: 0.75rem 1rem; border-radius: 8px; backdrop-filter: blur(10px);">
+                                    <p style="margin: 0; font-size: 0.875rem; opacity: 0.95;">
+                                        <strong>Financial Year 2025-26</strong> • Last Updated: 17-Feb-2026 15:00
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div style="text-align: center; border-left: 2px solid rgba(255,255,255,0.2); padding-left: 1.5rem;">
+                                <div style="font-size: 2rem; font-weight: 700; margin-bottom: 0.25rem;">₹1,875 Cr</div>
+                                <div style="font-size: 0.875rem; opacity: 0.9;">Total Expenditure</div>
+                                <div style="margin-top: 0.5rem; font-size: 0.75rem; background: rgba(76,175,80,0.3); display: inline-block; padding: 0.25rem 0.75rem; border-radius: 12px;">
+                                    ↑ 8.5% vs Q3
+                                </div>
+                            </div>
+                            
+                            <div style="text-align: center; border-left: 2px solid rgba(255,255,255,0.2); padding-left: 1.5rem;">
+                                <div style="font-size: 2rem; font-weight: 700; margin-bottom: 0.25rem;">6,234</div>
+                                <div style="font-size: 0.875rem; opacity: 0.9;">Active Panchayats</div>
+                                <div style="margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.8;">
+                                    Across 30 Districts
+                                </div>
+                            </div>
+                            
+                            <div style="text-align: center; border-left: 2px solid rgba(255,255,255,0.2); padding-left: 1.5rem;">
+                                <div style="font-size: 2rem; font-weight: 700; margin-bottom: 0.25rem;">₹125 Cr</div>
+                                <div style="font-size: 0.875rem; opacity: 0.9;">Pending Bills</div>
+                                <div style="margin-top: 0.5rem; font-size: 0.75rem; background: rgba(255,152,0,0.3); display: inline-block; padding: 0.25rem 0.75rem; border-radius: 12px;">
+                                    Requires Action
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats Row -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                    <div class="card" style="border-left: 4px solid #4caf50;">
+                        <div class="card-body" style="padding: 1.25rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Scheme-wise Average</div>
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: #4caf50;">₹7.6 Cr</div>
+                                </div>
+                                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #4caf50, #66bb6a); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white;">
+                                    📊
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="border-left: 4px solid #2196f3;">
+                        <div class="card-body" style="padding: 1.25rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Utilization Rate</div>
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: #2196f3;">76.5%</div>
+                                </div>
+                                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #2196f3, #42a5f5); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white;">
+                                    📈
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="border-left: 4px solid #ff9800;">
+                        <div class="card-body" style="padding: 1.25rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Approval Pending</div>
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: #ff9800;">247</div>
+                                </div>
+                                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #ff9800, #ffa726); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white;">
+                                    ⏳
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Scheme</label>
+                                <select class="form-control form-select" id="schemeFilter">
+                                    <option value="">All Schemes</option>
+                                    <option value="scheme1">MGNREGA</option>
+                                    <option value="scheme2">PMAY</option>
+                                    <option value="scheme3">Swachh Bharat Mission</option>
+                                    <option value="scheme4">PMGSY</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">District</label>
+                                <select class="form-control form-select" id="districtFilter">
+                                    <option value="">All Districts</option>
+                                    <option value="dist1">Khordha</option>
+                                    <option value="dist2">Cuttack</option>
+                                    <option value="dist3">Puri</option>
+                                    <option value="dist4">Ganjam</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Block</label>
+                                <select class="form-control form-select" id="blockFilter">
+                                    <option value="">All Blocks</option>
+                                    <option value="block1">Bhubaneswar</option>
+                                    <option value="block2">Jatni</option>
+                                    <option value="block3">Balipatna</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Panchayat</label>
+                                <select class="form-control form-select" id="panchayatFilter">
+                                    <option value="">All Panchayats</option>
+                                    <option value="p1">Panchayat 1</option>
+                                    <option value="p2">Panchayat 2</option>
+                                    <option value="p3">Panchayat 3</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Financial Year</label>
+                                <select class="form-control form-select" id="fyFilter">
+                                    <option value="2025-26">2025-26</option>
+                                    <option value="2024-25">2024-25</option>
+                                    <option value="2023-24">2023-24</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expenditure Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Expenditure Records (Panchayat-wise)</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-sm btn-outline" onclick="exportTableToCSV('expenditureTable', 'expenditure.csv')">
+                                📥 Export CSV
+                            </button>
+                            <button class="btn btn-sm btn-outline" onclick="SchemeMonitoring.exportToExcel('expenditureTable')">
+                                📊 Export Excel
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-container">
+                            <table class="table" id="expenditureTable">
+                                <thead>
+                                    <tr>
+                                        <th>Expenditure ID</th>
+                                        <th>Scheme Name</th>
+                                        <th>District</th>
+                                        <th>Block</th>
+                                        <th>Panchayat</th>
+                                        <th>Amount (₹)</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge badge-outline">EXP-2025-001</span></td>
+                                        <td>MGNREGA</td>
+                                        <td>Khordha</td>
+                                        <td>Bhubaneswar</td>
+                                        <td>Patia GP</td>
+                                        <td><strong>₹12,50,000</strong></td>
+                                        <td>15-Feb-2026</td>
+                                        <td><span class="badge badge-success">Approved</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewExpenditure('EXP-2025-001')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-outline">EXP-2025-002</span></td>
+                                        <td>PMAY</td>
+                                        <td>Cuttack</td>
+                                        <td>Cuttack Sadar</td>
+                                        <td>Badambadi GP</td>
+                                        <td><strong>₹8,75,000</strong></td>
+                                        <td>14-Feb-2026</td>
+                                        <td><span class="badge badge-warning">Pending</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewExpenditure('EXP-2025-002')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-outline">EXP-2025-003</span></td>
+                                        <td>Swachh Bharat Mission</td>
+                                        <td>Puri</td>
+                                        <td>Puri Sadar</td>
+                                        <td>Baliguali GP</td>
+                                        <td><strong>₹5,25,000</strong></td>
+                                        <td>13-Feb-2026</td>
+                                        <td><span class="badge badge-success">Approved</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewExpenditure('EXP-2025-003')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-outline">EXP-2025-004</span></td>
+                                        <td>PMGSY</td>
+                                        <td>Ganjam</td>
+                                        <td>Berhampur</td>
+                                        <td>Gopalpur GP</td>
+                                        <td><strong>₹15,00,000</strong></td>
+                                        <td>12-Feb-2026</td>
+                                        <td><span class="badge badge-success">Approved</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewExpenditure('EXP-2025-004')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-outline">EXP-2025-005</span></td>
+                                        <td>MGNREGA</td>
+                                        <td>Khordha</td>
+                                        <td>Jatni</td>
+                                        <td>Kantabada GP</td>
+                                        <td><strong>₹9,50,000</strong></td>
+                                        <td>11-Feb-2026</td>
+                                        <td><span class="badge badge-danger">Rejected</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewExpenditure('EXP-2025-005')">View</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- Scripts -->
+    <script src="../../static/js/main.js"></script>
+    <script src="../../static/js/modal.js"></script>
+    <script>
+    // Expenditure data
+    const expenditures = {
+        'EXP-2025-001': {
+            id: 'EXP-2025-001',
+            scheme: 'MGNREGA',
+            district: 'Khordha',
+            block: 'Bhubaneswar',
+            panchayat: 'Patia GP',
+            amount: '₹12,50,000',
+            allocated: '₹15,00,000',
+            utilized: '₹12,50,000',
+            utilization: '83.3%',
+            date: '15-Feb-2026',
+            status: 'Approved',
+            purpose: 'Rural road construction and maintenance work',
+            beneficiaries: 285,
+            workDays: 4560,
+            approvedBy: 'Block Development Officer',
+            verifiedBy: 'District Rural Development Agency',
+            paymentMode: 'Direct Bank Transfer',
+            breakdown: [
+                { category: 'Labour Wages', amount: '₹8,50,000', percentage: '68%' },
+                { category: 'Materials', amount: '₹2,75,000', percentage: '22%' },
+                { category: 'Administrative', amount: '₹1,25,000', percentage: '10%' }
+            ]
+        },
+        'EXP-2025-002': {
+            id: 'EXP-2025-002',
+            scheme: 'PMAY',
+            district: 'Cuttack',
+            block: 'Cuttack Sadar',
+            panchayat: 'Badambadi GP',
+            amount: '₹18,75,000',
+            allocated: '₹20,00,000',
+            utilized: '₹18,75,000',
+            utilization: '93.8%',
+            date: '14-Feb-2026',
+            status: 'Approved',
+            purpose: 'Construction of affordable housing units',
+            beneficiaries: 25,
+            workDays: 0,
+            approvedBy: 'Executive Engineer',
+            verifiedBy: 'Technical Sanction Authority',
+            paymentMode: 'Contractor Payment',
+            breakdown: [
+                { category: 'Construction', amount: '₹15,00,000', percentage: '80%' },
+                { category: 'Materials', amount: '₹2,81,250', percentage: '15%' },
+                { category: 'Supervision', amount: '₹93,750', percentage: '5%' }
+            ]
+        },
+        'EXP-2025-003': {
+            id: 'EXP-2025-003',
+            scheme: 'Swachh Bharat Mission',
+            district: 'Puri',
+            block: 'Satyabadi',
+            panchayat: 'Sukal GP',
+            amount: '₹7,25,000',
+            allocated: '₹10,00,000',
+            utilized: '₹7,25,000',
+            utilization: '72.5%',
+            date: '13-Feb-2026',
+            status: 'Pending',
+            purpose: 'Construction of individual household latrines',
+            beneficiaries: 145,
+            workDays: 0,
+            approvedBy: 'Pending Review',
+            verifiedBy: 'Pending Verification',
+            paymentMode: 'Beneficiary Account',
+            breakdown: [
+                { category: 'Construction Material', amount: '₹5,80,000', percentage: '80%' },
+                { category: 'Labour', amount: '₹1,08,750', percentage: '15%' },
+                { category: 'Monitoring', amount: '₹36,250', percentage: '5%' }
+            ]
+        },
+        'EXP-2025-004': {
+            id: 'EXP-2025-004',
+            scheme: 'PMGSY',
+            district: 'Ganjam',
+            block: 'Berhampur',
+            panchayat: 'Gopalpur GP',
+            amount: '₹35,50,000',
+            allocated: '₹40,00,000',
+            utilized: '₹35,50,000',
+            utilization: '88.8%',
+            date: '12-Feb-2026',
+            status: 'Approved',
+            purpose: 'Rural road construction and upgradation',
+            beneficiaries: 850,
+            workDays: 0,
+            approvedBy: 'Chief Engineer (Rural Works)',
+            verifiedBy: 'State Quality Monitors',
+            paymentMode: 'Contractor Payment',
+            breakdown: [
+                { category: 'Road Construction', amount: '₹28,40,000', percentage: '80%' },
+                { category: 'Quality Testing', amount: '₹3,55,000', percentage: '10%' },
+                { category: 'Supervision', amount: '₹3,55,000', percentage: '10%' }
+            ]
+        },
+        'EXP-2025-005': {
+            id: 'EXP-2025-005',
+            scheme: 'MGNREGA',
+            district: 'Khordha',
+            block: 'Jatni',
+            panchayat: 'Kantabada GP',
+            amount: '₹9,50,000',
+            allocated: '₹12,00,000',
+            utilized: '₹9,50,000',
+            utilization: '79.2%',
+            date: '11-Feb-2026',
+            status: 'Rejected',
+            purpose: 'Water conservation work',
+            beneficiaries: 0,
+            workDays: 0,
+            approvedBy: 'N/A',
+            verifiedBy: 'N/A',
+            paymentMode: 'N/A',
+            breakdown: []
+        }
+    };
+    
+    function viewExpenditure(id) {
+        const exp = expenditures[id];
+        if (!exp) {
+            SchemeMonitoring.showToast('Expenditure record not found', 'error');
+            return;
+        }
+        
+        const statusClass = exp.status === 'Approved' ? 'success' : 
+                           exp.status === 'Pending' ? 'warning' : 'danger';
+        
+        let breakdownHTML = '';
+        if (exp.breakdown && exp.breakdown.length > 0) {
+            breakdownHTML = `
+                <div style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                    <h4 style="margin: 0 0 1rem 0; color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 0.5rem;">Expenditure Breakdown</h4>
+                    ${exp.breakdown.map(item => `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: #f5f5f5; border-radius: 6px; margin-bottom: 0.5rem;">
+                            <div>
+                                <div style="font-weight: 600; color: #333;">${item.category}</div>
+                                <div style="font-size: 0.875rem; color: #666;">${item.percentage} of total</div>
+                            </div>
+                            <div style="font-size: 1.25rem; font-weight: 700; color: #1a237e;">${item.amount}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        const content = `
+            <div style="background: linear-gradient(135deg, #1a237e 0%, #283593 100%); color: white; padding: 1.5rem; border-radius: 0; margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h3 style="margin: 0 0 0.5rem 0; font-size: 1.5rem;">${exp.id}</h3>
+                        <p style="margin: 0; opacity: 0.9;">${exp.scheme}</p>
+                    </div>
+                    <div>
+                        <span class="badge badge-${statusClass}" style="font-size: 1rem; padding: 0.5rem 1rem;">${exp.status}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                <div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; border-left: 4px solid #2196f3;">
+                    <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.25rem;">Utilized Amount</div>
+                    <div style="font-size: 1.25rem; font-weight: 700; color: #1a237e;">${exp.amount}</div>
+                </div>
+                <div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; border-left: 4px solid #4caf50;">
+                    <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.25rem;">Utilization Rate</div>
+                    <div style="font-size: 1.25rem; font-weight: 700; color: #1a237e;">${exp.utilization}</div>
+                </div>
+                <div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; border-left: 4px solid #ff9800;">
+                    <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.25rem;">Beneficiaries</div>
+                    <div style="font-size: 1.25rem; font-weight: 700; color: #1a237e;">${exp.beneficiaries}</div>
+                </div>
+            </div>
+            
+            <div style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                <h4 style="margin: 0 0 1rem 0; color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 0.5rem;">Location Details</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <div style="font-size: 0.875rem; color: #666;">District</div>
+                        <div style="font-weight: 600; color: #333;">${exp.district}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.875rem; color: #666;">Block</div>
+                        <div style="font-weight: 600; color: #333;">${exp.block}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.875rem; color: #666;">Panchayat</div>
+                        <div style="font-weight: 600; color: #333;">${exp.panchayat}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.875rem; color: #666;">Expenditure Date</div>
+                        <div style="font-weight: 600; color: #333;">${exp.date}</div>
+                    </div>
+                </div>
+            </div>
+            
+            ${breakdownHTML}
+            
+            <div style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem;">
+                <h4 style="margin: 0 0 1rem 0; color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 0.5rem;">Project Details</h4>
+                <div style="margin-bottom: 1rem;">
+                    <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.25rem;">Purpose</div>
+                    <div style="color: #333; line-height: 1.6;">${exp.purpose}</div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    ${exp.workDays > 0 ? `
+                    <div>
+                        <div style="font-size: 0.875rem; color: #666;">Work Days Generated</div>
+                        <div style="font-weight: 600; color: #333;">${exp.workDays} days</div>
+                    </div>
+                    ` : ''}
+                    <div>
+                        <div style="font-size: 0.875rem; color: #666;">Payment Mode</div>
+                        <div style="font-weight: 600; color: #333;">${exp.paymentMode}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem;">
+                <h4 style="margin: 0 0 1rem 0; color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 0.5rem;">Approval Chain</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <div style="font-size: 0.875rem; color: #666;">Approved By</div>
+                        <div style="font-weight: 600; color: #333;">${exp.approvedBy}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.875rem; color: #666;">Verified By</div>
+                        <div style="font-weight: 600; color: #333;">${exp.verifiedBy}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('expenditureDetailsContent').innerHTML = content;
+        openModal('viewExpenditureModal');
+    }
+    
+    function downloadExpenditurePDF() {
+        SchemeMonitoring.showToast('PDF download started...', 'success');
+        // In production, generate and download PDF
+    }
+    </script>
+    <!-- View Expenditure Modal -->
+    <div id="viewExpenditureModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Expenditure Details</h2>
+                <button class="modal-close" onclick="closeModal('viewExpenditureModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="expenditureDetailsContent">
+                    <!-- Content will be populated dynamically -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('viewExpenditureModal')">Close</button>
+                <button class="btn btn-primary" onclick="downloadExpenditurePDF()">Download PDF</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

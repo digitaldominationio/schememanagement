@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PFMS & Treasury Status - Scheme Monitoring System">
+    <title>PFMS Status - Scheme Monitoring System</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../../static/css/main.css">
+    <link rel="stylesheet" href="../../static/css/components.css">
+    <link rel="stylesheet" href="../../static/css/modal.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"><div class="sidebar-logo-icon">&#128202;</div><div class="sidebar-logo-text"><h1>Scheme Monitoring System</h1></div></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <div class="nav-item">
+                        <a href="../dashboard.html" class="nav-link">
+                            <span class="nav-icon">🏠</span>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Financial Monitoring</div>
+                    <div class="nav-item">
+                        <a href="fund_allocation.html" class="nav-link">
+                            <span class="nav-icon">💰</span>
+                            <span>Fund Allocation & Release</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="expenditure.html" class="nav-link">
+                            <span class="nav-icon">📉</span>
+                            <span>Expenditure (Panchayat-wise)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="uc_generation.html" class="nav-link">
+                            <span class="nav-icon">📄</span>
+                            <span>UC Generation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="pfms_status.html" class="nav-link active">
+                            <span class="nav-icon">🏦</span>
+                            <span>PFMS / Treasury Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Beneficiary Management</div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/registration.html" class="nav-link">
+                            <span class="nav-icon">👥</span>
+                            <span>Registration & Validation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/category_coverage.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span>Category-wise Coverage</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/benefit_delivery.html" class="nav-link">
+                            <span class="nav-icon">🚚</span>
+                            <span>Benefit Delivery Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Inspection & Verification</div>
+                    <div class="nav-item">
+                        <a href="../inspection/field_inspection.html" class="nav-link">
+                            <span class="nav-icon">🔎</span>
+                            <span>Field Inspection</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../inspection/mobile_reports.html" class="nav-link">
+                            <span class="nav-icon">📱</span>
+                            <span>Mobile Inspection Reports</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../inspection/third_party_verification.html" class="nav-link">
+                            <span class="nav-icon">✅</span>
+                            <span>3rd Party Verification</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Reports & MIS</div>
+                    <div class="nav-item">
+                        <a href="../reports/mis_reports.html" class="nav-link">
+                            <span class="nav-icon">📑</span>
+                            <span>MIS Reports (M/Q/Y)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../reports/physical_financial.html" class="nav-link">
+                            <span class="nav-icon">📈</span>
+                            <span>Physical vs Financial</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div class="header-left" style="gap: 1.5rem;">
+                    <button class="menu-toggle" onclick="toggleSidebar()" style="color: #1a237e;">☰</button>
+                    <div class="header-branding"><span class="header-gov-text">Government of Odisha</span><h2 class="header-title-text">Scheme Monitoring System</h2></div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="header-search" style="background: #f8f9fa; border: 1px solid #dee2e6; position: relative;">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" id="globalSearchInput" placeholder="Search schemes, files..." style="background: transparent;"><div class="search-results-dropdown" id="searchResultsDropdown"></div>
+                    </div>
+                    <div class="header-notifications"><button class="notification-btn" id="notificationBtn" style="color: #1a237e;">🔔<span class="notification-badge">5</span></button><div class="notification-dropdown" id="notificationDropdown"><div class="notification-header"><h3>Notifications</h3><button class="mark-read-btn">Mark all as read</button></div><div class="notification-list"><div class="notification-item unread"><div class="notification-icon">📝</div><div class="notification-content"><p><strong>New UC Generated</strong><br>Bhubaneswar Block submitted UC for ₹5L.</p><span class="notification-time">2 mins ago</span></div></div><div class="notification-item unread"><div class="notification-icon">💰</div><div class="notification-content"><p><strong>Fund Released</strong><br>₹2.5 Cr released for Rural Housing Scheme.</p><span class="notification-time">1 hour ago</span></div></div><div class="notification-item"><div class="notification-icon">⚠️</div><div class="notification-content"><p><strong>Pending Inspection</strong><br>Cuttack District inspection overdue by 3 days.</p><span class="notification-time">5 hours ago</span></div></div></div><div class="notification-footer"><a href="#" class="view-all-btn">View All Notifications</a></div></div></div>
+                    <div class="user-profile" style="border-left: 1px solid #dee2e6; padding-left: 1rem;">
+                        <div class="user-avatar" style="background: #1a237e; color: white;">AU</div>
+                        <div class="user-info">
+                            <h4 style="color: #333;">Admin User</h4>
+                            <p>State Nodal Officer</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <div class="page-header">
+                    <h1 class="page-title">PFMS & Treasury Integration Status</h1>
+                    <p class="page-description">Monitor payment status and treasury integration</p>
+                </div>
+
+                <!-- PFMS Live Status Dashboard -->
+                <div class="card mb-3" style="background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%); color: white; border: none;">
+                    <div class="card-body" style="padding: 2rem;">
+                        <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 2rem; align-items: center;">
+                            <!-- Status Indicator -->
+                            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                                <div style="position: relative;">
+                                    <div style="width: 72px; height: 72px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; backdrop-filter: blur(10px);">
+                                        🏦
+                                    </div>
+                                    <div style="position: absolute; top: -4px; right: -4px; width: 24px; height: 24px; background: #4caf50; border-radius: 50%; border: 3px solid white; animation: pulse 2s infinite;"></div>
+                                </div>
+                                <div>
+                                    <h2 style="margin: 0; font-size: 1.75rem; font-weight: 700; color: white;">PFMS Integration</h2>
+                                    <p style="margin: 0.5rem 0 0 0; opacity: 0.95; font-size: 1rem;">
+                                        <span style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(76,175,80,0.3); padding: 0.25rem 0.75rem; border-radius: 16px; font-weight: 600;">
+                                            <span style="width: 8px; height: 8px; background: #4caf50; border-radius: 50%; animation: blink 1.5s infinite;"></span>
+                                            LIVE & CONNECTED
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <!-- Sync Information -->
+                            <div style="background: rgba(255,255,255,0.15); padding: 1.25rem; border-radius: 12px; backdrop-filter: blur(10px);">
+                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; text-align: center;">
+                                    <div>
+                                        <div style="font-size: 0.75rem; opacity: 0.9; margin-bottom: 0.25rem;">Last Sync</div>
+                                        <div style="font-size: 1rem; font-weight: 700;">17-Feb-2026</div>
+                                        <div style="font-size: 0.875rem; opacity: 0.85;">14:55:30</div>
+                                    </div>
+                                    <div style="border-left: 1px solid rgba(255,255,255,0.2); border-right: 1px solid rgba(255,255,255,0.2);">
+                                        <div style="font-size: 0.75rem; opacity: 0.9; margin-bottom: 0.25rem;">Success Rate</div>
+                                        <div style="font-size: 1.5rem; font-weight: 700;">95.2%</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 0.75rem; opacity: 0.9; margin-bottom: 0.25rem;">Uptime</div>
+                                        <div style="font-size: 1rem; font-weight: 700;">99.8%</div>
+                                        <div style="font-size: 0.875rem; opacity: 0.85;">Last 30 days</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Sync Button -->
+                            <button class="btn" onclick="syncPFMS()" style="background: white; color: #2e7d32; font-weight: 600; padding: 0.875rem 2rem; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                                🔄 Sync Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transaction Status Grid -->
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                    <!-- Total Transactions -->
+                    <div class="card" style="border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                        <div class="card-body" style="padding: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                                <div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Total Transactions</div>
+                                    <div style="font-size: 2.25rem; font-weight: 700; color: #1a237e;">3,456</div>
+                                </div>
+                                <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #e8eaf6, #c5cae9); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem;">
+                                    💳
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem;">
+                                <span style="color: #4caf50; font-weight: 600;">↑ 15%</span>
+                                <span style="color: var(--gray-600);">This month</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Successful -->
+                    <div class="card" style="border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.08); background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);">
+                        <div class="card-body" style="padding: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                                <div>
+                                    <div style="font-size: 0.75rem; color: #2e7d32; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; font-weight: 600;">Successful</div>
+                                    <div style="font-size: 2.25rem; font-weight: 700; color: #4caf50;">3,289</div>
+                                </div>
+                                <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #4caf50, #66bb6a); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; color: white; box-shadow: 0 4px 12px rgba(76,175,80,0.3);">
+                                    ✓
+                                </div>
+                            </div>
+                            <div style="font-size: 0.875rem; color: #2e7d32; font-weight: 600;">
+                                95.2% Success Rate
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pending -->
+                    <div class="card" style="border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.08); background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);">
+                        <div class="card-body" style="padding: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                                <div>
+                                    <div style="font-size: 0.75rem; color: #e65100; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; font-weight: 600;">Pending</div>
+                                    <div style="font-size: 2.25rem; font-weight: 700; color: #ff9800;">124</div>
+                                </div>
+                                <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #ff9800, #ffa726); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; color: white; box-shadow: 0 4px 12px rgba(255,152,0,0.3);">
+                                    ⏳
+                                </div>
+                            </div>
+                            <div style="font-size: 0.875rem; color: #e65100; font-weight: 600;">
+                                In Processing
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Failed -->
+                    <div class="card" style="border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.08); background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);">
+                        <div class="card-body" style="padding: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                                <div>
+                                    <div style="font-size: 0.75rem; color: #c62828; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; font-weight: 600;">Failed</div>
+                                    <div style="font-size: 2.25rem; font-weight: 700; color: #f44336;">43</div>
+                                </div>
+                                <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #f44336, #e57373); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; color: white; box-shadow: 0 4px 12px rgba(244,67,54,0.3);">
+                                    ✗
+                                </div>
+                            </div>
+                            <div style="font-size: 0.875rem; color: #c62828; font-weight: 600;">
+                                Requires Attention
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+                    @keyframes pulse {
+                        0%, 100% { transform: scale(1); opacity: 1; }
+                        50% { transform: scale(1.1); opacity: 0.8; }
+                    }
+                    @keyframes blink {
+                        0%, 100% { opacity: 1; }
+                        50% { opacity: 0.3; }
+                    }
+                </style>
+
+                <!-- Filters -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Scheme</label>
+                                <select class="form-control form-select" id="schemeFilter">
+                                    <option value="">All Schemes</option>
+                                    <option value="scheme1">MGNREGA</option>
+                                    <option value="scheme2">PMAY</option>
+                                    <option value="scheme3">Swachh Bharat Mission</option>
+                                    <option value="scheme4">PMGSY</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">District</label>
+                                <select class="form-control form-select" id="districtFilter">
+                                    <option value="">All Districts</option>
+                                    <option value="dist1">Khordha</option>
+                                    <option value="dist2">Cuttack</option>
+                                    <option value="dist3">Puri</option>
+                                    <option value="dist4">Ganjam</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Status</label>
+                                <select class="form-control form-select" id="statusFilter">
+                                    <option value="">All Status</option>
+                                    <option value="success">Successful</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="failed">Failed</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">From Date</label>
+                                <input type="date" class="form-control" id="fromDate" value="2026-02-01">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">To Date</label>
+                                <input type="date" class="form-control" id="toDate" value="2026-02-17">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PFMS Transaction Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">PFMS Transaction Records</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-sm btn-outline" onclick="exportTableToCSV('pfmsTable', 'pfms-transactions.csv')">
+                                📥 Export CSV
+                            </button>
+                            <button class="btn btn-sm btn-outline" onclick="SchemeMonitoring.exportToExcel('pfmsTable')">
+                                📊 Export Excel
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-container">
+                            <table class="table" id="pfmsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Transaction ID</th>
+                                        <th>Scheme Name</th>
+                                        <th>District</th>
+                                        <th>Block</th>
+                                        <th>Amount (₹)</th>
+                                        <th>PFMS Ref No.</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge badge-outline">TXN-2025-3456</span></td>
+                                        <td>MGNREGA</td>
+                                        <td>Khordha</td>
+                                        <td>Bhubaneswar</td>
+                                        <td><strong>₹12,50,000</strong></td>
+                                        <td>PFMS2025123456</td>
+                                        <td>17-Feb-2026 14:30</td>
+                                        <td><span class="badge badge-success">✓ Successful</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewTransaction('TXN-2025-3456')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-outline">TXN-2025-3455</span></td>
+                                        <td>PMAY</td>
+                                        <td>Cuttack</td>
+                                        <td>Cuttack Sadar</td>
+                                        <td><strong>₹8,75,000</strong></td>
+                                        <td>PFMS2025123455</td>
+                                        <td>17-Feb-2026 13:15</td>
+                                        <td><span class="badge badge-success">✓ Successful</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewTransaction('TXN-2025-3455')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-outline">TXN-2025-3454</span></td>
+                                        <td>Swachh Bharat Mission</td>
+                                        <td>Puri</td>
+                                        <td>Puri Sadar</td>
+                                        <td><strong>₹5,25,000</strong></td>
+                                        <td>-</td>
+                                        <td>17-Feb-2026 12:00</td>
+                                        <td><span class="badge badge-warning">⏳ Pending</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewTransaction('TXN-2025-3454')">View</button>
+                                            <button class="btn btn-sm btn-primary" onclick="retryTransaction('TXN-2025-3454')">Retry</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-outline">TXN-2025-3453</span></td>
+                                        <td>PMGSY</td>
+                                        <td>Ganjam</td>
+                                        <td>Berhampur</td>
+                                        <td><strong>₹15,00,000</strong></td>
+                                        <td>-</td>
+                                        <td>17-Feb-2026 11:30</td>
+                                        <td><span class="badge badge-danger">✗ Failed</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewTransaction('TXN-2025-3453')">View</button>
+                                            <button class="btn btn-sm btn-primary" onclick="retryTransaction('TXN-2025-3453')">Retry</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-outline">TXN-2025-3452</span></td>
+                                        <td>MGNREGA</td>
+                                        <td>Khordha</td>
+                                        <td>Jatni</td>
+                                        <td><strong>₹9,50,000</strong></td>
+                                        <td>PFMS2025123452</td>
+                                        <td>16-Feb-2026 16:45</td>
+                                        <td><span class="badge badge-success">✓ Successful</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewTransaction('TXN-2025-3452')">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-outline">TXN-2025-3451</span></td>
+                                        <td>PMAY</td>
+                                        <td>Puri</td>
+                                        <td>Satyabadi</td>
+                                        <td><strong>₹7,25,000</strong></td>
+                                        <td>PFMS2025123451</td>
+                                        <td>16-Feb-2026 15:20</td>
+                                        <td><span class="badge badge-success">✓ Successful</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline" onclick="viewTransaction('TXN-2025-3451')">View</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="../../static/js/main.js"></script>
+    <script src="../../static/js/modal.js"></script>
+</body>
+</html>

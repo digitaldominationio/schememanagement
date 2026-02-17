@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3rd Party Verification - Scheme Monitoring System</title>
+    <link rel="stylesheet" href="../../static/css/main.css">
+    <link rel="stylesheet" href="../../static/css/components.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"><div class="sidebar-logo-icon">&#128202;</div><div class="sidebar-logo-text"><h1>Scheme Monitoring System</h1></div></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <div class="nav-item">
+                        <a href="../dashboard.html" class="nav-link">
+                            <span class="nav-icon">🏠</span>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Financial Monitoring</div>
+                    <div class="nav-item">
+                        <a href="../financial/fund_allocation.html" class="nav-link">
+                            <span class="nav-icon">💰</span>
+                            <span>Fund Allocation & Release</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../financial/expenditure.html" class="nav-link">
+                            <span class="nav-icon">📉</span>
+                            <span>Expenditure (Panchayat-wise)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../financial/uc_generation.html" class="nav-link">
+                            <span class="nav-icon">📄</span>
+                            <span>UC Generation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../financial/pfms_status.html" class="nav-link">
+                            <span class="nav-icon">🏦</span>
+                            <span>PFMS / Treasury Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Beneficiary Management</div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/registration.html" class="nav-link">
+                            <span class="nav-icon">👥</span>
+                            <span>Registration & Validation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/category_coverage.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span>Category-wise Coverage</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../beneficiary/benefit_delivery.html" class="nav-link">
+                            <span class="nav-icon">🚚</span>
+                            <span>Benefit Delivery Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Inspection & Verification</div>
+                    <div class="nav-item">
+                        <a href="field_inspection.html" class="nav-link">
+                            <span class="nav-icon">🔎</span>
+                            <span>Field Inspection</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="mobile_reports.html" class="nav-link">
+                            <span class="nav-icon">📱</span>
+                            <span>Mobile Inspection Reports</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="third_party_verification.html" class="nav-link active">
+                            <span class="nav-icon">✅</span>
+                            <span>3rd Party Verification</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Reports & MIS</div>
+                    <div class="nav-item">
+                        <a href="../reports/mis_reports.html" class="nav-link">
+                            <span class="nav-icon">📑</span>
+                            <span>MIS Reports (M/Q/Y)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="../reports/physical_financial.html" class="nav-link">
+                            <span class="nav-icon">📈</span>
+                            <span>Physical vs Financial</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+             <header class="header">
+                <div class="header-left" style="gap: 1.5rem;">
+                    <button class="menu-toggle" onclick="toggleSidebar()" style="color: #1a237e;">☰</button>
+                    <div class="header-branding"><span class="header-gov-text">Government of Odisha</span><h2 class="header-title-text">Scheme Monitoring System</h2></div>
+                </div>
+                 <div class="header-right">
+                    <div class="header-search" style="background: #f8f9fa; border: 1px solid #dee2e6; position: relative;">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" id="globalSearchInput" placeholder="Search schemes, files..." style="background: transparent;"><div class="search-results-dropdown" id="searchResultsDropdown"></div>
+                    </div>
+                    <div class="header-notifications"><button class="notification-btn" id="notificationBtn" style="color: #1a237e;">🔔<span class="notification-badge">5</span></button><div class="notification-dropdown" id="notificationDropdown"><div class="notification-header"><h3>Notifications</h3><button class="mark-read-btn">Mark all as read</button></div><div class="notification-list"><div class="notification-item unread"><div class="notification-icon">📝</div><div class="notification-content"><p><strong>New UC Generated</strong><br>Bhubaneswar Block submitted UC for ₹5L.</p><span class="notification-time">2 mins ago</span></div></div><div class="notification-item unread"><div class="notification-icon">💰</div><div class="notification-content"><p><strong>Fund Released</strong><br>₹2.5 Cr released for Rural Housing Scheme.</p><span class="notification-time">1 hour ago</span></div></div><div class="notification-item"><div class="notification-icon">⚠️</div><div class="notification-content"><p><strong>Pending Inspection</strong><br>Cuttack District inspection overdue by 3 days.</p><span class="notification-time">5 hours ago</span></div></div></div><div class="notification-footer"><a href="#" class="view-all-btn">View All Notifications</a></div></div></div>
+                    <div class="user-profile" style="border-left: 1px solid #dee2e6; padding-left: 1rem;">
+                        <div class="user-avatar" style="background: #1a237e; color: white;">AU</div>
+                        <div class="user-info">
+                            <h4 style="color: #333;">Admin User</h4>
+                            <p>State Nodal Officer</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="page-content">
+                <!-- Page Header with Gradient -->
+                <div style="background: linear-gradient(135deg, #388e3c 0%, #4caf50 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; color: white;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h1 style="margin: 0 0 0.5rem 0; font-size: 2rem; font-weight: 700;">✅ 3rd Party Verification</h1>
+                            <p style="margin: 0; opacity: 0.95; font-size: 1.125rem;">Independent assessment and audit reports</p>
+                        </div>
+                        <button class="btn btn-light" style="background: white; color: #388e3c; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            <span style="margin-right: 0.5rem;">📋</span> Request New Audit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Verification Overview Stats -->
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div class="card" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border-left: 4px solid #4caf50;">
+                        <div class="card-body">
+                            <div style="color: #666; font-size: 0.875rem; margin-bottom: 0.5rem; font-weight: 600;">TOTAL AUDITS</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: #1a237e; margin-bottom: 0.25rem;">156</div>
+                            <div style="color: #4caf50; font-size: 0.875rem; font-weight: 600;">
+                                <span style="margin-right: 0.25rem;">✓</span> 142 Completed
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border-left: 4px solid #2196f3;">
+                        <div class="card-body">
+                            <div style="color: #666; font-size: 0.875rem; margin-bottom: 0.5rem; font-weight: 600;">IN PROGRESS</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: #1a237e; margin-bottom: 0.25rem;">14</div>
+                            <div style="color: #666; font-size: 0.875rem;">
+                                Ongoing verifications
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border-left: 4px solid #ff9800;">
+                        <div class="card-body">
+                            <div style="color: #666; font-size: 0.875rem; margin-bottom: 0.5rem; font-weight: 600;">COMPLIANCE RATE</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: #1a237e; margin-bottom: 0.25rem;">94.2%</div>
+                            <div style="color: #4caf50; font-size: 0.875rem; font-weight: 600;">
+                                <span style="margin-right: 0.25rem;">↑</span> +2.1% from last quarter
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border-left: 4px solid #9c27b0;">
+                        <div class="card-body">
+                            <div style="color: #666; font-size: 0.875rem; margin-bottom: 0.5rem; font-weight: 600;">AUDIT AGENCIES</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: #1a237e; margin-bottom: 0.25rem;">8</div>
+                            <div style="color: #666; font-size: 0.875rem;">
+                                Empaneled agencies
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Verification Status Timeline -->
+                <div class="card mb-3">
+                    <div class="card-header" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border-bottom: 2px solid #e0e0e0;">
+                        <h3 class="card-title" style="margin: 0;">Recent Verification Activities</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                            <!-- Activity 1 -->
+                            <div style="border-left: 4px solid #4caf50; padding-left: 1rem; background: #f1f8f4; padding: 1rem; border-radius: 8px;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                    <div style="font-weight: 600; color: #1a237e;">Housing Scheme Audit</div>
+                                    <span class="badge badge-success" style="font-size: 0.75rem;">Completed</span>
+                                </div>
+                                <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">
+                                    <div>🏢 ABC Audit Services</div>
+                                    <div>📍 Khordha District</div>
+                                    <div>📅 Completed: 10-Feb-2026</div>
+                                </div>
+                                <div style="font-size: 0.875rem; color: #4caf50; font-weight: 600;">
+                                    ✓ 98% Compliance Score
+                                </div>
+                            </div>
+
+                            <!-- Activity 2 -->
+                            <div style="border-left: 4px solid #2196f3; padding-left: 1rem; background: #e3f2fd; padding: 1rem; border-radius: 8px;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                    <div style="font-weight: 600; color: #1a237e;">Water Supply Verification</div>
+                                    <span class="badge badge-primary" style="font-size: 0.75rem;">In Progress</span>
+                                </div>
+                                <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">
+                                    <div>🏢 XYZ Consultants</div>
+                                    <div>📍 Cuttack District</div>
+                                    <div>📅 Started: 12-Feb-2026</div>
+                                </div>
+                                <div style="font-size: 0.875rem; color: #2196f3; font-weight: 600;">
+                                    ⟳ 67% Progress
+                                </div>
+                            </div>
+
+                            <!-- Activity 3 -->
+                            <div style="border-left: 4px solid #ff9800; padding-left: 1rem; background: #fff3e0; padding: 1rem; border-radius: 8px;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                                    <div style="font-weight: 600; color: #1a237e;">Road Construction Audit</div>
+                                    <span class="badge badge-warning" style="font-size: 0.75rem;">Scheduled</span>
+                                </div>
+                                <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">
+                                    <div>🏢 PQR Auditors</div>
+                                    <div>📍 Puri District</div>
+                                    <div>📅 Scheduled: 20-Feb-2026</div>
+                                </div>
+                                <div style="font-size: 0.875rem; color: #ff9800; font-weight: 600;">
+                                    ○ Awaiting Start
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Audit Agencies -->
+                <div class="card mb-3">
+                    <div class="card-header" style="background: #f8f9fa; border-bottom: 2px solid #e0e0e0;">
+                        <h3 class="card-title" style="margin: 0;">Empaneled Audit Agencies</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                            <!-- Agency 1 -->
+                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏢</div>
+                                <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">ABC Audit Services</div>
+                                <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Bhubaneswar</div>
+                                <div style="font-size: 0.75rem; color: #4caf50; font-weight: 600;">
+                                    ✓ 24 Audits Completed
+                                </div>
+                            </div>
+
+                            <!-- Agency 2 -->
+                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏢</div>
+                                <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">XYZ Consultants</div>
+                                <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Cuttack</div>
+                                <div style="font-size: 0.75rem; color: #4caf50; font-weight: 600;">
+                                    ✓ 18 Audits Completed
+                                </div>
+                            </div>
+
+                            <!-- Agency 3 -->
+                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏢</div>
+                                <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">PQR Auditors</div>
+                                <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Puri</div>
+                                <div style="font-size: 0.75rem; color: #4caf50; font-weight: 600;">
+                                    ✓ 21 Audits Completed
+                                </div>
+                            </div>
+
+                            <!-- Agency 4 -->
+                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏢</div>
+                                <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">LMN Associates</div>
+                                <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Ganjam</div>
+                                <div style="font-size: 0.75rem; color: #4caf50; font-weight: 600;">
+                                    ✓ 19 Audits Completed
+                                </div>
+                            </div>
+
+                            <!-- Agency 5 -->
+                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏢</div>
+                                <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">RST Verification</div>
+                                <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Balasore</div>
+                                <div style="font-size: 0.75rem; color: #4caf50; font-weight: 600;">
+                                    ✓ 16 Audits Completed
+                                </div>
+                            </div>
+
+                            <!-- Agency 6 -->
+                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏢</div>
+                                <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">UVW Inspections</div>
+                                <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Sambalpur</div>
+                                <div style="font-size: 0.75rem; color: #4caf50; font-weight: 600;">
+                                    ✓ 15 Audits Completed
+                                </div>
+                            </div>
+
+                            <!-- Agency 7 -->
+                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏢</div>
+                                <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">DEF Quality Check</div>
+                                <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Berhampur</div>
+                                <div style="font-size: 0.75rem; color: #4caf50; font-weight: 600;">
+                                    ✓ 14 Audits Completed
+                                </div>
+                            </div>
+
+                            <!-- Agency 8 -->
+                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏢</div>
+                                <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">GHI Compliance</div>
+                                <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Rourkela</div>
+                                <div style="font-size: 0.75rem; color: #4caf50; font-weight: 600;">
+                                    ✓ 15 Audits Completed
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Compliance Checklist -->
+                <div class="card">
+                    <div class="card-header" style="background: #f8f9fa; border-bottom: 2px solid #e0e0e0;">
+                        <h3 class="card-title" style="margin: 0;">Compliance Checklist</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                            <!-- Left Column -->
+                            <div>
+                                <div style="border-bottom: 1px solid #e0e0e0; padding: 1rem 0; display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">Financial Documentation</div>
+                                        <div style="font-size: 0.875rem; color: #666;">All financial records verified</div>
+                                    </div>
+                                    <span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">✓ Compliant</span>
+                                </div>
+
+                                <div style="border-bottom: 1px solid #e0e0e0; padding: 1rem 0; display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">Physical Verification</div>
+                                        <div style="font-size: 0.875rem; color: #666;">On-site inspection completed</div>
+                                    </div>
+                                    <span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">✓ Compliant</span>
+                                </div>
+
+                                <div style="border-bottom: 1px solid #e0e0e0; padding: 1rem 0; display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">Beneficiary Validation</div>
+                                        <div style="font-size: 0.875rem; color: #666;">Random sample verification</div>
+                                    </div>
+                                    <span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">✓ Compliant</span>
+                                </div>
+
+                                <div style="border-bottom: 1px solid #e0e0e0; padding: 1rem 0; display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">Quality Standards</div>
+                                        <div style="font-size: 0.875rem; color: #666;">Construction quality assessment</div>
+                                    </div>
+                                    <span class="badge badge-warning" style="font-size: 0.875rem; padding: 0.5rem 1rem;">⚠ Partial</span>
+                                </div>
+                            </div>
+
+                            <!-- Right Column -->
+                            <div>
+                                <div style="border-bottom: 1px solid #e0e0e0; padding: 1rem 0; display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">Procurement Process</div>
+                                        <div style="font-size: 0.875rem; color: #666;">Tender and procurement audit</div>
+                                    </div>
+                                    <span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">✓ Compliant</span>
+                                </div>
+
+                                <div style="border-bottom: 1px solid #e0e0e0; padding: 1rem 0; display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">Environmental Clearance</div>
+                                        <div style="font-size: 0.875rem; color: #666;">Environmental compliance check</div>
+                                    </div>
+                                    <span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">✓ Compliant</span>
+                                </div>
+
+                                <div style="border-bottom: 1px solid #e0e0e0; padding: 1rem 0; display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">Safety Protocols</div>
+                                        <div style="font-size: 0.875rem; color: #666;">Worker safety measures</div>
+                                    </div>
+                                    <span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">✓ Compliant</span>
+                                </div>
+
+                                <div style="border-bottom: 1px solid #e0e0e0; padding: 1rem 0; display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">Documentation Archive</div>
+                                        <div style="font-size: 0.875rem; color: #666;">Record keeping compliance</div>
+                                    </div>
+                                    <span class="badge badge-success" style="font-size: 0.875rem; padding: 0.5rem 1rem;">✓ Compliant</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="../../static/js/main.js"></script>
+</body>
+</html>
