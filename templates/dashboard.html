@@ -33,6 +33,18 @@
                             <span>Dashboard</span>
                         </a>
                     </div>
+                     <div class="nav-item">
+                        <a href="create_scheme.html" class="nav-link">
+                            <span class="nav-icon">&#10133;</span>
+                            <span>Create New Scheme</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="set_target.html" class="nav-link">
+                            <span class="nav-icon">&#127919;</span>
+                            <span>Set Target</span>
+                        </a>
+                    </div>
                 </div>
                 
                 <div class="nav-section">
@@ -188,9 +200,56 @@
             </header>
             
             <div class="page-content">
-                <div class="page-header">
-                    <h1 class="page-title">Dashboard</h1>
-                    <p class="page-description">Overview of all scheme monitoring activities</p>
+                <div class="page-header" style="flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h1 class="page-title">Dashboard</h1>
+                        <p class="page-description">Overview of all scheme monitoring activities</p>
+                    </div>
+                </div>
+
+                <!-- Filter Bar -->
+                <div id="dashboardFilterBar" style="background: white; border-radius: 10px; padding: 1rem 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #e8eaf6; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: #1a237e; font-weight: 600; font-size: 0.9rem;">
+                        <span>&#128269;</span> Filter By:
+                    </div>
+
+                    <!-- Scheme Filter (visible to all) -->
+                    <div style="display: flex; align-items: center; gap: 0.5rem; flex: 1; min-width: 200px;">
+                        <label style="font-size: 0.85rem; color: #555; white-space: nowrap; font-weight: 500;">Scheme:</label>
+                        <select id="filterScheme" class="form-control form-select" style="font-size: 0.875rem; padding: 0.4rem 0.75rem; border-color: #c5cae9;" onchange="applyDashboardFilter()">
+                            <option value="all">All Schemes</option>
+                            <option value="biju_pucca">Pradhanmatri Abash Yojna</option>
+                            <option value="kalia">Prdhanmatri Krushi Samrudhi</option>
+                            <option value="mission_shakti">Subhadra Yojna</option>
+                            <option value="mamata">Mamata Scheme</option>
+                            <option value="mo_kudia">Mo Kudia</option>
+                        </select>
+                    </div>
+
+                    <!-- District Filter (admin only) -->
+                    <div id="districtFilterWrapper" style="display: flex; align-items: center; gap: 0.5rem; flex: 1; min-width: 200px;">
+                        <label style="font-size: 0.85rem; color: #555; white-space: nowrap; font-weight: 500;">District:</label>
+                        <select id="filterDistrict" class="form-control form-select" style="font-size: 0.875rem; padding: 0.4rem 0.75rem; border-color: #c5cae9;" onchange="applyDashboardFilter()">
+                            <option value="all">All Districts</option>
+                            <option value="bhubaneswar">Bhubaneswar</option>
+                            <option value="cuttack">Cuttack</option>
+                            <option value="puri">Puri</option>
+                            <option value="ganjam">Ganjam</option>
+                            <option value="balasore">Balasore</option>
+                            <option value="sambalpur">Sambalpur</option>
+                            <option value="rourkela">Rourkela</option>
+                            <option value="angul">Angul</option>
+                            <option value="khordha">Khordha</option>
+                            <option value="mayurbhanj">Mayurbhanj</option>
+                        </select>
+                    </div>
+
+                    <!-- Active filter label -->
+                    <div id="activeFilterLabel" style="font-size: 0.8rem; color: #3949ab; background: #e8eaf6; padding: 4px 12px; border-radius: 20px; font-weight: 600; white-space: nowrap;">
+                        Showing: All Data
+                    </div>
+
+                    <button onclick="resetDashboardFilter()" style="font-size: 0.8rem; color: #666; background: none; border: 1px solid #ddd; border-radius: 6px; padding: 4px 12px; cursor: pointer; white-space: nowrap;">&#10006; Reset</button>
                 </div>
 
                 <!-- Stats Grid -->
@@ -198,11 +257,11 @@
                     <div class="stat-card">
                         <div class="stat-header">
                             <span class="stat-label">Physical Progress</span>
-                            <div class="stat-icon">🏗️</div>
+                            <div class="stat-icon">&#127959;&#65039;</div>
                         </div>
-                        <div class="stat-value">84.5%</div>
+                        <div class="stat-value" id="statPhysical">84.5%</div>
                         <div class="stat-footer">
-                            <span class="stat-change positive">↑ 12%</span>
+                            <span class="stat-change positive" id="statPhysicalChange">&#8593; 12%</span>
                             <span class="text-gray">Projects Completed</span>
                         </div>
                     </div>
@@ -210,11 +269,11 @@
                     <div class="stat-card success">
                         <div class="stat-header">
                             <span class="stat-label">Financial Utilization</span>
-                            <div class="stat-icon">💰</div>
+                            <div class="stat-icon">&#128176;</div>
                         </div>
-                        <div class="stat-value">₹1,875 Cr</div>
+                        <div class="stat-value" id="statFinancial">&#8377;1,875 Cr</div>
                         <div class="stat-footer">
-                            <span class="stat-change positive">76.5%</span>
+                            <span class="stat-change positive" id="statFinancialChange">76.5%</span>
                             <span class="text-gray">of Allocated Funds</span>
                         </div>
                     </div>
@@ -222,11 +281,11 @@
                     <div class="stat-card warning">
                         <div class="stat-header">
                             <span class="stat-label">Pending UCs</span>
-                            <div class="stat-icon">📄</div>
+                            <div class="stat-icon">&#128196;</div>
                         </div>
-                        <div class="stat-value">142</div>
+                        <div class="stat-value" id="statPendingUC">142</div>
                         <div class="stat-footer">
-                            <span class="stat-change negative">↓ 5.2%</span>
+                            <span class="stat-change negative" id="statPendingUCChange">&#8595; 5.2%</span>
                             <span class="text-gray">Needs Attention</span>
                         </div>
                     </div>
@@ -234,15 +293,16 @@
                     <div class="stat-card danger">
                         <div class="stat-header">
                             <span class="stat-label">Beneficiaries Covered</span>
-                            <div class="stat-icon">👥</div>
+                            <div class="stat-icon">&#128101;</div>
                         </div>
-                        <div class="stat-value">1,24,567</div>
+                        <div class="stat-value" id="statBeneficiaries">1,24,567</div>
                         <div class="stat-footer">
-                            <span class="stat-change positive">↑ 5.8%</span>
+                            <span class="stat-change positive" id="statBeneficiariesChange">&#8593; 5.8%</span>
                             <span class="text-gray">Scheme Saturation</span>
                         </div>
                     </div>
                 </div>
+
 
                 <!-- Main Content Grid -->
                 <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
@@ -449,6 +509,30 @@
                     </div>
                 </div>
 
+                <!-- Pending Approvals (Admin Only) -->
+                <div class="card mb-3 admin-only" id="pendingApprovalsCard" style="display: none; border-left: 4px solid #ff9800;">
+                    <div class="card-header">
+                        <h3 class="card-title" style="color: #e65100;">⏳ Pending Scheme Approvals</h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table" id="pendingApprovalsTable">
+                            <thead>
+                                <tr>
+                                    <th>Scheme Name</th>
+                                    <th>Submitted By</th>
+                                    <th>Budget</th>
+                                    <th>Districts</th>
+                                    <th>Submitted Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pendingApprovalsBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <!-- District-wise Performance -->
                 <div class="card admin-only"> <!-- Only Admin sees District Wise full table -->
                     <div class="card-header">
@@ -543,6 +627,102 @@
                 window.location.href = 'financial/expenditure.html';
             }, 800);
         }
+
+        // ─── Dashboard Filter Logic ───────────────────────────────────────────
+
+        // Mock data: keyed by scheme_district combination
+        // 'all_all' = default totals, 'scheme_all', 'all_district', 'scheme_district'
+        const filterData = {
+            'all_all':           { physical: '84.5%', physChange: '↑ 12%', financial: '₹1,875 Cr', finChange: '76.5%', uc: '142', ucChange: '↓ 5.2%', ben: '1,24,567', benChange: '↑ 5.8%' },
+            // By scheme only
+            'biju_pucca_all':    { physical: '78.2%', physChange: '↑ 8%',  financial: '₹480 Cr',   finChange: '72.1%', uc: '38',  ucChange: '↓ 3.1%', ben: '42,310',  benChange: '↑ 4.2%' },
+            'kalia_all':         { physical: '91.3%', physChange: '↑ 15%', financial: '₹620 Cr',   finChange: '88.4%', uc: '21',  ucChange: '↓ 7.5%', ben: '38,920',  benChange: '↑ 9.1%' },
+            'mission_shakti_all':{ physical: '82.0%', physChange: '↑ 10%', financial: '₹310 Cr',   finChange: '74.3%', uc: '44',  ucChange: '↓ 2.8%', ben: '28,140',  benChange: '↑ 6.3%' },
+            'mamata_all':        { physical: '70.5%', physChange: '↑ 5%',  financial: '₹215 Cr',   finChange: '65.0%', uc: '27',  ucChange: '↓ 1.9%', ben: '11,200',  benChange: '↑ 3.5%' },
+            'mo_kudia_all':      { physical: '88.9%', physChange: '↑ 18%', financial: '₹250 Cr',   finChange: '81.2%', uc: '12',  ucChange: '↓ 9.0%', ben: '3,997',   benChange: '↑ 7.2%' },
+            // By district only
+            'all_bhubaneswar':   { physical: '90.1%', physChange: '↑ 14%', financial: '₹310 Cr',   finChange: '82.3%', uc: '18',  ucChange: '↓ 6.1%', ben: '22,450',  benChange: '↑ 7.0%' },
+            'all_cuttack':       { physical: '85.4%', physChange: '↑ 11%', financial: '₹280 Cr',   finChange: '79.5%', uc: '24',  ucChange: '↓ 4.3%', ben: '19,870',  benChange: '↑ 5.5%' },
+            'all_puri':          { physical: '76.8%', physChange: '↑ 7%',  financial: '₹195 Cr',   finChange: '68.2%', uc: '31',  ucChange: '↓ 2.5%', ben: '14,320',  benChange: '↑ 4.1%' },
+            'all_ganjam':        { physical: '72.3%', physChange: '↑ 6%',  financial: '₹175 Cr',   finChange: '63.4%', uc: '36',  ucChange: '↓ 1.8%', ben: '16,540',  benChange: '↑ 3.8%' },
+            'all_balasore':      { physical: '80.5%', physChange: '↑ 9%',  financial: '₹145 Cr',   finChange: '71.0%', uc: '22',  ucChange: '↓ 3.5%', ben: '11,230',  benChange: '↑ 5.0%' },
+            'all_sambalpur':     { physical: '83.2%', physChange: '↑ 10%', financial: '₹160 Cr',   finChange: '74.8%', uc: '19',  ucChange: '↓ 4.0%', ben: '9,870',   benChange: '↑ 4.7%' },
+            'all_rourkela':      { physical: '87.6%', physChange: '↑ 13%', financial: '₹185 Cr',   finChange: '78.9%', uc: '14',  ucChange: '↓ 5.8%', ben: '8,450',   benChange: '↑ 6.2%' },
+            'all_angul':         { physical: '69.4%', physChange: '↑ 4%',  financial: '₹120 Cr',   finChange: '60.1%', uc: '28',  ucChange: '↓ 1.2%', ben: '7,320',   benChange: '↑ 2.9%' },
+            'all_khordha':       { physical: '88.0%', physChange: '↑ 14%', financial: '₹220 Cr',   finChange: '80.5%', uc: '16',  ucChange: '↓ 5.0%', ben: '18,900',  benChange: '↑ 6.8%' },
+            'all_mayurbhanj':    { physical: '74.1%', physChange: '↑ 6%',  financial: '₹135 Cr',   finChange: '66.7%', uc: '33',  ucChange: '↓ 2.0%', ben: '12,100',  benChange: '↑ 3.4%' },
+            // Scheme + District combinations (sample)
+            'biju_pucca_cuttack':{ physical: '80.3%', physChange: '↑ 9%',  financial: '₹95 Cr',    finChange: '74.5%', uc: '8',   ucChange: '↓ 4.0%', ben: '7,840',   benChange: '↑ 5.1%' },
+            'biju_pucca_puri':   { physical: '73.5%', physChange: '↑ 6%',  financial: '₹72 Cr',    finChange: '68.0%', uc: '11',  ucChange: '↓ 2.2%', ben: '5,620',   benChange: '↑ 3.7%' },
+            'kalia_ganjam':      { physical: '93.2%', physChange: '↑ 17%', financial: '₹140 Cr',   finChange: '91.0%', uc: '4',   ucChange: '↓ 8.5%', ben: '9,200',   benChange: '↑ 10.2%' },
+            'mission_shakti_bhubaneswar': { physical: '86.1%', physChange: '↑ 12%', financial: '₹68 Cr', finChange: '78.3%', uc: '7', ucChange: '↓ 3.5%', ben: '6,340', benChange: '↑ 7.0%' },
+        };
+
+        function applyDashboardFilter() {
+            const scheme = document.getElementById('filterScheme').value;
+            const district = document.getElementById('filterDistrict') ? document.getElementById('filterDistrict').value : 'all';
+
+            const key = `${scheme}_${district}`;
+            // Try exact key, then scheme_all, then all_district, then all_all
+            const data = filterData[key] || filterData[`${scheme}_all`] || filterData[`all_${district}`] || filterData['all_all'];
+
+            // Update stat cards
+            document.getElementById('statPhysical').textContent = data.physical;
+            document.getElementById('statPhysicalChange').textContent = data.physChange;
+            document.getElementById('statFinancial').textContent = data.financial;
+            document.getElementById('statFinancialChange').textContent = data.finChange;
+            document.getElementById('statPendingUC').textContent = data.uc;
+            document.getElementById('statPendingUCChange').textContent = data.ucChange;
+            document.getElementById('statBeneficiaries').textContent = data.ben;
+            document.getElementById('statBeneficiariesChange').textContent = data.benChange;
+
+            // Update label
+            const schemeLabel = document.getElementById('filterScheme').options[document.getElementById('filterScheme').selectedIndex].text;
+            const districtLabel = district !== 'all' && document.getElementById('filterDistrict')
+                ? document.getElementById('filterDistrict').options[document.getElementById('filterDistrict').selectedIndex].text
+                : null;
+
+            let labelText = 'Showing: ';
+            if (scheme === 'all' && district === 'all') {
+                labelText += 'All Data';
+            } else if (scheme !== 'all' && (district === 'all' || !districtLabel)) {
+                labelText += schemeLabel;
+            } else if (scheme === 'all' && districtLabel) {
+                labelText += districtLabel;
+            } else {
+                labelText += `${schemeLabel} · ${districtLabel}`;
+            }
+            document.getElementById('activeFilterLabel').textContent = labelText;
+
+            // Animate cards
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.style.transform = 'scale(0.97)';
+                card.style.transition = 'transform 0.15s ease';
+                setTimeout(() => { card.style.transform = 'scale(1)'; }, 150);
+            });
+        }
+
+        function resetDashboardFilter() {
+            document.getElementById('filterScheme').value = 'all';
+            if (document.getElementById('filterDistrict')) {
+                document.getElementById('filterDistrict').value = 'all';
+            }
+            applyDashboardFilter();
+        }
+
+        // Role-based visibility: hide district filter for non-admin users
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const user = SchemeMonitoring.AuthService ? SchemeMonitoring.AuthService.getCurrentUser() : null;
+                const isAdmin = !user || user.role === 'admin' || user.role === 'Admin';
+                if (!isAdmin) {
+                    const districtWrapper = document.getElementById('districtFilterWrapper');
+                    if (districtWrapper) districtWrapper.style.display = 'none';
+                }
+            } catch(e) {
+                // Default to showing both (admin view) if auth not available
+            }
+        });
     </script>
 </body>
 </html>

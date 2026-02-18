@@ -68,6 +68,46 @@ const SchemeService = {
         return JSON.parse(localStorage.getItem('schemes'));
     },
 
+    getSchemeById(id) {
+        const schemes = this.getAllSchemes();
+        return schemes.find(s => s.id === parseInt(id));
+    },
+
+    updateScheme(updatedScheme) {
+        const schemes = this.getAllSchemes();
+        const index = schemes.findIndex(s => s.id === updatedScheme.id);
+        if (index !== -1) {
+            schemes[index] = updatedScheme;
+            localStorage.setItem('schemes', JSON.stringify(schemes));
+            return true;
+        }
+        return false;
+    },
+
+    addGlobalTarget(schemeId, targetData) {
+        const schemes = this.getAllSchemes();
+        const schemeIndex = schemes.findIndex(s => s.id === parseInt(schemeId));
+        
+        if (schemeIndex !== -1) {
+            if (!schemes[schemeIndex].targets) {
+                schemes[schemeIndex].targets = [];
+            }
+            // Generate Target ID
+             const maxTargetId = schemes[schemeIndex].targets.reduce((max, t) => Math.max(max, t.id || 0), 0);
+             targetData.id = maxTargetId + 1;
+             targetData.createdAt = new Date().toISOString();
+
+            schemes[schemeIndex].targets.push(targetData);
+            
+            // Update total allocated if needed or specific logic
+            // schemes[schemeIndex].allocated += parseFloat(targetData.amount || 0);
+
+            localStorage.setItem('schemes', JSON.stringify(schemes));
+            return { success: true, target: targetData };
+        }
+        return { success: false, message: 'Scheme not found' };
+    },
+
     getUserSchemes(username) {
         const all = this.getAllSchemes();
         // Admins see all, Users see assigned
@@ -82,6 +122,58 @@ const SchemeService = {
             schemes[index].progress = progress;
             schemes[index].status = status;
             schemes[index].lastUpdated = new Date().toISOString();
+            localStorage.setItem('schemes', JSON.stringify(schemes));
+            return true;
+        }
+        return false;
+    },
+
+    addScheme(scheme) {
+        const schemes = this.getAllSchemes();
+        // Generate new ID
+        const maxId = schemes.reduce((max, s) => Math.max(max, s.id), 0);
+        scheme.id = maxId + 1;
+        
+        // Initialize targets/assignments array
+        scheme.targets = [];
+
+        // Status based on role
+        const currentUser = AuthService.getCurrentUser();
+        if (currentUser && currentUser.role === 'admin') {
+            scheme.status = 'Active';
+            scheme.approvedBy = currentUser.name;
+        } else {
+            scheme.status = 'Pending Approval';
+            scheme.submittedBy = currentUser.name;
+        }
+        
+        schemes.push(scheme);
+        localStorage.setItem('schemes', JSON.stringify(schemes));
+        return { success: true, scheme: scheme };
+    },
+
+    getPendingSchemes() {
+        return this.getAllSchemes().filter(s => s.status === 'Pending Approval');
+    },
+
+    approveScheme(id) {
+        const schemes = this.getAllSchemes();
+        const index = schemes.findIndex(s => s.id === id);
+        if (index !== -1) {
+            schemes[index].status = 'Active';
+            schemes[index].approvedBy = AuthService.getCurrentUser()?.name || 'Admin';
+            schemes[index].approvalDate = new Date().toISOString();
+            localStorage.setItem('schemes', JSON.stringify(schemes));
+            return true;
+        }
+        return false;
+    },
+
+    rejectScheme(id) {
+        const schemes = this.getAllSchemes();
+        const index = schemes.findIndex(s => s.id === id);
+        if (index !== -1) {
+            schemes.splice(index, 1); // Remove rejected scheme or mark as Rejected
             localStorage.setItem('schemes', JSON.stringify(schemes));
             return true;
         }
@@ -681,27 +773,63 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Admin Dashboard Functions
+// Admin Dashboard Functions
 window.SchemeMonitoring.loadAdminDashboard = function() {
     const schemes = this.SchemeService.getAllSchemes();
+    
+    // 1. Pending Approvals Section
+    const pendingSchemes = this.SchemeService.getPendingSchemes();
+    const pendingCard = document.getElementById('pendingApprovalsCard');
+    const pendingBody = document.getElementById('pendingApprovalsBody');
+    
+    if (pendingSchemes.length > 0 && pendingCard && pendingBody) {
+        pendingCard.style.display = 'block';
+        pendingBody.innerHTML = pendingSchemes.map(s => `
+            <tr>
+                <td><strong>${s.name}</strong></td>
+                <td>${s.submittedBy || 'User'}</td>
+                <td>${this.formatCurrency(s.allocated)}</td>
+                <td>${s.districts ? s.districts.join(', ') : s.district}</td>
+                <td>${new Date(s.createdAt || Date.now()).toLocaleDateString()}</td>
+                <td>
+                    <button class="btn btn-sm btn-success" onclick="SchemeMonitoring.approveScheme(${s.id})">Approve</button>
+                    <button class="btn btn-sm btn-danger" onclick="SchemeMonitoring.rejectScheme(${s.id})">Reject</button>
+                </td>
+            </tr>
+        `).join('');
+    } else if (pendingCard) {
+        pendingCard.style.display = 'none';
+    }
+
     const tbody = document.querySelector('#districtTable tbody');
     if (!tbody) return;
 
+    // Filter only Active schemes for main dashboard
+    const activeSchemes = schemes.filter(s => s.status !== 'Pending Approval');
+
     // Aggregate by District
     const districtData = {};
-    schemes.forEach(scheme => {
-        if (!districtData[scheme.district]) {
-            districtData[scheme.district] = {
-                name: scheme.district,
+    activeSchemes.forEach(scheme => {
+        // If scheme has multiple districts, we might need to distribute data or just showing primary.
+        // For simple ref, taking primary district or defaulting to first in array
+        let primaryDistrict = scheme.district;
+        if(scheme.districts && scheme.districts.length > 0) primaryDistrict = scheme.districts[0];
+
+        if (!primaryDistrict) return;
+
+        if (!districtData[primaryDistrict]) {
+            districtData[primaryDistrict] = {
+                name: primaryDistrict,
                 totalSchemes: 0,
                 allocated: 0,
                 utilized: 0,
-                beneficiaries: 0, // Mock data doesn't have beneficiaries count yet, assume 0 or random
-                status: 'On Track' // Logic to determine status
+                beneficiaries: 0, 
+                status: 'On Track' 
             };
         }
-        districtData[scheme.district].totalSchemes++;
-        districtData[scheme.district].allocated += scheme.allocated;
-        districtData[scheme.district].utilized += scheme.utilized;
+        districtData[primaryDistrict].totalSchemes++;
+        districtData[primaryDistrict].allocated += scheme.allocated;
+        districtData[primaryDistrict].utilized += scheme.utilized;
     });
 
     tbody.innerHTML = Object.values(districtData).map(dist => {
@@ -865,6 +993,28 @@ window.SchemeMonitoring.submitProgressUpdate = function() {
         this.loadUserSchemes();
     } else {
         this.loadAdminDashboard();
+    }
+};
+
+window.SchemeMonitoring.handleCreateScheme = function(schemeData) {
+    if(!this.AuthService.getCurrentUser()) return { success: false, message: 'Not logged in' };
+    
+    return this.SchemeService.addScheme(schemeData);
+};
+
+window.SchemeMonitoring.approveScheme = function(id) {
+    if(confirm('Are you sure you want to approve this scheme?')) {
+        this.SchemeService.approveScheme(id);
+        this.showToast('Scheme Approved Successfully', 'success');
+        this.loadAdminDashboard(); // Refresh
+    }
+};
+
+window.SchemeMonitoring.rejectScheme = function(id) {
+    if(confirm('Are you sure you want to reject this scheme?')) {
+        this.SchemeService.rejectScheme(id);
+        this.showToast('Scheme Rejected', 'info');
+        this.loadAdminDashboard(); // Refresh
     }
 };
 

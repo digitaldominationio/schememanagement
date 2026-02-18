@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create New Scheme - Scheme Monitoring System">
+    <title>Create New Scheme - Scheme Monitoring System</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="../static/css/components.css">
+    <link rel="stylesheet" href="../static/css/modal.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        .form-section {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            border: 1px solid #eee;
+        }
+        .form-section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1a237e;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #e8eaf6;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .multi-select-container {
+            position: relative;
+        }
+        .multi-select-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: none;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+        .multi-select-dropdown.show {
+            display: block;
+        }
+        .multi-select-option {
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-radius: 4px;
+        }
+        .multi-select-option:hover {
+            background-color: #f5f5f5;
+        }
+        .multi-select-trigger {
+            background: #fff;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .selected-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .selected-tag {
+            background: #e8eaf6;
+            color: #1a237e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 16px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .selected-tag-close {
+            cursor: pointer;
+            font-weight: bold;
+            color: #3949ab;
+        }
+        .selected-tag-close:hover {
+            color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"><div class="sidebar-logo-icon">&#128202;</div><div class="sidebar-logo-text"><h1>Scheme Monitoring System</h1></div></div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <div class="nav-item">
+                        <a href="dashboard.html" class="nav-link">
+                            <span class="nav-icon">🏠</span>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                     <div class="nav-item">
+                        <a href="create_scheme.html" class="nav-link active">
+                            <span class="nav-icon">&#10133;</span>
+                            <span>Create New Scheme</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="set_target.html" class="nav-link">
+                            <span class="nav-icon">&#127919;</span>
+                            <span>Set Target</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Financial Monitoring</div>
+                    <div class="nav-item admin-only">
+                        <a href="financial/fund_allocation.html" class="nav-link">
+                            <span class="nav-icon">💰</span>
+                            <span>Fund Allocation & Release</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="financial/expenditure.html" class="nav-link">
+                            <span class="nav-icon">📉</span>
+                            <span>Expenditure (Panchayat-wise)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="financial/uc_generation.html" class="nav-link">
+                            <span class="nav-icon">📄</span>
+                            <span>UC Generation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="financial/pfms_status.html" class="nav-link">
+                            <span class="nav-icon">🏦</span>
+                            <span>PFMS / Treasury Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Beneficiary Management</div>
+                    <div class="nav-item">
+                        <a href="beneficiary/registration.html" class="nav-link">
+                            <span class="nav-icon">👥</span>
+                            <span>Registration & Validation</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="beneficiary/category_coverage.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span>Category-wise Coverage</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="beneficiary/benefit_delivery.html" class="nav-link">
+                            <span class="nav-icon">🚚</span>
+                            <span>Benefit Delivery Status</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Inspection & Verification</div>
+                    <div class="nav-item">
+                        <a href="inspection/field_inspection.html" class="nav-link">
+                            <span class="nav-icon">🔎</span>
+                            <span>Field Inspection</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="inspection/mobile_reports.html" class="nav-link">
+                            <span class="nav-icon">📱</span>
+                            <span>Mobile Inspection Reports</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="inspection/third_party_verification.html" class="nav-link">
+                            <span class="nav-icon">✅</span>
+                            <span>3rd Party Verification</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Reports & MIS</div>
+                    <div class="nav-item">
+                        <a href="reports/mis_reports.html" class="nav-link">
+                            <span class="nav-icon">📑</span>
+                            <span>MIS Reports (M/Q/Y)</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="reports/physical_financial.html" class="nav-link">
+                            <span class="nav-icon">📈</span>
+                            <span>Physical vs Financial</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                 <div class="header-left" style="gap: 1.5rem;">
+                    <button class="menu-toggle" onclick="toggleSidebar()" style="color: #1a237e;">☰</button>
+                    <div class="header-branding"><span class="header-gov-text">Government of Odisha</span><h2 class="header-title-text">Scheme Monitoring System</h2></div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="user-profile" style="border-left: 1px solid #dee2e6; padding-left: 1rem; cursor: pointer; position: relative;" onclick="document.getElementById('userDropdown').classList.toggle('show')">
+                        <div class="user-avatar" id="headerUserAvatar" style="background: #1a237e; color: white;">AU</div>
+                        <div class="user-info">
+                            <h4 id="headerUserName" style="color: #333;">Admin User</h4>
+                            <p id="headerUserRole">State Nodal Officer</p>
+                        </div>
+                        <div class="dropdown-menu" id="userDropdown" style="position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ddd; border-radius: 4px; display: none; margin-top: 10px; width: 150px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 1000;">
+                             <a href="#" id="logoutBtn" class="dropdown-item" style="display: block; padding: 10px; color: #d32f2f; text-decoration: none;">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="page-content">
+                <!-- Success Section (Initially Hidden) -->
+                <div id="activeSchemeSection" style="display: none; margin-bottom: 2rem;">
+                    <div style="background: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 8px; padding: 2rem; text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
+                        <h2 style="color: #2e7d32; margin-bottom: 0.5rem;">Scheme Created Successfully!</h2>
+                        <p style="color: #555; margin-bottom: 1.5rem;">Your scheme is now active and ready for target assignment.</p>
+                        
+                        <!-- Created Scheme Card -->
+                        <div style="background: white; border: 0; border-radius: 12px; padding: 2rem; max-width: 650px; margin: 0 auto 2.5rem; text-align: left; display: flex; gap: 2rem; align-items: flex-start; box-shadow: 0 10px 30px rgba(0,0,0,0.08); position: relative; overflow: hidden;">
+                            <div style="position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: #2e7d32;"></div>
+                            
+                            <img id="createdSchemeLogo" src="" alt="Scheme Logo" style="width: 100px; height: 100px; object-fit: contain; border-radius: 12px; border: 1px solid #f0f0f0; background: #fff; padding: 0.5rem; flex-shrink: 0;">
+                            
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                                    <h3 id="createdSchemeName" style="color: #1a237e; margin: 0; font-size: 1.5rem; font-weight: 700;"></h3>
+                                    <span style="background: #e8f5e9; color: #2e7d32; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;">Active</span>
+                                </div>
+                                
+                                <p id="createdSchemeDesc" style="color: #666; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.6;">No description available.</p>
+                                
+                                <div style="display: flex; gap: 2rem; border-top: 1px solid #f5f5f5; padding-top: 1rem;">
+                                    <div>
+                                        <div style="font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Type</div>
+                                        <div id="createdSchemeType" style="color: #333; font-weight: 600;"></div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Budget</div>
+                                        <div id="createdSchemeBudget" style="color: #333; font-weight: 600;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: center; gap: 1rem;">
+                            <button class="btn btn-outline" onclick="window.location.reload()">Create Another Scheme</button>
+                            <button class="btn btn-primary" id="setTargetsBtn" onclick="goToSetTargets()">🎯 Set Targets via Location</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page-header" id="pageHeader">
+                    <div>
+                        <h1 class="page-title">Create New Scheme</h1>
+                        <p class="page-description">Define scheme details, allocation, and targets. Admin approval may be required.</p>
+                    </div>
+                </div>
+
+                <form id="createSchemeForm">
+                    <!-- Section 1: Basic Information -->
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <span>📝</span> Basic Information
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Scheme Logo</label>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <input type="file" class="form-control" id="schemeLogo" accept="image/*" onchange="previewLogo(this)">
+                                    <img id="logoPreview" src="" alt="Preview" style="max-height: 50px; display: none; border-radius: 4px; border: 1px solid #ddd;">
+                                </div>
+                                <small style="color: #666;">Upload a logo for the scheme (Optional)</small>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 2;">
+                                <label class="form-label required">Scheme Name</label>
+                                <input type="text" class="form-control" id="schemeName" placeholder="e.g. Rural Housing Development Phase II" required>
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label class="form-label required">Scheme Type</label>
+                                <select class="form-control form-select" id="schemeType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="Housing">Housing</option>
+                                    <option value="Infrastructure">Infrastructure</option>
+                                    <option value="Health">Health</option>
+                                    <option value="Education">Education</option>
+                                    <option value="Sanitation">Sanitation</option>
+                                    <option value="Agriculture">Agriculture</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 1;">
+                                <label class="form-label required">Total Budget Allocation (&#8377;)</label>
+                                <input type="number" class="form-control" id="schemeBudget" placeholder="e.g. 120000000" min="0" required>
+                                <small style="color: #666;">Enter the total scheme budget in rupees (e.g. 12,00,00,000 for &#8377;120 Cr)</small>
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label class="form-label">Financial Year</label>
+                                <select class="form-control form-select" id="schemeFinYear">
+                                    <option value="2024-25">2024-25</option>
+                                    <option value="2025-26" selected>2025-26</option>
+                                    <option value="2026-27">2026-27</option>
+                                    <option value="2027-28">2027-28</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description / Objectives</label>
+                            <textarea class="form-control" id="schemeDescription" rows="3" placeholder="Briefly describe the purpose and goals of this scheme..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-section" style="border: none; box-shadow: none; background: transparent; padding: 0; display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
+                        <button type="button" class="btn btn-outline" onclick="window.location.href='dashboard.html'" style="padding: 0.75rem 2rem;">Cancel</button>
+                        <button type="button" class="btn btn-primary" onclick="submitNewScheme()" style="padding: 0.75rem 2rem;">✅ Create Scheme</button>
+                    </div>
+                </form>
+
+                <!-- Scheme List Section -->
+                <div style="margin-top: 3rem; border-top: 1px solid #eee; padding-top: 2rem;">
+                    <h3 style="color: #1a237e; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <span style="background: #e8eaf6; padding: 0.5rem; border-radius: 8px;">📋</span> Recently Created Schemes
+                    </h3>
+
+                    <div id="schemesListContainer">
+                        <!-- New schemes will be injected here -->
+
+                        <!-- Static Card 1 -->
+                        <div class="scheme-card" style="background: white; border: 1px solid #e8eaf6; border-radius: 12px; padding: 1.5rem 2rem; margin-bottom: 1.25rem; display: flex; gap: 1.5rem; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: box-shadow 0.2s; border-left: 5px solid #1a237e;" onmouseover="this.style.boxShadow='0 6px 20px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)'">
+                            <img src="https://cdn-icons-png.flaticon.com/512/2502/2502802.png" alt="Logo" style="width: 64px; height: 64px; object-fit: contain; background: #f5f5f5; border-radius: 10px; padding: 6px; border: 1px solid #eee; flex-shrink: 0;">
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
+                                    <h4 style="margin: 0; color: #1a237e; font-size: 1.05rem; font-weight: 700;">Pradhanmatri Abash Yojna</h4>
+                                    <span style="background: #e8eaf6; color: #1a237e; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; margin-left: 1rem;">Housing</span>
+                                </div>
+                                <p style="margin: 0 0 0.75rem; font-size: 0.875rem; color: #666; line-height: 1.5;">Provide pucca houses to all houseless households.</p>
+                                <div style="display: flex; gap: 1.5rem; align-items: center;">
+                                    <div style="font-size: 0.85rem; color: #333; background: #f8f9ff; display: inline-flex; align-items: center; gap: 0.4rem; padding: 5px 12px; border-radius: 6px; border: 1px solid #e8eaf6; font-weight: 600;">&#8377; 1,200 Cr <span style="font-weight: 400; color: #888; font-size: 0.78rem;">Total Budget</span></div>
+                                    <div style="font-size: 0.8rem; color: #888;">FY 2025-26</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Static Card 2 -->
+                        <div class="scheme-card" style="background: white; border: 1px solid #fff3e0; border-radius: 12px; padding: 1.5rem 2rem; margin-bottom: 1.25rem; display: flex; gap: 1.5rem; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: box-shadow 0.2s; border-left: 5px solid #e65100;" onmouseover="this.style.boxShadow='0 6px 20px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)'">
+                            <img src="https://cdn-icons-png.flaticon.com/512/822/822102.png" alt="Logo" style="width: 64px; height: 64px; object-fit: contain; background: #fff3e0; border-radius: 10px; padding: 6px; border: 1px solid #ffe0b2; flex-shrink: 0;">
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
+                                    <h4 style="margin: 0; color: #e65100; font-size: 1.05rem; font-weight: 700;">Prdhanmatri Krushi Samrudhi</h4>
+                                    <span style="background: #fff3e0; color: #e65100; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; margin-left: 1rem;">Agriculture</span>
+                                </div>
+                                <p style="margin: 0 0 0.75rem; font-size: 0.875rem; color: #666; line-height: 1.5;">Financial assistance to cultivators and landless agricultural laborers.</p>
+                                <div style="display: flex; gap: 1.5rem; align-items: center;">
+                                    <div style="font-size: 0.85rem; color: #333; background: #fff8f3; display: inline-flex; align-items: center; gap: 0.4rem; padding: 5px 12px; border-radius: 6px; border: 1px solid #ffe0b2; font-weight: 600;">&#8377; 3,400 Cr <span style="font-weight: 400; color: #888; font-size: 0.78rem;">Total Budget</span></div>
+                                    <div style="font-size: 0.8rem; color: #888;">FY 2025-26</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Static Card 3 -->
+                        <div class="scheme-card" style="background: white; border: 1px solid #f1f8e9; border-radius: 12px; padding: 1.5rem 2rem; margin-bottom: 1.25rem; display: flex; gap: 1.5rem; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: box-shadow 0.2s; border-left: 5px solid #2e7d32;" onmouseover="this.style.boxShadow='0 6px 20px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)'">
+                            <img src="https://cdn-icons-png.flaticon.com/512/2965/2965300.png" alt="Logo" style="width: 64px; height: 64px; object-fit: contain; background: #f1f8e9; border-radius: 10px; padding: 6px; border: 1px solid #c8e6c9; flex-shrink: 0;">
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
+                                    <h4 style="margin: 0; color: #2e7d32; font-size: 1.05rem; font-weight: 700;">Subhadra Yojna</h4>
+                                    <span style="background: #e8f5e9; color: #2e7d32; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; margin-left: 1rem;">Women Empowerment</span>
+                                </div>
+                                <p style="margin: 0 0 0.75rem; font-size: 0.875rem; color: #666; line-height: 1.5;">Promoting Women Self Help Groups (WSHGs) for holistic empowerment.</p>
+                                <div style="display: flex; gap: 1.5rem; align-items: center;">
+                                    <div style="font-size: 0.85rem; color: #333; background: #f3fbf3; display: inline-flex; align-items: center; gap: 0.4rem; padding: 5px 12px; border-radius: 6px; border: 1px solid #c8e6c9; font-weight: 600;">&#8377; 850 Cr <span style="font-weight: 400; color: #888; font-size: 0.78rem;">Total Budget</span></div>
+                                    <div style="font-size: 0.8rem; color: #888;">FY 2025-26</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../static/js/main.js"></script>
+    <script src="../static/js/modal.js"></script>
+    <script>
+        // Data for dropdowns
+        const districtsList = ['Bhubaneswar', 'Cuttack', 'Puri', 'Ganjam', 'Balasore', 'Sambalpur', 'Rourkela', 'Angul'];
+        const blocksList = ['Block 1', 'Block 2', 'Block 3', 'Block 4', 'Block 5', 'Block 6', 'Block 7', 'Block 8'];
+
+        // State for selections
+        let selectedDistricts = [];
+        let selectedBlocks = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            populateDropdown('district', districtsList);
+            populateDropdown('block', blocksList);
+            
+            // Set default dates
+            document.getElementById('launchDate').valueAsDate = new Date();
+        });
+
+        function populateDropdown(type, items) {
+            const container = document.getElementById(`${type}Dropdown`);
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'multi-select-option';
+                div.onclick = (e) => toggleOption(type, item, div);
+                div.innerHTML = `
+                    <input type="checkbox" value="${item}">
+                    <label style="cursor: pointer; width: 100%;">${item}</label>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function toggleMultiSelect(id) {
+            const el = document.getElementById(id);
+            const isVisible = el.classList.contains('show');
+            // Close all first
+            document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.remove('show'));
+            if (!isVisible) el.classList.add('show');
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.multi-select-container')) {
+                document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.remove('show'));
+            }
+        });
+
+        function toggleOption(type, value, element) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            
+            const list = type === 'district' ? selectedDistricts : selectedBlocks;
+            
+            if (checkbox.checked) {
+                if (!list.includes(value)) list.push(value);
+            } else {
+                const index = list.indexOf(value);
+                if (index > -1) list.splice(index, 1);
+                // Uncheck "All" if one is unchecked
+                 document.getElementById(`${type}_all`).checked = false;
+            }
+            
+            updateTags(type);
+        }
+
+        function toggleSelectAll(type, element) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            
+            // Toggle the mock checkbox manually since we preventDefault in parent onclick usually, 
+            // but here we let event bubble or handle it. 
+            // Better: just force state based on current check
+            const isChecked = checkbox.checked; // This is the state AFTER click
+            
+            const list = type === 'district' ? selectedDistricts : selectedBlocks;
+            const sourceList = type === 'district' ? districtsList : blocksList;
+
+            const dropdown = document.getElementById(`${type}Dropdown`);
+            const options = dropdown.querySelectorAll('.multi-select-option input[type="checkbox"]:not([id$="_all"])');
+
+            if (isChecked) {
+                // Select All
+                list.length = 0;
+                list.push(...sourceList);
+                options.forEach(opt => opt.checked = true);
+            } else {
+                // Deselect All
+                list.length = 0;
+                options.forEach(opt => opt.checked = false);
+            }
+            updateTags(type);
+        }
+
+        function updateTags(type) {
+            const list = type === 'district' ? selectedDistricts : selectedBlocks;
+            const container = document.getElementById(`${type}Tags`);
+            const placeholder = document.getElementById(`${type}Placeholder`);
+            
+            container.innerHTML = '';
+            
+            if (list.length === 0) {
+                placeholder.textContent = `Select ${type === 'district' ? 'Districts' : 'Blocks'}...`;
+                placeholder.style.color = '#666';
+            } else {
+                placeholder.textContent = `${list.length} selected`;
+                placeholder.style.color = '#333';
+                
+                list.forEach(item => {
+                    const tag = document.createElement('div');
+                    tag.className = 'selected-tag';
+                    tag.innerHTML = `
+                        ${item}
+                        <span class="selected-tag-close" onclick="removeTag('${type}', '${item}')">×</span>
+                    `;
+                    container.appendChild(tag);
+                });
+            }
+        }
+
+        function removeTag(type, value) {
+            const list = type === 'district' ? selectedDistricts : selectedBlocks;
+            const index = list.indexOf(value);
+            if (index > -1) {
+                list.splice(index, 1);
+                // Uncheck in dropdown
+                const dropdown = document.getElementById(`${type}Dropdown`);
+                const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(cb => {
+                    if (cb.value === value) cb.checked = false;
+                });
+                document.getElementById(`${type}_all`).checked = false;
+                updateTags(type);
+            }
+        }
+
+        let currentSchemeId = null;
+
+        function previewLogo(input) {
+            const preview = document.getElementById('logoPreview');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+
+        async function submitNewScheme() {
+            // Validation
+            const name = document.getElementById('schemeName').value;
+            const type = document.getElementById('schemeType').value;
+            const budget = document.getElementById('schemeBudget').value;
+            const finYear = document.getElementById('schemeFinYear').value;
+
+            if (!name || !type || !budget) {
+                SchemeMonitoring.showToast('Please fill all required fields (Name, Type, Budget)', 'error');
+                return;
+            }
+
+            // Handle Logo
+            let logoData = null;
+            const logoInput = document.getElementById('schemeLogo');
+            if (logoInput.files && logoInput.files[0]) {
+                logoData = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.readAsDataURL(logoInput.files[0]);
+                });
+            }
+
+            // Create Scheme Object (Basic Info Only)
+            const newScheme = {
+                name: name,
+                type: type,
+                logo: logoData,
+                description: document.getElementById('schemeDescription').value,
+                allocated: parseFloat(budget),
+                financialYear: finYear,
+                utilized: 0,
+                progress: 0,
+                assignedTo: null,
+                fundingSource: null, 
+                launchDate: null,
+                targetDate: null,
+                districts: [],
+                blocks: [],
+                targets: [],
+                createdAt: new Date().toISOString()
+            };
+
+            // Call Main Logic
+            const result = SchemeMonitoring.SchemeService.addScheme(newScheme);
+            
+            if (result.success) {
+                currentSchemeId = result.scheme.id;
+                
+                // Colors based on type for UI flair
+                let themeColor = '#1a237e';
+                let themeBg = '#e8eaf6';
+                if(type === 'Agriculture') { themeColor = '#e65100'; themeBg = '#fff3e0'; }
+                if(type === 'Health') { themeColor = '#c62828'; themeBg = '#ffebee'; }
+                if(type === 'Sanitation') { themeColor = '#2e7d32'; themeBg = '#e8f5e9'; }
+
+                const logoSrc = logoData || "https://cdn-icons-png.flaticon.com/512/2502/2502802.png";
+
+                const newCardHTML = `
+                    <div class="scheme-card" style="background: white; border: 1px solid ${themeColor}40; border-left: 5px solid ${themeColor}; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; display: flex; gap: 1.5rem; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); animation: slideDown 0.5s ease-out;">
+                        <img src="${logoSrc}" alt="Logo" style="width: 60px; height: 60px; object-fit: contain; background: ${themeBg}; border-radius: 8px; padding: 4px;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <h4 style="margin: 0; color: ${themeColor}; font-size: 1.1rem; font-weight: 700;">${name}</h4>
+                                <span style="background: ${themeBg}; color: ${themeColor}; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">ACTIVE</span>
+                            </div>
+                            <p style="margin: 0 0 0.5rem; font-size: 0.9rem; color: #666;">${newScheme.description || 'No description provided.'}</p>
+                            <div style="font-size: 0.85rem; color: #444;"><strong>Details:</strong> Newly Created • Target Setting Pending</div>
+                        </div>
+                        <button class="btn btn-outline" onclick="goToSetTargets(${currentSchemeId})" style="border-color: ${themeColor}; color: ${themeColor}; background: white; font-weight: 600;">🎯 Set Targets</button>
+                    </div>
+                `;
+
+                // Insert new card at the top
+                const container = document.getElementById('schemesListContainer');
+                container.insertAdjacentHTML('afterbegin', newCardHTML);
+
+                // Toast
+                SchemeMonitoring.showToast('Scheme created successfully! Added to list below.', 'success');
+                
+                // Reset form
+                document.getElementById('createSchemeForm').reset();
+                document.getElementById('logoPreview').style.display = 'none';
+                
+            } else {
+                SchemeMonitoring.showToast('Failed to create scheme', 'error');
+            }
+        }
+
+        function goToSetTargets(id) {
+            window.location.href = `set_target.html?id=${id}`;
+        }
+
+        // Add simple animation style
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes slideDown {
+                from { opacity: 0; transform: translateY(-20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

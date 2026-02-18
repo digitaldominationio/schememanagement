@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Set Targets - Scheme Monitoring System">
+    <title>Set Targets - Scheme Monitoring System</title>
+    <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="../static/css/components.css">
+    <link rel="stylesheet" href="../static/css/modal.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ── Step indicator ── */
+        .steps-bar {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 2rem;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex: 1;
+        }
+        .step-circle {
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            background: #e8eaf6;
+            color: #9fa8da;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+        .step.active .step-circle  { background: #1a237e; color: white; }
+        .step.done   .step-circle  { background: #2e7d32; color: white; }
+        .step-label { font-size: 0.85rem; font-weight: 600; color: #aaa; transition: color 0.3s; }
+        .step.active .step-label   { color: #1a237e; }
+        .step.done   .step-label   { color: #2e7d32; }
+        .step-line { flex: 1; height: 2px; background: #e8eaf6; margin: 0 0.5rem; }
+        .step-line.done { background: #2e7d32; }
+
+        /* ── Scheme dropdown select ── */
+        .scheme-select-wrap {
+            position: relative;
+            max-width: 520px;
+        }
+        .scheme-select-wrap select {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            padding: 0.75rem 3rem 0.75rem 1rem;
+            font-size: 1rem;
+            font-family: inherit;
+            border: 2px solid #c5cae9;
+            border-radius: 8px;
+            background: #fff;
+            color: #1a237e;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .scheme-select-wrap select:focus,
+        .scheme-select-wrap select:hover {
+            border-color: #1a237e;
+            box-shadow: 0 0 0 3px rgba(26,35,126,0.1);
+        }
+        .scheme-select-wrap::after {
+            content: '\25BC';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #1a237e;
+            font-size: 0.8rem;
+            pointer-events: none;
+        }
+        /* ── Scheme preview card (shown after selection) ── */
+        .scheme-preview {
+            display: none;
+            margin-top: 1.25rem;
+            background: #f8f9ff;
+            border: 1.5px solid #c5cae9;
+            border-radius: 10px;
+            padding: 1.1rem 1.5rem;
+            display: none;
+            align-items: center;
+            gap: 1.25rem;
+            border-left: 5px solid #1a237e;
+        }
+        .scheme-preview.visible { display: flex; }
+        .scheme-preview img { width: 56px; height: 56px; object-fit: contain; border-radius: 8px; background: #fff; padding: 5px; border: 1px solid #eee; flex-shrink: 0; }
+        .scheme-preview h4 { margin: 0 0 0.2rem; color: #1a237e; font-size: 1rem; font-weight: 700; }
+        .scheme-preview p  { margin: 0 0 0.4rem; font-size: 0.85rem; color: #666; }
+        .scheme-preview .budget-pill { font-size: 0.8rem; font-weight: 600; color: #2e7d32; background: #e8f5e9; padding: 3px 10px; border-radius: 10px; display: inline-block; }
+
+        /* ── Selected scheme header ── */
+        .scheme-header-bar {
+            background: white;
+            border-radius: 10px;
+            padding: 1.25rem 1.75rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            border-left: 5px solid #1a237e;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .scheme-header-bar img { width: 56px; height: 56px; object-fit: contain; border-radius: 8px; background: #f5f5f5; padding: 5px; border: 1px solid #eee; }
+        .scheme-header-bar h3 { margin: 0 0 0.2rem; color: #1a237e; font-size: 1.1rem; font-weight: 700; }
+        .scheme-header-bar p  { margin: 0; font-size: 0.85rem; color: #666; }
+
+        /* ── Form section ── */
+        .form-section {
+            background: #fff;
+            padding: 1.75rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            border: 1px solid #eee;
+        }
+        .form-section-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1a237e;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #e8eaf6;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        /* ── Multi-select ── */
+        .multi-select-container { position: relative; }
+        .multi-select-trigger {
+            background: #fff; border: 1px solid #ced4da; border-radius: 4px;
+            padding: 0.5rem 0.75rem; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            min-height: 42px; user-select: none;
+        }
+        .multi-select-trigger:hover { border-color: #1a237e; }
+        .multi-select-dropdown {
+            position: absolute; top: calc(100% + 4px); left: 0; width: 100%;
+            background: white; border: 1px solid #ced4da; border-radius: 6px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12); z-index: 1050;
+            display: none; max-height: 220px; overflow-y: auto;
+        }
+        .multi-select-dropdown.show { display: block; }
+        .multi-select-option {
+            padding: 0.5rem 0.75rem; display: flex; align-items: center;
+            gap: 0.75rem; cursor: pointer; transition: background 0.15s; font-size: 0.9rem;
+        }
+        .multi-select-option:hover { background-color: #f0f4ff; }
+        .multi-select-option.select-all-option {
+            font-weight: 600; color: #1a237e; border-bottom: 1px solid #e8eaf6; background: #f8f9ff;
+        }
+        .multi-select-option input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: #1a237e; flex-shrink: 0; }
+        .multi-select-option label { cursor: pointer; width: 100%; margin: 0; }
+        .selected-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+        .selected-tag {
+            background: #e8eaf6; color: #1a237e; padding: 3px 10px;
+            border-radius: 16px; font-size: 0.8rem; font-weight: 500;
+            display: flex; align-items: center; gap: 0.4rem;
+        }
+        .selected-tag.block-tag { background: #e8f5e9; color: #2e7d32; }
+        .selected-tag-close { cursor: pointer; font-weight: bold; font-size: 1rem; line-height: 1; opacity: 0.7; }
+        .selected-tag-close:hover { opacity: 1; color: #d32f2f; }
+
+        /* ── Target list table ── */
+        .target-table { width: 100%; border-collapse: collapse; }
+        .target-table th, .target-table td { padding: 0.85rem 1rem; text-align: left; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+        .target-table th { background: #f8f9fa; font-weight: 600; color: #444; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.3px; }
+        .target-table tr:hover td { background: #fafbff; }
+        .loc-tag { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.78rem; margin: 2px; }
+        .loc-tag.district { background: #e3f2fd; color: #1565c0; }
+        .loc-tag.block    { background: #e8f5e9; color: #2e7d32; }
+    </style>
+</head>
+<body>
+<div class="app-container">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">&#128202;</div>
+                <div class="sidebar-logo-text"><h1>Scheme Monitoring System</h1></div>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <div class="nav-item"><a href="dashboard.html" class="nav-link"><span class="nav-icon">&#127968;</span><span>Dashboard</span></a></div>
+                <div class="nav-item"><a href="create_scheme.html" class="nav-link"><span class="nav-icon">&#10133;</span><span>Create New Scheme</span></a></div>
+                <div class="nav-item"><a href="set_target.html" class="nav-link active"><span class="nav-icon">&#127919;</span><span>Set Target</span></a></div>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Financial Monitoring</div>
+                <div class="nav-item admin-only"><a href="financial/fund_allocation.html" class="nav-link"><span class="nav-icon">&#128176;</span><span>Fund Allocation &amp; Release</span></a></div>
+                <div class="nav-item"><a href="financial/expenditure.html" class="nav-link"><span class="nav-icon">&#128201;</span><span>Expenditure (Panchayat-wise)</span></a></div>
+                <div class="nav-item"><a href="financial/uc_generation.html" class="nav-link"><span class="nav-icon">&#128196;</span><span>UC Generation</span></a></div>
+                <div class="nav-item admin-only"><a href="financial/pfms_status.html" class="nav-link"><span class="nav-icon">&#127970;</span><span>PFMS / Treasury Status</span></a></div>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Beneficiary Management</div>
+                <div class="nav-item"><a href="beneficiary/registration.html" class="nav-link"><span class="nav-icon">&#128101;</span><span>Registration &amp; Validation</span></a></div>
+                <div class="nav-item"><a href="beneficiary/category_coverage.html" class="nav-link"><span class="nav-icon">&#128202;</span><span>Category-wise Coverage</span></a></div>
+                <div class="nav-item"><a href="beneficiary/benefit_delivery.html" class="nav-link"><span class="nav-icon">&#128666;</span><span>Benefit Delivery Status</span></a></div>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Inspection &amp; Verification</div>
+                <div class="nav-item"><a href="inspection/field_inspection.html" class="nav-link"><span class="nav-icon">&#128270;</span><span>Field Inspection</span></a></div>
+                <div class="nav-item"><a href="inspection/mobile_reports.html" class="nav-link"><span class="nav-icon">&#128241;</span><span>Mobile Inspection Reports</span></a></div>
+                <div class="nav-item"><a href="inspection/third_party_verification.html" class="nav-link"><span class="nav-icon">&#9989;</span><span>3rd Party Verification</span></a></div>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Reports &amp; MIS</div>
+                <div class="nav-item"><a href="reports/mis_reports.html" class="nav-link"><span class="nav-icon">&#128209;</span><span>MIS Reports (M/Q/Y)</span></a></div>
+                <div class="nav-item"><a href="reports/physical_financial.html" class="nav-link"><span class="nav-icon">&#128200;</span><span>Physical vs Financial</span></a></div>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- ── Main Content ── -->
+    <main class="main-content">
+        <header class="header">
+            <div class="header-left" style="gap: 1.5rem;">
+                <button class="menu-toggle" onclick="toggleSidebar()" style="color: #1a237e;">&#9776;</button>
+                <div class="header-branding">
+                    <span class="header-gov-text">Government of Odisha</span>
+                    <h2 class="header-title-text">Scheme Monitoring System</h2>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="header-notifications">
+                    <button class="notification-btn" id="notificationBtn" style="color: #1a237e;">&#128276;<span class="notification-badge">3</span></button>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                            <button class="mark-read-btn">Mark all as read</button>
+                        </div>
+                        <div class="notification-list">
+                            <div class="notification-item unread">
+                                <div class="notification-icon">&#128221;</div>
+                                <div class="notification-content"><p><strong>Target Set</strong><br>Puri District target assigned.</p><span class="notification-time">5 mins ago</span></div>
+                            </div>
+                            <div class="notification-item unread">
+                                <div class="notification-icon">&#128176;</div>
+                                <div class="notification-content"><p><strong>Fund Released</strong><br>&#8377;2.5 Cr released for Rural Housing.</p><span class="notification-time">1 hour ago</span></div>
+                            </div>
+                        </div>
+                        <div class="notification-footer"><a href="#" class="view-all-btn">View All Notifications</a></div>
+                    </div>
+                </div>
+                <div class="user-profile" style="border-left: 1px solid #dee2e6; padding-left: 1rem; cursor: pointer; position: relative;" onclick="document.getElementById('userDropdown').classList.toggle('show')">
+                    <div class="user-avatar" style="background: #1a237e; color: white;">AU</div>
+                    <div class="user-info"><h4 style="color:#333;">Admin User</h4><p>State Nodal Officer</p></div>
+                    <div class="dropdown-menu" id="userDropdown" style="position:absolute;top:100%;right:0;background:white;border:1px solid #ddd;border-radius:4px;display:none;margin-top:10px;width:150px;box-shadow:0 4px 6px rgba(0,0,0,0.1);z-index:1000;">
+                        <a href="#" style="display:block;padding:10px;color:#333;text-decoration:none;border-bottom:1px solid #eee;">Profile</a>
+                        <a href="#" style="display:block;padding:10px;color:#d32f2f;text-decoration:none;">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="page-content">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Set Scheme Targets</h1>
+                    <p class="page-description">Select a scheme, assign district/block targets, officers and timelines.</p>
+                </div>
+                
+            </div>
+
+            <!-- ── Step Indicator ── -->
+            <div class="steps-bar">
+                <div class="step active" id="step1Indicator">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">Select Scheme</div>
+                </div>
+                <div class="step-line" id="line1"></div>
+                <div class="step" id="step2Indicator">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Assign Targets</div>
+                </div>
+                <div class="step-line" id="line2"></div>
+                <div class="step" id="step3Indicator">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">View Details</div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════
+                 STEP 1 — Select Scheme
+            ══════════════════════════════════════════════════════════ -->
+            <div id="step1Section">
+                <div class="form-section">
+                    <div class="form-section-title">&#127919; Select a Scheme to Set Targets</div>
+
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label" style="font-size:0.9rem;color:#555;margin-bottom:0.5rem;">Choose Scheme</label>
+                        <div class="scheme-select-wrap">
+                            <select id="schemeDropdown" onchange="onSchemeDropdownChange()">
+                                <option value="">-- Select a Scheme --</option>
+                                <option value="101">Biju Pucca Ghar Yojana</option>
+                                <option value="102">Prdhanmatri Krushi Samrudhi</option>
+                                <option value="103">Subhadra Yojna</option>
+                                <option value="104">Mamata Scheme</option>
+                                <option value="105">Mo Kudia</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Preview card shown after selection -->
+                    <div class="scheme-preview" id="schemePreview">
+                        <img id="previewLogo" src="" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2502/2502802.png'">
+                        <div style="flex:1;">
+                            <h4 id="previewName"></h4>
+                            <p id="previewDesc"></p>
+                            <span class="budget-pill" id="previewBudget"></span>
+                            <span style="margin-left:0.5rem;font-size:0.8rem;color:#888;" id="previewType"></span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:1.5rem;display:flex;justify-content:flex-end;">
+                        <button class="btn btn-primary" id="proceedBtn" onclick="proceedToStep2()" disabled style="padding:0.65rem 2rem;">
+                            Continue to Set Targets &#8594;
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════
+                 STEP 2 — Assign Targets
+            ══════════════════════════════════════════════════════════ -->
+            <div id="step2Section" style="display:none;">
+                <!-- Selected scheme header -->
+                <div class="scheme-header-bar" id="selectedSchemeHeader">
+                    <img id="selSchemeImg" src="" alt="Logo">
+                    <div style="flex:1;">
+                        <h3 id="selSchemeName">-</h3>
+                        <p id="selSchemeSubtitle">-</p>
+                    </div>
+                    <button class="btn btn-outline btn-sm" onclick="backToStep1()" style="font-size:0.8rem;">&#8592; Change Scheme</button>
+                </div>
+
+                <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
+                    <!-- Form -->
+                    <div style="flex:1;min-width:340px;">
+                        <div class="form-section">
+                            <div class="form-section-title">&#43; Add New Target</div>
+
+                            <div class="form-group">
+                                <label class="form-label required">Target Districts</label>
+                                <div class="multi-select-container">
+                                    <div class="multi-select-trigger" onclick="toggleDropdown('district')">
+                                        <span id="districtPlaceholder" style="color:#6c757d;">Select Districts...</span>
+                                        <span style="color:#666;font-size:0.8rem;">&#9660;</span>
+                                    </div>
+                                    <div class="multi-select-dropdown" id="districtDropdown"></div>
+                                </div>
+                                <div class="selected-tags" id="districtTags"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Target Blocks <span style="font-size:0.8rem;color:#888;">(optional)</span></label>
+                                <div class="multi-select-container">
+                                    <div class="multi-select-trigger" onclick="toggleDropdown('block')">
+                                        <span id="blockPlaceholder" style="color:#6c757d;">Select Blocks...</span>
+                                        <span style="color:#666;font-size:0.8rem;">&#9660;</span>
+                                    </div>
+                                    <div class="multi-select-dropdown" id="blockDropdown"></div>
+                                </div>
+                                <div class="selected-tags" id="blockTags"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label required">Allocated Budget for Target (&#8377;)</label>
+                                <input type="number" class="form-control" id="targetBudget" placeholder="Enter amount in rupees" min="0">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label required">Responsible Officer</label>
+                                <select class="form-control form-select" id="targetOfficer">
+                                    <option value="">Select Officer</option>
+                                    <option value="BDO">Block Development Officer (BDO)</option>
+                                    <option value="Collector">District Collector</option>
+                                    <option value="BEO">Block Education Officer</option>
+                                    <option value="Tehsildar">Tehsildar</option>
+                                    <option value="DPC">District Programme Coordinator</option>
+                                </select>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label required">Start Date</label>
+                                    <input type="date" class="form-control" id="targetStartDate">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">End Date</label>
+                                    <input type="date" class="form-control" id="targetEndDate">
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-primary" style="width:100%;margin-top:0.5rem;" onclick="submitTarget()">&#43; Add Target</button>
+                        </div>
+                    </div>
+
+                    <!-- Assigned targets list -->
+                    <div style="flex:1;min-width:340px;">
+                        <div class="form-section">
+                            <div class="form-section-title">&#128203; Assigned Targets</div>
+                            <div style="overflow-x:auto;">
+                                <table class="target-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Locations</th>
+                                            <th>Budget</th>
+                                            <th>Officer</th>
+                                            <th>Timeline</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="targetListBody">
+                                        <tr><td colspan="5" style="text-align:center;color:#aaa;padding:2rem;">No targets yet. Add one using the form.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div style="margin-top:1.5rem;display:flex;justify-content:flex-end;">
+                                <button class="btn btn-primary" onclick="proceedToStep3()" id="viewDetailsBtn" style="padding:0.65rem 2rem;">
+                                    View Target Details &#8594;
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════
+                 STEP 3 — View / Summary
+            ══════════════════════════════════════════════════════════ -->
+            <div id="step3Section" style="display:none;">
+                <div class="form-section">
+                    <div class="form-section-title">&#9989; Target Summary</div>
+
+                    <!-- Scheme info card -->
+                    <div id="summarySchemeCard" style="background:#f8f9ff;border:1px solid #e8eaf6;border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.25rem;border-left:5px solid #1a237e;">
+                        <img id="summarySchemeImg" src="" alt="" style="width:52px;height:52px;object-fit:contain;border-radius:8px;background:#fff;padding:5px;border:1px solid #eee;">
+                        <div style="flex:1;">
+                            <h3 id="summarySchemeName" style="margin:0 0 0.2rem;color:#1a237e;font-size:1.05rem;font-weight:700;"></h3>
+                            <p id="summarySchemeInfo" style="margin:0;font-size:0.85rem;color:#666;"></p>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:0.75rem;color:#888;text-transform:uppercase;font-weight:600;">Total Budget</div>
+                            <div id="summaryBudget" style="font-size:1.1rem;font-weight:700;color:#1a237e;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Targets summary table -->
+                    <div style="overflow-x:auto;">
+                        <table class="target-table" id="summaryTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Districts</th>
+                                    <th>Blocks</th>
+                                    <th>Budget</th>
+                                    <th>Officer</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="summaryBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:flex-end;flex-wrap:wrap;">
+                        <button class="btn btn-outline" onclick="backToStep2()">&#8592; Back to Edit</button>
+                        <button class="btn btn-outline" onclick="backToStep1()">&#43; Set Another Scheme</button>
+                        <button class="btn btn-primary" onclick="window.location.href='dashboard.html'">&#127968; Go to Dashboard</button>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /page-content -->
+    </main>
+</div>
+
+<!-- Edit Scheme Modal -->
+<div id="editSchemeModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:white;border-radius:12px;padding:2rem;width:420px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+            <h3 style="margin:0;color:#1a237e;font-size:1.1rem;">&#9999;&#65039; Edit Scheme Details</h3>
+            <button onclick="closeEditModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#666;">&times;</button>
+        </div>
+        <div class="form-group" style="margin-bottom:1rem;">
+            <label class="form-label" style="font-weight:600;">Scheme Type</label>
+            <select id="editSchemeType" class="form-control form-select">
+                <option value="">Select Type</option>
+                <option value="Housing">Housing</option>
+                <option value="Infrastructure">Infrastructure</option>
+                <option value="Health">Health</option>
+                <option value="Education">Education</option>
+                <option value="Sanitation">Sanitation</option>
+                <option value="Agriculture">Agriculture</option>
+                <option value="State Sponsored">State Sponsored</option>
+                <option value="Central">Central</option>
+                <option value="CNT">CNT</option>
+            </select>
+        </div>
+        <div class="form-group" style="margin-bottom:1.5rem;">
+            <label class="form-label" style="font-weight:600;">Total Budget Allocation (&#8377;)</label>
+            <input type="number" id="editSchemeBudget" class="form-control" placeholder="Enter amount in rupees">
+        </div>
+        <div style="display:flex;gap:1rem;justify-content:flex-end;">
+            <button class="btn btn-outline" onclick="closeEditModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveSchemeDetails()">Save Changes</button>
+        </div>
+    </div>
+</div>
+
+<script src="../static/js/main.js"></script>
+<script src="../static/js/modal.js"></script>
+<script>
+// ─── Static mock schemes (shown when no localStorage data) ──────────────────
+const mockSchemes = [
+    { id: 101, name: 'Biju Pucca Ghar Yojana', type: 'Housing', allocated: 12000000000, logo: 'https://cdn-icons-png.flaticon.com/512/2502/2502802.png', description: 'Provide pucca houses to all houseless households.', targets: [] },
+    { id: 102, name: 'Prdhanmatri Krushi Samrudhi', type: 'Agriculture', allocated: 34000000000, logo: 'https://cdn-icons-png.flaticon.com/512/822/822102.png', description: 'Financial assistance to cultivators and landless agricultural laborers.', targets: [] },
+    { id: 103, name: 'Subhadra Yojna', type: 'Women Empowerment', allocated: 8500000000, logo: 'https://cdn-icons-png.flaticon.com/512/2965/2965300.png', description: 'Promoting Women Self Help Groups (WSHGs) for holistic empowerment.', targets: [] },
+    { id: 104, name: 'Mamata Scheme', type: 'Health', allocated: 2500000000, logo: 'https://cdn-icons-png.flaticon.com/512/3774/3774278.png', description: 'Conditional cash transfer for pregnant and lactating mothers.', targets: [] },
+    { id: 105, name: 'Mo Kudia', type: 'Housing', allocated: 3000000000, logo: 'https://cdn-icons-png.flaticon.com/512/1670/1670080.png', description: 'Providing housing assistance to urban poor families.', targets: [] },
+];
+
+const districtsList = ['Angul','Balangir','Balasore','Bargarh','Bhadrak','Bhubaneswar','Boudh','Cuttack','Deogarh','Dhenkanal','Gajapati','Ganjam','Jagatsinghpur','Jajpur','Jharsuguda','Kalahandi','Kandhamal','Kendrapara','Kendujhar','Khordha','Koraput','Malkangiri','Mayurbhanj','Nabarangpur','Nayagarh','Nuapada','Puri','Rayagada','Rourkela','Sambalpur','Sonepur','Sundargarh'];
+const blocksList = ['Bhubaneswar Block','Cuttack Sadar','Puri Sadar','Ganjam Block','Balasore Sadar','Sambalpur Block','Rourkela Block','Angul Block','Jatni','Khordha Block','Berhampur','Baripada','Brahmapur','Jeypore','Phulbani','Kendrapara Block','Bhadrak Block','Dhenkanal Block'];
+
+// ─── State ───────────────────────────────────────────────────────────────────
+let allSchemes = [];
+let currentScheme = null;
+let selectedDistricts = [];
+let selectedBlocks = [];
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    // Load schemes from service or fall back to mock
+    try {
+        const saved = SchemeMonitoring.SchemeService.getAllSchemes();
+        allSchemes = (saved && saved.length > 0) ? saved : mockSchemes;
+    } catch(e) {
+        allSchemes = mockSchemes;
+    }
+
+    // Check if a scheme id was passed via URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const preselectedId = urlParams.get('id');
+    if (preselectedId) {
+        const found = allSchemes.find(s => String(s.id) === String(preselectedId));
+        if (found) { currentScheme = found; proceedToStep2(); return; }
+    }
+
+    // Populate dropdown from allSchemes (in case dynamically created schemes exist)
+    const dd = document.getElementById('schemeDropdown');
+    if (dd && allSchemes.length > 0) {
+        // Keep static options but add any extra schemes from service
+        const existingIds = [101,102,103,104,105];
+        allSchemes.forEach(s => {
+            if (!existingIds.includes(s.id)) {
+                const opt = document.createElement('option');
+                opt.value = s.id;
+                opt.textContent = s.name;
+                dd.appendChild(opt);
+            }
+        });
+    }
+
+    // Close dropdowns on outside click
+    document.addEventListener('click', e => {
+        if (!e.target.closest('.multi-select-container')) closeAllDropdowns();
+    });
+
+    // Notification bell
+    const notifBtn = document.getElementById('notificationBtn');
+    if (notifBtn) notifBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        document.getElementById('notificationDropdown').classList.toggle('show');
+    });
+});
+
+// ─── Step 1: Dropdown Scheme Picker ─────────────────────────────────────────
+function onSchemeDropdownChange() {
+    const dd = document.getElementById('schemeDropdown');
+    const id = parseInt(dd.value);
+    const preview = document.getElementById('schemePreview');
+
+    if (!id) {
+        currentScheme = null;
+        preview.classList.remove('visible');
+        document.getElementById('proceedBtn').disabled = true;
+        return;
+    }
+
+    currentScheme = allSchemes.find(s => s.id === id) || null;
+    if (!currentScheme) {
+        preview.classList.remove('visible');
+        document.getElementById('proceedBtn').disabled = true;
+        return;
+    }
+
+    // Populate preview card
+    document.getElementById('previewLogo').src = currentScheme.logo || 'https://cdn-icons-png.flaticon.com/512/2502/2502802.png';
+    document.getElementById('previewName').textContent = currentScheme.name;
+    document.getElementById('previewDesc').textContent = currentScheme.description || '';
+    document.getElementById('previewBudget').textContent = currentScheme.allocated
+        ? (typeof SchemeMonitoring !== 'undefined' ? SchemeMonitoring.formatCurrency(currentScheme.allocated) : '\u20B9' + (currentScheme.allocated/10000000).toFixed(0) + ' Cr')
+        : 'Budget TBD';
+    document.getElementById('previewType').textContent = currentScheme.type || '';
+    preview.classList.add('visible');
+    document.getElementById('proceedBtn').disabled = false;
+}
+
+function proceedToStep2() {
+    if (!currentScheme) return;
+    setStep(2);
+
+    // Fill scheme header bar
+    document.getElementById('selSchemeImg').src = currentScheme.logo || '';
+    document.getElementById('selSchemeName').textContent = currentScheme.name;
+    document.getElementById('selSchemeSubtitle').textContent =
+        `${currentScheme.type || 'Scheme'} · ${currentScheme.allocated ? SchemeMonitoring.formatCurrency(currentScheme.allocated) : 'Budget TBD'}`;
+
+    // Build dropdowns
+    buildDropdown('districtDropdown', districtsList, 'district');
+    buildDropdown('blockDropdown', blocksList, 'block');
+
+    // Reset form
+    selectedDistricts = [];
+    selectedBlocks = [];
+    updateTags('district');
+    updateTags('block');
+    document.getElementById('targetBudget').value = '';
+    document.getElementById('targetOfficer').value = '';
+    document.getElementById('targetStartDate').value = '';
+    document.getElementById('targetEndDate').value = '';
+
+    renderTargetList();
+}
+
+function backToStep1() {
+    currentScheme = null;
+    document.getElementById('proceedBtn').disabled = true;
+    document.querySelectorAll('.scheme-pick-card').forEach(c => c.classList.remove('selected'));
+    setStep(1);
+}
+
+// ─── Step 2: Target Form ──────────────────────────────────────────────────────
+function submitTarget() {
+    const budget  = document.getElementById('targetBudget').value;
+    const officer = document.getElementById('targetOfficer').value;
+    const start   = document.getElementById('targetStartDate').value;
+    const end     = document.getElementById('targetEndDate').value;
+
+    if (selectedDistricts.length === 0 && selectedBlocks.length === 0) {
+        SchemeMonitoring.showToast('Please select at least one District or Block.', 'error'); return;
+    }
+    if (!budget || !officer || !start || !end) {
+        SchemeMonitoring.showToast('Please fill all required fields.', 'error'); return;
+    }
+    if (new Date(end) < new Date(start)) {
+        SchemeMonitoring.showToast('End date must be after start date.', 'error'); return;
+    }
+
+    if (!currentScheme.targets) currentScheme.targets = [];
+    currentScheme.targets.push({
+        districts: [...selectedDistricts],
+        blocks:    [...selectedBlocks],
+        budget:    parseFloat(budget),
+        officer,
+        startDate: start,
+        endDate:   end
+    });
+
+    try { SchemeMonitoring.SchemeService.updateScheme(currentScheme); } catch(e) {}
+
+    SchemeMonitoring.showToast('Target added successfully!', 'success');
+
+    // Reset selections
+    selectedDistricts = []; selectedBlocks = [];
+    updateTags('district'); updateTags('block');
+    document.querySelectorAll('.multi-select-dropdown input[type="checkbox"]').forEach(cb => cb.checked = false);
+    document.getElementById('targetBudget').value = '';
+    document.getElementById('targetOfficer').value = '';
+    document.getElementById('targetStartDate').value = '';
+    document.getElementById('targetEndDate').value = '';
+
+    renderTargetList();
+}
+
+function renderTargetList() {
+    const tbody = document.getElementById('targetListBody');
+    if (!currentScheme || !currentScheme.targets || currentScheme.targets.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#aaa;padding:2rem;">No targets yet. Add one using the form.</td></tr>';
+        return;
+    }
+    tbody.innerHTML = currentScheme.targets.map((t, i) => {
+        const locs = [
+            ...(t.districts||[]).map(d => `<span class="loc-tag district">${d}</span>`),
+            ...(t.blocks||[]).map(b => `<span class="loc-tag block">${b}</span>`)
+        ].join('') || '<span style="color:#aaa;">-</span>';
+        return `<tr>
+            <td style="max-width:180px;">${locs}</td>
+            <td style="font-weight:600;white-space:nowrap;">${SchemeMonitoring.formatCurrency(t.budget)}</td>
+            <td>${t.officer}</td>
+            <td style="font-size:0.82rem;color:#666;white-space:nowrap;">${t.startDate}<br>to ${t.endDate}</td>
+            <td><button class="btn btn-sm btn-danger" onclick="removeTarget(${i})" style="padding:3px 10px;font-size:0.78rem;">Remove</button></td>
+        </tr>`;
+    }).join('');
+}
+
+function removeTarget(index) {
+    if (confirm('Remove this target?')) {
+        currentScheme.targets.splice(index, 1);
+        try { SchemeMonitoring.SchemeService.updateScheme(currentScheme); } catch(e) {}
+        SchemeMonitoring.showToast('Target removed.', 'success');
+        renderTargetList();
+    }
+}
+
+function proceedToStep3() {
+    if (!currentScheme || !currentScheme.targets || currentScheme.targets.length === 0) {
+        SchemeMonitoring.showToast('Please add at least one target before viewing details.', 'error'); return;
+    }
+    setStep(3);
+
+    // Fill summary
+    document.getElementById('summarySchemeImg').src = currentScheme.logo || '';
+    document.getElementById('summarySchemeName').textContent = currentScheme.name;
+    document.getElementById('summarySchemeInfo').textContent = `${currentScheme.type || 'Scheme'} · FY 2025-26`;
+    document.getElementById('summaryBudget').textContent = currentScheme.allocated ? SchemeMonitoring.formatCurrency(currentScheme.allocated) : 'TBD';
+
+    const tbody = document.getElementById('summaryBody');
+    tbody.innerHTML = currentScheme.targets.map((t, i) => `
+        <tr>
+            <td style="font-weight:700;color:#1a237e;">${i+1}</td>
+            <td>${(t.districts||[]).map(d=>`<span class="loc-tag district">${d}</span>`).join('') || '-'}</td>
+            <td>${(t.blocks||[]).map(b=>`<span class="loc-tag block">${b}</span>`).join('') || '-'}</td>
+            <td style="font-weight:600;">${SchemeMonitoring.formatCurrency(t.budget)}</td>
+            <td>${t.officer}</td>
+            <td style="font-size:0.82rem;">${t.startDate}</td>
+            <td style="font-size:0.82rem;">${t.endDate}</td>
+        </tr>
+    `).join('');
+}
+
+function backToStep2() { setStep(2); }
+
+// ─── Step Manager ─────────────────────────────────────────────────────────────
+function setStep(n) {
+    document.getElementById('step1Section').style.display = n === 1 ? 'block' : 'none';
+    document.getElementById('step2Section').style.display = n === 2 ? 'block' : 'none';
+    document.getElementById('step3Section').style.display = n === 3 ? 'block' : 'none';
+
+    [1,2,3].forEach(i => {
+        const el = document.getElementById('step' + i + 'Indicator');
+        el.className = 'step' + (i < n ? ' done' : i === n ? ' active' : '');
+    });
+    document.getElementById('line1').className = 'step-line' + (n > 1 ? ' done' : '');
+    document.getElementById('line2').className = 'step-line' + (n > 2 ? ' done' : '');
+}
+
+// ─── Dropdown Logic ───────────────────────────────────────────────────────────
+function buildDropdown(containerId, items, type) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+
+    const allDiv = document.createElement('div');
+    allDiv.className = 'multi-select-option select-all-option';
+    allDiv.innerHTML = `<input type="checkbox" id="chk_all_${type}"><label for="chk_all_${type}">Select All</label>`;
+    allDiv.querySelector('input').addEventListener('change', e => { e.stopPropagation(); toggleSelectAll(type, e.target.checked, items); });
+    container.appendChild(allDiv);
+
+    items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'multi-select-option';
+        const cbId = `chk_${type}_${item.replace(/\s+/g,'_')}`;
+        div.innerHTML = `<input type="checkbox" id="${cbId}" value="${item}"><label for="${cbId}">${item}</label>`;
+        div.querySelector('input').addEventListener('change', e => { e.stopPropagation(); onItemChange(type, item, e.target.checked, items); });
+        container.appendChild(div);
+    });
+}
+
+function toggleDropdown(type) {
+    const dd = document.getElementById(type + 'Dropdown');
+    const open = dd.classList.contains('show');
+    closeAllDropdowns();
+    if (!open) dd.classList.add('show');
+}
+
+function closeAllDropdowns() {
+    document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.remove('show'));
+}
+
+function toggleSelectAll(type, checked, items) {
+    const list = type === 'district' ? selectedDistricts : selectedBlocks;
+    list.length = 0;
+    document.getElementById(type+'Dropdown').querySelectorAll('input[type="checkbox"]:not([id^="chk_all_"])').forEach(cb => {
+        cb.checked = checked;
+        if (checked) list.push(cb.value);
+    });
+    updateTags(type);
+}
+
+function onItemChange(type, value, checked, allItems) {
+    const list = type === 'district' ? selectedDistricts : selectedBlocks;
+    if (checked) { if (!list.includes(value)) list.push(value); }
+    else { const i = list.indexOf(value); if (i > -1) list.splice(i, 1); }
+    const allCb = document.getElementById('chk_all_' + type);
+    if (allCb) allCb.checked = list.length === allItems.length;
+    updateTags(type);
+}
+
+function updateTags(type) {
+    const list = type === 'district' ? selectedDistricts : selectedBlocks;
+    const tags = document.getElementById(type + 'Tags');
+    const ph   = document.getElementById(type + 'Placeholder');
+    tags.innerHTML = '';
+    if (list.length === 0) {
+        ph.textContent = type === 'district' ? 'Select Districts...' : 'Select Blocks...';
+        ph.style.color = '#6c757d';
+    } else {
+        ph.textContent = `${list.length} selected`;
+        ph.style.color = '#1a237e';
+        list.forEach(item => {
+            const tag = document.createElement('span');
+            tag.className = 'selected-tag' + (type === 'block' ? ' block-tag' : '');
+            tag.innerHTML = `${item} <span class="selected-tag-close" onclick="removeTag('${item}','${type}')">&#215;</span>`;
+            tags.appendChild(tag);
+        });
+    }
+}
+
+function removeTag(value, type) {
+    const list = type === 'district' ? selectedDistricts : selectedBlocks;
+    const i = list.indexOf(value);
+    if (i > -1) {
+        list.splice(i, 1);
+        const cb = document.getElementById(`chk_${type}_${value.replace(/\s+/g,'_')}`);
+        if (cb) cb.checked = false;
+        const allCb = document.getElementById('chk_all_' + type);
+        if (allCb) allCb.checked = false;
+        updateTags(type);
+    }
+}
+
+// ─── Edit scheme details (from summary) ──────────────────────────────────────
+function editSchemeDetails() {
+    document.getElementById('editSchemeType').value = currentScheme.type || '';
+    document.getElementById('editSchemeBudget').value = currentScheme.allocated || '';
+    document.getElementById('editSchemeModal').style.display = 'flex';
+}
+function closeEditModal() { document.getElementById('editSchemeModal').style.display = 'none'; }
+function saveSchemeDetails() {
+    const t = document.getElementById('editSchemeType').value;
+    const b = document.getElementById('editSchemeBudget').value;
+    if (t) currentScheme.type = t;
+    if (b && !isNaN(b)) currentScheme.allocated = parseFloat(b);
+    try { SchemeMonitoring.SchemeService.updateScheme(currentScheme); } catch(e) {}
+    closeEditModal();
+    proceedToStep2(); // refresh header
+    SchemeMonitoring.showToast('Scheme details updated!', 'success');
+}
+document.getElementById('editSchemeModal').addEventListener('click', function(e) { if (e.target === this) closeEditModal(); });
+</script>
+</body>
+</html>
