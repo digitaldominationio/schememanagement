@@ -37,7 +37,7 @@
                 
                 <div class="nav-section">
                     <div class="nav-section-title">Financial Monitoring</div>
-                    <div class="nav-item">
+                    <div class="nav-item admin-only">
                         <a href="fund_allocation.html" class="nav-link">
                             <span class="nav-icon">💰</span>
                             <span>Fund Allocation & Release</span>
@@ -55,7 +55,7 @@
                             <span>UC Generation</span>
                         </a>
                     </div>
-                    <div class="nav-item">
+                    <div class="nav-item admin-only">
                         <a href="pfms_status.html" class="nav-link">
                             <span class="nav-icon">🏦</span>
                             <span>PFMS / Treasury Status</span>
@@ -138,11 +138,15 @@
                         <input type="text" class="search-input" id="globalSearchInput" placeholder="Search schemes, files..." style="background: transparent;"><div class="search-results-dropdown" id="searchResultsDropdown"></div>
                     </div>
                     <div class="header-notifications"><button class="notification-btn" id="notificationBtn" style="color: #1a237e;">🔔<span class="notification-badge">5</span></button><div class="notification-dropdown" id="notificationDropdown"><div class="notification-header"><h3>Notifications</h3><button class="mark-read-btn">Mark all as read</button></div><div class="notification-list"><div class="notification-item unread"><div class="notification-icon">📝</div><div class="notification-content"><p><strong>New UC Generated</strong><br>Bhubaneswar Block submitted UC for ₹5L.</p><span class="notification-time">2 mins ago</span></div></div><div class="notification-item unread"><div class="notification-icon">💰</div><div class="notification-content"><p><strong>Fund Released</strong><br>₹2.5 Cr released for Rural Housing Scheme.</p><span class="notification-time">1 hour ago</span></div></div><div class="notification-item"><div class="notification-icon">⚠️</div><div class="notification-content"><p><strong>Pending Inspection</strong><br>Cuttack District inspection overdue by 3 days.</p><span class="notification-time">5 hours ago</span></div></div></div><div class="notification-footer"><a href="#" class="view-all-btn">View All Notifications</a></div></div></div>
-                    <div class="user-profile" style="border-left: 1px solid #dee2e6; padding-left: 1rem;">
+                    <div class="user-profile" style="border-left: 1px solid #dee2e6; padding-left: 1rem; cursor: pointer; position: relative;" onclick="document.getElementById('userDropdown').classList.toggle('show')">
                         <div class="user-avatar" style="background: #1a237e; color: white;">AU</div>
                         <div class="user-info">
                             <h4 style="color: #333;">Admin User</h4>
                             <p>State Nodal Officer</p>
+                        </div>
+                        <div class="dropdown-menu" id="userDropdown" style="position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ddd; border-radius: 4px; display: none; margin-top: 10px; width: 150px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 1000;">
+                            <a href="#" class="dropdown-item" style="display: block; padding: 10px; color: #333; text-decoration: none; border-bottom: 1px solid #eee;">Profile</a>
+                            <a href="#" id="logoutBtn" class="dropdown-item" style="display: block; padding: 10px; color: #d32f2f; text-decoration: none;">Logout</a>
                         </div>
                     </div>
                 </div>

@@ -4,14 +4,98 @@
 
 // Global State Management
 const AppState = {
-  user: {
-    name: "Admin User",
-    role: "System Administrator",
-    avatar: "AU",
-  },
+  user: JSON.parse(localStorage.getItem('currentUser')) || null,
   notifications: [],
   sidebarOpen: true,
 };
+
+// ============================================
+// Authentication Service
+// ============================================
+const AuthService = {
+    users: [
+        { username: 'admin', password: 'admin123', role: 'admin', name: 'Admin User', designation: 'State Nodal Officer', avatar: 'AU' },
+        { username: 'user', password: 'user123', role: 'user', name: 'Block Officer', designation: 'Block Development Officer', avatar: 'BO' }
+    ],
+
+    login(username, password) {
+        const user = this.users.find(u => u.username === username && u.password === password);
+        if (user) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            AppState.user = user;
+            return { success: true, user };
+        }
+        return { success: false, message: 'Invalid credentials' };
+    },
+
+    logout() {
+        localStorage.removeItem('currentUser');
+        AppState.user = null;
+        window.location.href = '../index.html';
+    },
+
+    checkSession() {
+        const user = localStorage.getItem('currentUser');
+        if (!user && !window.location.pathname.includes('index.html')) {
+            window.location.href = '../index.html';
+        }
+    },
+
+    getCurrentUser() {
+        return JSON.parse(localStorage.getItem('currentUser'));
+    }
+};
+
+// ============================================
+// Scheme Data Service (Mock Backend)
+// ============================================
+const SchemeService = {
+    // Initial Seed Data
+    initialData: [
+        { id: 1, name: 'Rural Housing Scheme', type: 'Housing', allocated: 5000000, utilized: 3500000, progress: 70, status: 'On Track', district: 'Bhubaneswar', assignedTo: 'user' },
+        { id: 2, name: 'Safe Drinking Water', type: 'Infrastructure', allocated: 2000000, utilized: 1800000, progress: 90, status: 'Completed', district: 'Cuttack', assignedTo: 'user' },
+        { id: 3, name: 'Road Development', type: 'Infrastructure', allocated: 8000000, utilized: 2000000, progress: 25, status: 'Delayed', district: 'Puri', assignedTo: 'admin' }
+    ],
+
+    init() {
+        if (!localStorage.getItem('schemes')) {
+            localStorage.setItem('schemes', JSON.stringify(this.initialData));
+        }
+    },
+
+    getAllSchemes() {
+        this.init();
+        return JSON.parse(localStorage.getItem('schemes'));
+    },
+
+    getUserSchemes(username) {
+        const all = this.getAllSchemes();
+        // Admins see all, Users see assigned
+        if (AuthService.getCurrentUser()?.role === 'admin') return all;
+        return all.filter(s => s.assignedTo === username);
+    },
+
+    updateSchemeProgress(id, progress, status) {
+        const schemes = this.getAllSchemes();
+        const index = schemes.findIndex(s => s.id === id);
+        if (index !== -1) {
+            schemes[index].progress = progress;
+            schemes[index].status = status;
+            schemes[index].lastUpdated = new Date().toISOString();
+            localStorage.setItem('schemes', JSON.stringify(schemes));
+            return true;
+        }
+        return false;
+    }
+};
+
+// Initialize Data
+SchemeService.init();
+
+// Check Session on Load (skip for login page)
+if (!window.location.pathname.endsWith('index.html') && !window.location.pathname.endsWith('/')) {
+    AuthService.checkSession();
+}
 
 // ============================================
 // Utility Functions
@@ -449,6 +533,27 @@ function animateProgressBar(elementId, targetPercentage) {
 // ============================================
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Check Auth & Render User Info
+  const user = AppState.user;
+  if (user) {
+      const profileName = document.querySelector('.user-info h4');
+      const profileRole = document.querySelector('.user-info p');
+      const profileAvatar = document.querySelector('.user-avatar');
+      
+      if (profileName) profileName.textContent = user.name;
+      if (profileRole) profileRole.textContent = user.designation;
+      if (profileAvatar) profileAvatar.textContent = user.avatar;
+
+      // Handle Role-Based UI
+      if (user.role === 'user') {
+          document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+          document.querySelectorAll('.user-only').forEach(el => el.style.display = 'block'); // Ensure user-only are shown if hidden
+      } else if (user.role === 'admin') {
+          document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block'); // Ensure admin-only are shown
+          document.querySelectorAll('.user-only').forEach(el => el.style.display = 'none');
+      }
+  }
+
   // Initialize navigation
   initNavigation();
   scrollActiveNavIntoView();
@@ -483,6 +588,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize tooltips (if needed)
   initTooltips();
+  
+  // Setup Logout
+  const logoutBtn = document.getElementById('logoutBtn');
+  if(logoutBtn) {
+      logoutBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          AuthService.logout();
+      });
+  }
 
   console.log("Scheme Monitoring System initialized");
 });
@@ -541,6 +655,8 @@ window.SchemeMonitoring = {
   apiRequest,
   getCSRFToken,
   animateProgressBar,
+  AuthService, // Exported
+  SchemeService // Exported
 };
 
 // ============================================
@@ -550,7 +666,192 @@ window.SchemeMonitoring = {
 document.addEventListener('DOMContentLoaded', () => {
     setupGlobalSearch();
     setupNotifications();
+    
+    // Load user schemes if on dashboard and user is logged in
+    if (window.location.href.includes('dashboard.html')) {
+        const currentUser = SchemeMonitoring.AuthService.getCurrentUser();
+        if (currentUser?.role === 'user') {
+            // Show user section
+            document.querySelector('.user-only').style.display = 'block';
+            SchemeMonitoring.loadUserSchemes();
+        } else if (currentUser?.role === 'admin') {
+            SchemeMonitoring.loadAdminDashboard();
+        }
+    }
 });
+
+// Admin Dashboard Functions
+window.SchemeMonitoring.loadAdminDashboard = function() {
+    const schemes = this.SchemeService.getAllSchemes();
+    const tbody = document.querySelector('#districtTable tbody');
+    if (!tbody) return;
+
+    // Aggregate by District
+    const districtData = {};
+    schemes.forEach(scheme => {
+        if (!districtData[scheme.district]) {
+            districtData[scheme.district] = {
+                name: scheme.district,
+                totalSchemes: 0,
+                allocated: 0,
+                utilized: 0,
+                beneficiaries: 0, // Mock data doesn't have beneficiaries count yet, assume 0 or random
+                status: 'On Track' // Logic to determine status
+            };
+        }
+        districtData[scheme.district].totalSchemes++;
+        districtData[scheme.district].allocated += scheme.allocated;
+        districtData[scheme.district].utilized += scheme.utilized;
+    });
+
+    tbody.innerHTML = Object.values(districtData).map(dist => {
+        const utilization = dist.allocated > 0 ? Math.round((dist.utilized / dist.allocated) * 100) : 0;
+        return `
+        <tr>
+            <td><strong>${dist.name}</strong></td>
+            <td>${dist.totalSchemes}</td>
+            <td>${this.formatCurrency(dist.allocated)}</td>
+            <td>${this.formatCurrency(dist.utilized)}</td>
+            <td>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <div class="progress" style="flex: 1; height: 6px;">
+                        <div class="progress-bar ${utilization > 50 ? 'success' : 'warning'}" style="width: ${utilization}%"></div>
+                    </div>
+                    <span>${utilization}%</span>
+                </div>
+            </td>
+            <td>-</td> <!-- Beneficiaries placeholder -->
+            <td><span class="badge badge-success">Active</span></td>
+            <td>
+                <button class="btn btn-sm btn-outline">View Details</button>
+            </td>
+        </tr>
+    `}).join('');
+
+    // Recent Updates
+    const recentTableBody = document.querySelector('#recentUpdatesTable tbody');
+    if (recentTableBody) {
+        // Sort schemes by lastUpdated desc
+        const sortedSchemes = [...schemes].sort((a, b) => { // Create copy to avoid mutating original if needed
+            const dateA = new Date(a.lastUpdated || 0);
+            const dateB = new Date(b.lastUpdated || 0);
+            return dateB - dateA;
+        }).slice(0, 5); // Top 5
+
+        recentTableBody.innerHTML = sortedSchemes.map(scheme => `
+            <tr>
+                <td><strong>${scheme.name}</strong></td>
+                <td>${scheme.district}</td>
+                <td>${scheme.assignedTo || 'N/A'}</td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="font-weight: 600;">${scheme.progress}%</span>
+                        <div class="progress" style="width: 50px; height: 4px;">
+                            <div class="progress-bar ${getProgressBarColor(scheme.progress)}" style="width: ${scheme.progress}%"></div>
+                        </div>
+                    </div>
+                </td>
+                <td><span class="badge ${getStatusBadgeClass(scheme.status)}">${scheme.status}</span></td>
+                <td>${new Date(scheme.lastUpdated || 0).toLocaleDateString()}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary" onclick="SchemeMonitoring.openUpdateModal(${scheme.id})">Edit</button>
+                </td>
+            </tr>
+        `).join('');
+        
+        // Ensure the container is visible (it has admin-only class which is handled by DOMContentLoaded, but we need to make sure)
+        // Actually DOMContentLoaded hides admin-only for non-admins. Examples show it's display:none by default in HTML? 
+        // No, HTML has style="display: none;" on the card itself for recent updates.
+        document.querySelector('.admin-only[style*="display: none"]').style.display = 'block';
+    }
+};
+
+// User Dashboard Functions
+window.SchemeMonitoring.loadUserSchemes = function() {
+    const user = this.AuthService.getCurrentUser();
+    if (!user) return;
+
+    const schemes = this.SchemeService.getUserSchemes(user.username);
+    const tbody = document.getElementById('mySchemesBody');
+    if (!tbody) return;
+
+    tbody.innerHTML = schemes.map(scheme => `
+        <tr>
+            <td><strong>${scheme.name}</strong><br><span style="font-size:0.8rem; color:#666;">${scheme.district}</span></td>
+            <td>${this.formatCurrency(scheme.allocated)}</td>
+            <td>${this.formatCurrency(scheme.utilized)}</td>
+            <td>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <div class="progress" style="flex: 1; height: 8px;">
+                        <div class="progress-bar ${getProgressBarColor(scheme.progress)}" style="width: ${scheme.progress}%"></div>
+                    </div>
+                    <span style="font-size: 0.875rem; font-weight: 600;">${scheme.progress}%</span>
+                </div>
+            </td>
+            <td><span class="badge ${getStatusBadgeClass(scheme.status)}">${scheme.status}</span></td>
+            <td>${new Date(scheme.lastUpdated || Date.now()).toLocaleDateString()}</td>
+            <td>
+                <button class="btn btn-sm btn-primary" onclick="SchemeMonitoring.openUpdateModal(${scheme.id})">Update</button>
+            </td>
+        </tr>
+    `).join('');
+};
+
+window.SchemeMonitoring.openUpdateModal = function(id) {
+    const scheme = this.SchemeService.getAllSchemes().find(s => s.id === id);
+    if (!scheme) return;
+
+    document.getElementById('updateSchemeId').value = scheme.id;
+    document.getElementById('updateSchemeName').value = scheme.name;
+    document.getElementById('updateProgressValue').value = scheme.progress;
+    document.getElementById('updateStatusValue').value = scheme.status;
+    document.getElementById('updateRemarks').value = ''; // Clear remarks
+
+    openModal('updateProgressModal');
+};
+
+window.SchemeMonitoring.submitProgressUpdate = function() {
+    const id = parseInt(document.getElementById('updateSchemeId').value);
+    const progress = parseInt(document.getElementById('updateProgressValue').value);
+    const status = document.getElementById('updateStatusValue').value;
+    const remarks = document.getElementById('updateRemarks').value;
+
+    if (progress < 0 || progress > 100) {
+        alert('Progress must be between 0 and 100');
+        return;
+    }
+
+    // Update in "Backend"
+    this.SchemeService.updateSchemeProgress(id, progress, status);
+    
+    // Log remark (mock)
+    console.log(`User updated scheme ${id}: ${remarks}`);
+
+    this.showToast('Progress updated successfully!', 'success');
+    closeModal('updateProgressModal');
+    this.loadUserSchemes(); // Refresh table
+    
+    // Refresh admin stats if visible (mock update)
+    // In a real app, admin view would fetch fresh data. 
+    // Here, if we were on admin view, we'd reload. 
+};
+
+// Helper functions for UI
+function getProgressBarColor(progress) {
+    if (progress >= 100) return 'success';
+    if (progress < 50) return 'warning';
+    return 'primary';
+}
+
+function getStatusBadgeClass(status) {
+    switch(status.toLowerCase()) {
+        case 'completed': return 'badge-success';
+        case 'on track': return 'badge-success';
+        case 'delayed': return 'badge-warning';
+        default: return 'badge-outline';
+    }
+}
+
 
 function setupGlobalSearch() {
     const searchInput = document.getElementById('globalSearchInput');

@@ -1309,3 +1309,8 @@ textarea {
 .bg-danger {
   background: var(--danger);
 }
+
+/* Role-based Visibility */
+.admin-only, .user-only {
+    transition: opacity 0.3s ease;
+}

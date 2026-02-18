@@ -36,7 +36,7 @@
                 
                 <div class="nav-section">
                     <div class="nav-section-title">Financial Monitoring</div>
-                    <div class="nav-item">
+                    <div class="nav-item admin-only">
                         <a href="financial/fund_allocation.html" class="nav-link">
                             <span class="nav-icon">💰</span>
                             <span>Fund Allocation & Release</span>
@@ -54,7 +54,7 @@
                             <span>UC Generation</span>
                         </a>
                     </div>
-                    <div class="nav-item">
+                    <div class="nav-item admin-only">
                         <a href="financial/pfms_status.html" class="nav-link">
                             <span class="nav-icon">🏦</span>
                             <span>PFMS / Treasury Status</span>
@@ -172,11 +172,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="user-profile" style="border-left: 1px solid #dee2e6; padding-left: 1rem;">
+                    <div class="user-profile" style="border-left: 1px solid #dee2e6; padding-left: 1rem; cursor: pointer; position: relative;" onclick="document.getElementById('userDropdown').classList.toggle('show')">
                         <div class="user-avatar" style="background: #1a237e; color: white;">AU</div>
                         <div class="user-info">
                             <h4 style="color: #333;">Admin User</h4>
                             <p>State Nodal Officer</p>
+                        </div>
+                        <div class="dropdown-menu" id="userDropdown" style="position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ddd; border-radius: 4px; display: none; margin-top: 10px; width: 150px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 1000;">
+                            <a href="#" class="dropdown-item" style="display: block; padding: 10px; color: #333; text-decoration: none; border-bottom: 1px solid #eee;">Profile</a>
+                            <a href="#" id="logoutBtn" class="dropdown-item" style="display: block; padding: 10px; color: #d32f2f; text-decoration: none;">Logout</a>
                         </div>
                     </div>
                 </div>
@@ -298,8 +302,102 @@
                     </div>
                 </div>
 
+                <!-- My Assigned Schemes (User Only) -->
+                <div class="card mb-3 user-only" style="display: none;"> <!-- Hidden by default, shown by JS if role=user -->
+                    <div class="card-header">
+                        <h3 class="card-title">My Assigned Schemes</h3>
+                        <button class="btn btn-sm btn-primary" onclick="SchemeMonitoring.loadUserSchemes()">↻ Refresh</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="table" id="mySchemesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Scheme Name</th>
+                                        <th>Target</th>
+                                        <th>Achieved</th>
+                                        <th>Progress</th>
+                                        <th>Status</th>
+                                        <th>Last Updated</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="mySchemesBody">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Updates (Admin Only) -->
+                <div class="card mb-3 admin-only" style="display: none;">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Scheme Updates</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="table" id="recentUpdatesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Scheme Name</th>
+                                        <th>District</th>
+                                        <th>Updated By</th>
+                                        <th>Progress</th>
+                                        <th>Status</th>
+                                        <th>Last Updated</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Update Progress Modal -->
+                <div id="updateProgressModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title">Update Scheme Progress</h2>
+                            <button class="modal-close" onclick="closeModal('updateProgressModal')">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="updateProgressForm">
+                                <input type="hidden" id="updateSchemeId">
+                                <div class="form-group">
+                                    <label class="form-label">Scheme Name</label>
+                                    <input type="text" id="updateSchemeName" class="form-control" readonly style="background: #f0f0f0;">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Current Progress (%)</label>
+                                    <input type="number" id="updateProgressValue" class="form-control" min="0" max="100" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Status</label>
+                                    <select id="updateStatusValue" class="form-control">
+                                        <option value="On Track">On Track</option>
+                                        <option value="Delayed">Delayed</option>
+                                        <option value="Completed">Completed</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Remarks</label>
+                                    <textarea id="updateRemarks" class="form-control" rows="3"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" onclick="closeModal('updateProgressModal')">Cancel</button>
+                            <button class="btn btn-primary" onclick="SchemeMonitoring.submitProgressUpdate()">Save Update</button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- District-wise Performance -->
-                <div class="card">
+                <div class="card admin-only"> <!-- Only Admin sees District Wise full table -->
                     <div class="card-header">
                         <h3 class="card-title">District-wise Performance</h3>
                         <div style="display: flex; gap: 0.5rem;">
