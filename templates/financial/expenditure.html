@@ -417,6 +417,99 @@
             </div>
         </main>
     </div>
+        <!-- View Expenditure Modal -->
+    <div id="viewExpenditureModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Expenditure Details</h2>
+                <button class="modal-close" onclick="closeModal('viewExpenditureModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="expenditureDetailsContent">
+                    <!-- Content will be populated dynamically -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('viewExpenditureModal')">Close</button>
+                <button class="btn btn-primary" onclick="downloadExpenditurePDF()">Download PDF</button>
+            </div>
+        </div>
+    </div>
+    <!-- Add Expenditure Modal -->
+    <div id="addExpenditureModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Add Expenditure Record</h2>
+                <button class="modal-close" onclick="closeModal('addExpenditureModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addExpenditureForm">
+                    <div class="form-group">
+                        <label class="form-label">Scheme Name</label>
+                        <select class="form-control form-select" required>
+                            <option value="">Select Scheme</option>
+                            <option value="MGNREGA">MGNREGA</option>
+                            <option value="PMAY">PMAY</option>
+                            <option value="Swachh Bharat Mission">Swachh Bharat Mission</option>
+                            <option value="PMGSY">PMGSY</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">District</label>
+                            <select class="form-control form-select" required>
+                                <option value="">Select District</option>
+                                <option value="Khordha">Khordha</option>
+                                <option value="Cuttack">Cuttack</option>
+                                <option value="Puri">Puri</option>
+                                <option value="Ganjam">Ganjam</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Block</label>
+                            <select class="form-control form-select" required>
+                                <option value="">Select Block</option>
+                                <option value="Bhubaneswar">Bhubaneswar</option>
+                                <option value="Jatni">Jatni</option>
+                                <option value="Balianta">Balianta</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Panchayat</label>
+                            <select class="form-control form-select" required>
+                                <option value="">Select Panchayat</option>
+                                <option value="Patia">Patia GP</option>
+                                <option value="Raghunathpur">Raghunathpur GP</option>
+                                <option value="Kalyanpur">Kalyanpur GP</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Expenditure Date</label>
+                            <input type="date" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Amount Utilized (₹)</label>
+                        <input type="number" class="form-control" placeholder="Enter amount" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Purpose / Description</label>
+                        <textarea class="form-control" rows="3" placeholder="Describe the expenditure purpose..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Upload Vouchers (Optional)</label>
+                        <input type="file" class="form-control" multiple>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addExpenditureModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="SchemeMonitoring.showToast('Expenditure submitted for approval', 'success'); closeModal('addExpenditureModal');">Submit</button>
+            </div>
+        </div>
+    </div>
     <!-- Scripts -->
     <script src="../../static/js/main.js"></script>
     <script src="../../static/js/modal.js"></script>
@@ -665,98 +758,6 @@
         // In production, generate and download PDF
     }
     </script>
-    <!-- View Expenditure Modal -->
-    <div id="viewExpenditureModal" class="modal">
-        <div class="modal-content" style="max-width: 700px;">
-            <div class="modal-header">
-                <h2 class="modal-title">Expenditure Details</h2>
-                <button class="modal-close" onclick="closeModal('viewExpenditureModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="expenditureDetailsContent">
-                    <!-- Content will be populated dynamically -->
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('viewExpenditureModal')">Close</button>
-                <button class="btn btn-primary" onclick="downloadExpenditurePDF()">Download PDF</button>
-            </div>
-        </div>
-    </div>
-    <!-- Add Expenditure Modal -->
-    <div id="addExpenditureModal" class="modal">
-        <div class="modal-content" style="max-width: 600px;">
-            <div class="modal-header">
-                <h2 class="modal-title">Add Expenditure Record</h2>
-                <button class="modal-close" onclick="closeModal('addExpenditureModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="addExpenditureForm">
-                    <div class="form-group">
-                        <label class="form-label">Scheme Name</label>
-                        <select class="form-control form-select" required>
-                            <option value="">Select Scheme</option>
-                            <option value="MGNREGA">MGNREGA</option>
-                            <option value="PMAY">PMAY</option>
-                            <option value="Swachh Bharat Mission">Swachh Bharat Mission</option>
-                            <option value="PMGSY">PMGSY</option>
-                        </select>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">District</label>
-                            <select class="form-control form-select" required>
-                                <option value="">Select District</option>
-                                <option value="Khordha">Khordha</option>
-                                <option value="Cuttack">Cuttack</option>
-                                <option value="Puri">Puri</option>
-                                <option value="Ganjam">Ganjam</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Block</label>
-                            <select class="form-control form-select" required>
-                                <option value="">Select Block</option>
-                                <option value="Bhubaneswar">Bhubaneswar</option>
-                                <option value="Jatni">Jatni</option>
-                                <option value="Balianta">Balianta</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Panchayat</label>
-                            <select class="form-control form-select" required>
-                                <option value="">Select Panchayat</option>
-                                <option value="Patia">Patia GP</option>
-                                <option value="Raghunathpur">Raghunathpur GP</option>
-                                <option value="Kalyanpur">Kalyanpur GP</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Expenditure Date</label>
-                            <input type="date" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Amount Utilized (₹)</label>
-                        <input type="number" class="form-control" placeholder="Enter amount" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Purpose / Description</label>
-                        <textarea class="form-control" rows="3" placeholder="Describe the expenditure purpose..." required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Upload Vouchers (Optional)</label>
-                        <input type="file" class="form-control" multiple>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('addExpenditureModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="SchemeMonitoring.showToast('Expenditure submitted for approval', 'success'); closeModal('addExpenditureModal');">Submit</button>
-            </div>
-        </div>
-    </div>
+
 </body>
 </html>

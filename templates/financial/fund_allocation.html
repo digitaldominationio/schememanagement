@@ -378,7 +378,114 @@
     </div>
 
 
+        <!-- New Allocation Modal -->
+    <div id="allocationModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 class="modal-title">New Fund Allocation</h3>
+                <button class="modal-close" onclick="closeModal('allocationModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <form id="allocationForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Scheme</label>
+                            <select class="form-control form-select" name="scheme" required>
+                                <option value="">Select Scheme</option>
+                                <option value="mgnrega">MGNREGA</option>
+                                <option value="pmay">PMAY</option>
+                                <option value="sbm">Swachh Bharat Mission</option>
+                                <option value="pmgsy">PMGSY</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Financial Year</label>
+                            <select class="form-control form-select" name="fy" required>
+                                <option value="2025-26">2025-26</option>
+                                <option value="2024-25">2024-25</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">District</label>
+                            <select class="form-control form-select" name="district" required>
+                                <option value="">Select District</option>
+                                <option value="dist1">District A</option>
+                                <option value="dist2">District B</option>
+                                <option value="dist3">District C</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Block</label>
+                            <select class="form-control form-select" name="block" required>
+                                <option value="">Select Block</option>
+                                <option value="block1">Block 1</option>
+                                <option value="block2">Block 2</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Panchayat</label>
+                        <select class="form-control form-select" name="panchayat" required>
+                            <option value="">Select Panchayat</option>
+                            <option value="panch1">Panchayat 1</option>
+                            <option value="panch2">Panchayat 2</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Allocation Amount (₹)</label>
+                            <input type="number" class="form-control" name="amount" placeholder="Enter amount" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Allocation Date</label>
+                            <input type="date" class="form-control" name="date" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Remarks</label>
+                        <textarea class="form-control" name="remarks" rows="3" placeholder="Enter any remarks or notes"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Supporting Documents</label>
+                        <input type="file" class="form-control" name="documents" multiple>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('allocationModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitAllocation()">Submit Allocation</button>
+            </div>
+        </div>
+    </div>
     
+    <!-- View Allocation Modal -->
+    <div id="viewAllocationModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Allocation Details</h2>
+                <button class="modal-close" onclick="closeModal('viewAllocationModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="allocationDetailsContent">
+                    <!-- Content will be populated dynamically -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('viewAllocationModal')">Close</button>
+                <button class="btn btn-primary" onclick="downloadAllocationPDF()">Download PDF</button>
+            </div>
+        </div>
+    </div>
     <!-- Scripts -->
     <script src="../../static/js/main.js"></script>
     <script src="../../static/js/modal.js"></script>
@@ -587,113 +694,6 @@
         });
     });
     </script>
-    <!-- New Allocation Modal -->
-    <div id="allocationModal" class="modal">
-        <div class="modal-content" style="max-width: 800px;">
-            <div class="modal-header">
-                <h3 class="modal-title">New Fund Allocation</h3>
-                <button class="modal-close" onclick="closeModal('allocationModal')">✕</button>
-            </div>
-            <div class="modal-body">
-                <form id="allocationForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label required">Scheme</label>
-                            <select class="form-control form-select" name="scheme" required>
-                                <option value="">Select Scheme</option>
-                                <option value="mgnrega">MGNREGA</option>
-                                <option value="pmay">PMAY</option>
-                                <option value="sbm">Swachh Bharat Mission</option>
-                                <option value="pmgsy">PMGSY</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label required">Financial Year</label>
-                            <select class="form-control form-select" name="fy" required>
-                                <option value="2025-26">2025-26</option>
-                                <option value="2024-25">2024-25</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label required">District</label>
-                            <select class="form-control form-select" name="district" required>
-                                <option value="">Select District</option>
-                                <option value="dist1">District A</option>
-                                <option value="dist2">District B</option>
-                                <option value="dist3">District C</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label required">Block</label>
-                            <select class="form-control form-select" name="block" required>
-                                <option value="">Select Block</option>
-                                <option value="block1">Block 1</option>
-                                <option value="block2">Block 2</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label required">Panchayat</label>
-                        <select class="form-control form-select" name="panchayat" required>
-                            <option value="">Select Panchayat</option>
-                            <option value="panch1">Panchayat 1</option>
-                            <option value="panch2">Panchayat 2</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label required">Allocation Amount (₹)</label>
-                            <input type="number" class="form-control" name="amount" placeholder="Enter amount" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label required">Allocation Date</label>
-                            <input type="date" class="form-control" name="date" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Remarks</label>
-                        <textarea class="form-control" name="remarks" rows="3" placeholder="Enter any remarks or notes"></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Supporting Documents</label>
-                        <input type="file" class="form-control" name="documents" multiple>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('allocationModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="submitAllocation()">Submit Allocation</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- View Allocation Modal -->
-    <div id="viewAllocationModal" class="modal">
-        <div class="modal-content" style="max-width: 700px;">
-            <div class="modal-header">
-                <h2 class="modal-title">Allocation Details</h2>
-                <button class="modal-close" onclick="closeModal('viewAllocationModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="allocationDetailsContent">
-                    <!-- Content will be populated dynamically -->
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('viewAllocationModal')">Close</button>
-                <button class="btn btn-primary" onclick="downloadAllocationPDF()">Download PDF</button>
-            </div>
-        </div>
-    </div>
+
 </body>
 </html>

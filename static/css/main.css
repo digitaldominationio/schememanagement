@@ -1048,7 +1048,12 @@ textarea {
   background: linear-gradient(90deg, var(--danger), #f87171);
 }
 
-/* Modal */
+/* main.css */
+:root {
+   --modal-max-width: 700px;
+}
+
+/* Modal
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -1115,7 +1120,7 @@ textarea {
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
-}
+} */
 
 /* Alerts */
 .alert {
