@@ -8,6 +8,7 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="../../static/css/main.css">
     <link rel="stylesheet" href="../../static/css/components.css">
+    <link rel="stylesheet" href="../../static/css/modal.css">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -523,8 +524,8 @@
     </div>
 
     <!-- New Inspection Modal -->
-    <div id="inspectionModal" class="modal-overlay">
-        <div class="modal" style="max-width: 900px;">
+    <div id="inspectionModal" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
             <div class="modal-header">
                 <h3 class="modal-title">New Inspection Report</h3>
                 <button class="modal-close" onclick="closeModal('inspectionModal')">✕</button>
@@ -651,11 +652,87 @@
         </div>
     </div>
     
+    <!-- View Inspection Modal -->
+    <div id="viewInspectionModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Inspection Details</h3>
+                <button class="modal-close" onclick="closeModal('viewInspectionModal')">✕</button>
+            </div>
+            <div class="modal-body" id="viewInspectionContent">
+                <!-- Content will be populated by JS -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('viewInspectionModal')">Close</button>
+                <button class="btn btn-primary" onclick="window.print()">Print Report</button>
+            </div>
+        </div>
+    </div>
+    
     <!-- Scripts -->
     <script src="../../static/js/main.js"></script>
+    <script src="../../static/js/modal.js"></script>
     <script>
     function viewInspection(id) {
-        SchemeMonitoring.showToast('Viewing inspection: ' + id, 'info');
+        // Mock data for demonstration
+        const mockData = {
+            'INS-2025-001': {
+                type: 'Routine',
+                scheme: 'MGNREGA',
+                location: 'Panchayat A1, District A',
+                inspector: 'Rajesh Kumar (ID: INS001)',
+                date: '15-Jan-2026',
+                status: 'Completed',
+                compliance: 'Compliant',
+                observations: 'All works progressing as per schedule. Muster rolls maintained correctly. Quality of materials found satisfactory.',
+                recommendations: 'Release next installment of funds.'
+            },
+            'INS-2025-002': {
+                type: 'Surprise',
+                scheme: 'PMAY',
+                location: 'Panchayat B2, District B',
+                inspector: 'Sunita Devi (ID: INS002)',
+                date: '14-Jan-2026',
+                status: 'Completed',
+                compliance: 'Partial',
+                observations: 'Construction delayed due to material shortage. Lintel level reached but roof casting pending.',
+                recommendations: 'Expedite material supply coordination.'
+            }
+        };
+
+        const data = mockData[id] || mockData['INS-2025-001']; // Fallback to first item
+
+        const content = `
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div>
+                    <h4 style="color: #666; margin-bottom: 0.5rem;">Basic Info</h4>
+                    <p><strong>Inspection ID:</strong> ${id}</p>
+                    <p><strong>Type:</strong> ${data.type}</p>
+                    <p><strong>Date:</strong> ${data.date}</p>
+                    <p><strong>Status:</strong> <span class="badge badge-success">${data.status}</span></p>
+                </div>
+                <div>
+                    <h4 style="color: #666; margin-bottom: 0.5rem;">Location & Inspector</h4>
+                    <p><strong>Scheme:</strong> ${data.scheme}</p>
+                    <p><strong>Location:</strong> ${data.location}</p>
+                    <p><strong>Inspector:</strong> ${data.inspector}</p>
+                </div>
+            </div>
+            <hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid #eee;">
+            <div>
+                <h4 style="color: #666; margin-bottom: 0.5rem;">Findings</h4>
+                <p><strong>Compliance:</strong> <span class="badge ${data.compliance === 'Compliant' ? 'badge-success' : 'badge-warning'}">${data.compliance}</span></p>
+                <div style="margin-top: 1rem; background: #f8f9fa; padding: 1rem; border-radius: 4px;">
+                    <p style="margin-bottom: 0.5rem;"><strong>Observations:</strong></p>
+                    <p style="margin-bottom: 1rem;">${data.observations}</p>
+                    <p style="margin-bottom: 0.5rem;"><strong>Recommendations:</strong></p>
+                    <p>${data.recommendations}</p>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('viewInspectionContent').innerHTML = content;
+        openModal('viewInspectionModal');
     }
 
     function submitInspection() {

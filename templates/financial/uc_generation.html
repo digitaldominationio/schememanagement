@@ -459,7 +459,218 @@
             </div>
         </main>
     </div>
+    <!-- View UC Modal -->
+    <div id="viewUCModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Utilization Certificate Details</h2>
+                <button class="modal-close" onclick="closeModal('viewUCModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="ucDetailsContent">
+                    <!-- Content will be populated dynamically -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('viewUCModal')">Close</button>
+                <button class="btn btn-primary" onclick="printUC()">Print UC</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generate UC Success Modal (Optional interaction) -->
+     <div id="ucSuccessModal" class="modal">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+             <div class="modal-body" style="padding: 3rem 2rem;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+                <h2 style="margin-bottom: 0.5rem; color: #1a237e;">UC Generated!</h2>
+                <p style="color: #666;">Utilization Certificate has been successfully generated and sent for approval.</p>
+            </div>
+            <div class="modal-footer" style="justify-content: center;">
+                <button class="btn btn-primary" onclick="closeModal('ucSuccessModal')">Continue</button>
+            </div>
+        </div>
+    </div>
+
     <script src="../../static/js/main.js"></script>
     <script src="../../static/js/modal.js"></script>
+    <script>
+        // Mock Data for UCs
+        const ucs = {
+            'UC-2025-1247': {
+                id: 'UC-2025-1247',
+                scheme: 'MGNREGA',
+                district: 'Khordha',
+                block: 'Bhubaneswar',
+                amount: '₹12,50,000',
+                period: 'Q4 2025-26',
+                generatedOn: '16-Feb-2026',
+                status: 'Approved',
+                letterNo: 'MGNREGA/BBSR/2025/1247',
+                approvedBy: 'District Collector',
+                remarks: 'Verified physical records.'
+            },
+            'UC-2025-1246': {
+                id: 'UC-2025-1246',
+                scheme: 'PMAY',
+                district: 'Cuttack',
+                block: 'Cuttack Sadar',
+                amount: '₹8,75,000',
+                period: 'Q4 2025-26',
+                generatedOn: '15-Feb-2026',
+                status: 'Pending',
+                letterNo: 'PMAY/CTC/2025/1246',
+                approvedBy: 'Pending Approval',
+                remarks: 'Awaiting site inspection report.'
+            },
+             'UC-2025-1245': {
+                id: 'UC-2025-1245',
+                scheme: 'Swachh Bharat Mission',
+                district: 'Puri',
+                block: 'Puri Sadar',
+                amount: '₹5,25,000',
+                period: 'Q3 2025-26',
+                generatedOn: '14-Feb-2026',
+                status: 'Approved',
+                letterNo: 'SBM/PURI/2025/1245',
+                approvedBy: 'Project Director, DRDA',
+                remarks: 'Target achieved.'
+            },
+            'UC-2025-1244': {
+                id: 'UC-2025-1244',
+                scheme: 'PMGSY',
+                district: 'Ganjam',
+                block: 'Berhampur',
+                amount: '₹15,00,000',
+                period: 'Q3 2025-26',
+                generatedOn: '13-Feb-2026',
+                status: 'Rejected',
+                letterNo: 'PMGSY/BAM/2025/1244',
+                approvedBy: 'N/A',
+                remarks: 'Mismatch in expenditure vouchers.'
+            },
+             'UC-2025-1243': {
+                id: 'UC-2025-1243',
+                scheme: 'MGNREGA',
+                district: 'Khordha',
+                block: 'Jatni',
+                amount: '₹9,50,000',
+                period: 'Q3 2025-26',
+                generatedOn: '12-Feb-2026',
+                status: 'Pending',
+                letterNo: 'MGNREGA/JAT/2025/1243',
+                approvedBy: 'Pending Approval',
+                remarks: 'Under verification.'
+            }
+        };
+
+        function viewUC(id) {
+            const uc = ucs[id];
+            if (!uc) {
+                SchemeMonitoring.showToast('UC details not found', 'error');
+                return;
+            }
+
+            const statusClass = uc.status === 'Approved' ? 'success' :
+                              uc.status === 'Pending' ? 'warning' : 'danger';
+
+            const content = `
+                <div style="background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%); color: white; padding: 1.5rem; border-radius: 0; margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h3 style="margin: 0 0 0.5rem 0; font-size: 1.5rem;">${uc.id}</h3>
+                            <p style="margin: 0; opacity: 0.9;">Letter No: ${uc.letterNo}</p>
+                        </div>
+                        <div>
+                            <span class="badge badge-${statusClass}" style="font-size: 1rem; padding: 0.5rem 1rem;">${uc.status}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                    <h4 style="margin: 0 0 1rem 0; color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 0.5rem;">UC Information</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <div style="font-size: 0.875rem; color: #666;">Scheme</div>
+                            <div style="font-weight: 600; color: #333;">${uc.scheme}</div>
+                        </div>
+                         <div>
+                            <div style="font-size: 0.875rem; color: #666;">Amount Utilized</div>
+                            <div style="font-weight: 600; color: #333; font-size: 1.1rem;">${uc.amount}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.875rem; color: #666;">Period</div>
+                            <div style="font-weight: 600; color: #333;">${uc.period}</div>
+                        </div>
+                         <div>
+                            <div style="font-size: 0.875rem; color: #666;">Generated On</div>
+                            <div style="font-weight: 600; color: #333;">${uc.generatedOn}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                    <h4 style="margin: 0 0 1rem 0; color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 0.5rem;">Location & Approval</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                         <div>
+                            <div style="font-size: 0.875rem; color: #666;">District</div>
+                            <div style="font-weight: 600; color: #333;">${uc.district}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.875rem; color: #666;">Block</div>
+                            <div style="font-weight: 600; color: #333;">${uc.block}</div>
+                        </div>
+                        <div style="grid-column: span 2;">
+                            <div style="font-size: 0.875rem; color: #666;">Approved By</div>
+                            <div style="font-weight: 600; color: #333;">${uc.approvedBy}</div>
+                        </div>
+                         <div style="grid-column: span 2;">
+                            <div style="font-size: 0.875rem; color: #666;">Remarks</div>
+                            <div style="color: #333;">${uc.remarks}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('ucDetailsContent').innerHTML = content;
+            openModal('viewUCModal');
+        }
+
+        function downloadUC(id) {
+            SchemeMonitoring.showToast(`Downloading UC ${id}...`, 'success');
+        }
+
+        function reviseUC(id) {
+             SchemeMonitoring.showToast(`Opening revision form for ${id}...`, 'info');
+             // Logic to open revision modal or redirect would go here
+        }
+
+        function generateUC() {
+            // Simple validation
+            const scheme = document.getElementById('ucScheme').value;
+            const district = document.getElementById('ucDistrict').value;
+            const block = document.getElementById('ucBlock').value;
+            const amount = document.getElementById('ucAmount').value;
+            
+            if(!scheme || !district || !block || !amount) {
+                SchemeMonitoring.showToast('Please fill all required fields', 'error');
+                return;
+            }
+
+            // Simulate generation
+            openModal('ucSuccessModal');
+            
+            // Clear form
+            document.getElementById('ucScheme').value = "";
+            document.getElementById('ucDistrict').value = "";
+            document.getElementById('ucBlock').value = "";
+            document.getElementById('ucAmount').value = "";
+            document.getElementById('ucPeriod').value = "";
+        }
+
+        function printUC() {
+             SchemeMonitoring.showToast('Printing Utilization Certificate...', 'info');
+        }
+    </script>
 </body>
 </html>

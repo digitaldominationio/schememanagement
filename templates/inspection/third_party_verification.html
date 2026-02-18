@@ -6,6 +6,7 @@
     <title>3rd Party Verification - Scheme Monitoring System</title>
     <link rel="stylesheet" href="../../static/css/main.css">
     <link rel="stylesheet" href="../../static/css/components.css">
+    <link rel="stylesheet" href="../../static/css/modal.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -151,7 +152,7 @@
                             <h1 style="margin: 0 0 0.5rem 0; font-size: 2rem; font-weight: 700;">✅ 3rd Party Verification</h1>
                             <p style="margin: 0; opacity: 0.95; font-size: 1.125rem;">Independent assessment and audit reports</p>
                         </div>
-                        <button class="btn btn-light" style="background: white; color: #388e3c; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                        <button class="btn btn-light" style="background: white; color: #388e3c; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;" onclick="openModal('requestAuditModal')">
                             <span style="margin-right: 0.5rem;">📋</span> Request New Audit
                         </button>
                     </div>
@@ -266,7 +267,7 @@
                     <div class="card-body">
                         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
                             <!-- Agency 1 -->
-                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';" onclick="viewAgency('AG-001')">
                                 <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏢</div>
                                 <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">ABC Audit Services</div>
                                 <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Bhubaneswar</div>
@@ -276,7 +277,7 @@
                             </div>
 
                             <!-- Agency 2 -->
-                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';" onclick="viewAgency('AG-002')">
                                 <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏢</div>
                                 <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">XYZ Consultants</div>
                                 <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Cuttack</div>
@@ -286,7 +287,7 @@
                             </div>
 
                             <!-- Agency 3 -->
-                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';" onclick="viewAgency('AG-003')">
                                 <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏢</div>
                                 <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">PQR Auditors</div>
                                 <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Puri</div>
@@ -296,7 +297,7 @@
                             </div>
 
                             <!-- Agency 4 -->
-                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';" onclick="viewAgency('AG-004')">
                                 <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏢</div>
                                 <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">LMN Associates</div>
                                 <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Ganjam</div>
@@ -306,7 +307,7 @@
                             </div>
 
                             <!-- Agency 5 -->
-                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';" onclick="viewAgency('AG-005')">
                                 <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏢</div>
                                 <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">RST Verification</div>
                                 <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Balasore</div>
@@ -316,7 +317,7 @@
                             </div>
 
                             <!-- Agency 6 -->
-                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';" onclick="viewAgency('AG-006')">
                                 <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏢</div>
                                 <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">UVW Inspections</div>
                                 <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Sambalpur</div>
@@ -326,7 +327,7 @@
                             </div>
 
                             <!-- Agency 7 -->
-                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';" onclick="viewAgency('AG-007')">
                                 <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏢</div>
                                 <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">DEF Quality Check</div>
                                 <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Berhampur</div>
@@ -336,7 +337,7 @@
                             </div>
 
                             <!-- Agency 8 -->
-                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';">
+                            <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)';" onmouseout="this.style.transform=''; this.style.boxShadow='';" onclick="viewAgency('AG-008')">
                                 <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏢</div>
                                 <div style="font-weight: 600; color: #1a237e; margin-bottom: 0.25rem;">GHI Compliance</div>
                                 <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem;">Rourkela</div>
@@ -430,6 +431,124 @@
             </div>
         </main>
     </div>
+    <!-- Request Audit Modal -->
+    <div id="requestAuditModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Request 3rd Party Audit</h3>
+                <button class="modal-close" onclick="closeModal('requestAuditModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <form id="auditForm">
+                    <div class="form-group">
+                        <label class="form-label required">Scheme</label>
+                        <select class="form-control form-select" required>
+                            <option value="">Select Scheme</option>
+                            <option value="housing">Rural Housing</option>
+                            <option value="water">Water Supply</option>
+                            <option value="road">Road Construction</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">District</label>
+                        <select class="form-control form-select" required>
+                            <option value="">Select District</option>
+                            <option value="khordha">Khordha</option>
+                            <option value="cuttack">Cuttack</option>
+                            <option value="puri">Puri</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">Audit Scope</label>
+                        <textarea class="form-control" rows="3" placeholder="Describe the scope of the audit" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">Preferred Agency</label>
+                        <select class="form-control form-select" required>
+                            <option value="">Select Agency</option>
+                            <option value="abc">ABC Audit Services</option>
+                            <option value="xyz">XYZ Consultants</option>
+                            <option value="any">Any Empaneled Agency</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('requestAuditModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitAuditRequest()">Submit Request</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Agency Modal -->
+    <div id="viewAgencyModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Agency Details</h3>
+                <button class="modal-close" onclick="closeModal('viewAgencyModal')">✕</button>
+            </div>
+            <div class="modal-body" id="viewAgencyContent">
+                <!-- Content will be populated by JS -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('viewAgencyModal')">Close</button>
+                <button class="btn btn-primary">Contact Agency</button>
+            </div>
+        </div>
+    </div>
+
     <script src="../../static/js/main.js"></script>
-</body>
+    <script src="../../static/js/modal.js"></script>
+    <script>
+    function viewAgency(id) {
+        // Mock data
+        const agencies = {
+            'AG-001': { name: 'ABC Audit Services', location: 'Bhubaneswar', audits: 24, rating: 4.8 },
+            'AG-002': { name: 'XYZ Consultants', location: 'Cuttack', audits: 18, rating: 4.5 },
+            'AG-003': { name: 'PQR Auditors', location: 'Puri', audits: 21, rating: 4.7 },
+            'AG-004': { name: 'LMN Associates', location: 'Ganjam', audits: 19, rating: 4.6 },
+            'AG-005': { name: 'RST Verification', location: 'Balasore', audits: 16, rating: 4.4 },
+            'AG-006': { name: 'UVW Inspections', location: 'Sambalpur', audits: 15, rating: 4.3 },
+            'AG-007': { name: 'DEF Quality Check', location: 'Berhampur', audits: 14, rating: 4.5 },
+            'AG-008': { name: 'GHI Compliance', location: 'Rourkela', audits: 15, rating: 4.6 }
+        };
+
+        const data = agencies[id] || agencies['AG-001'];
+
+        const content = `
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <div style="font-size: 4rem; margin-bottom: 0.5rem;">🏢</div>
+                <h3 style="margin: 0; color: #1a237e;">${data.name}</h3>
+                <p style="color: #666; margin: 0;">Empaneled Agency • ${data.location}</p>
+            </div>
+            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; border-bottom: 1px solid #e0e0e0; padding-bottom: 0.5rem;">
+                    <strong>Total Audits Completed</strong>
+                    <span>${data.audits}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; border-bottom: 1px solid #e0e0e0; padding-bottom: 0.5rem;">
+                    <strong>Performance Rating</strong>
+                    <span>⭐ ${data.rating}/5.0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <strong>Status</strong>
+                    <span class="badge badge-success">Active</span>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('viewAgencyContent').innerHTML = content;
+        openModal('viewAgencyModal');
+    }
+
+    function submitAuditRequest() {
+        if (SchemeMonitoring.validateForm('auditForm')) {
+            SchemeMonitoring.showToast('Audit request submitted successfully!', 'success');
+            closeModal('requestAuditModal');
+            SchemeMonitoring.clearForm('auditForm');
+        } else {
+            SchemeMonitoring.showToast('Please fill all required fields', 'error');
+        }
+    }
+    </script>
 </html>

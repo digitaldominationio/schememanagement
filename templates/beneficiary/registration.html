@@ -8,6 +8,7 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="../../static/css/main.css">
     <link rel="stylesheet" href="../../static/css/components.css">
+    <link rel="stylesheet" href="../../static/css/modal.css">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -500,11 +501,11 @@
     </div>
 
     <!-- New Beneficiary Modal -->
-    <div id="beneficiaryModal" class="modal-overlay">
-        <div class="modal" style="max-width: 900px;">
+    <div id="beneficiaryModal" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
             <div class="modal-header">
-                <h3 class="modal-title">Register New Beneficiary</h3>
-                <button class="modal-close" onclick="closeModal('beneficiaryModal')">✕</button>
+                <h2 class="modal-title">Register New Beneficiary</h2>
+                <button class="modal-close" onclick="closeModal('beneficiaryModal')">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="beneficiaryForm">
@@ -635,11 +636,171 @@
         </div>
     </div>
     
+    <!-- View Beneficiary Modal -->
+    <div id="viewBeneficiaryModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Beneficiary Details</h2>
+                <button class="modal-close" onclick="closeModal('viewBeneficiaryModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="beneficiaryDetailsContent">
+                    <!-- Content will be populated dynamically -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('viewBeneficiaryModal')">Close</button>
+                <button class="btn btn-primary" onclick="printBeneficiary()">Print Card</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="../../static/js/main.js"></script>
+    <script src="../../static/js/modal.js"></script>
     <script>
+    // Mock Data for Beneficiaries
+    const beneficiaries = {
+        'BEN-2025-001': {
+            id: 'BEN-2025-001',
+            name: 'Rajesh Kumar',
+            guardian: 'Suresh Kumar',
+            aadhaar: 'XXXX-XXXX-1234',
+            mobile: '9876543210',
+            dob: '15-Aug-1985',
+            gender: 'Male',
+            category: 'General',
+            scheme: 'MGNREGA',
+            district: 'District A',
+            block: 'Block 1',
+            panchayat: 'Panchayat 1',
+            village: 'Village X',
+            status: 'Validated',
+            registrationDate: '15-Jan-2026'
+        },
+        'BEN-2025-002': {
+            id: 'BEN-2025-002',
+            name: 'Sunita Devi',
+            guardian: 'Ramesh Singh',
+            aadhaar: 'XXXX-XXXX-5678',
+            mobile: '8765432109',
+            dob: '20-Oct-1990',
+            gender: 'Female',
+            category: 'SC',
+            scheme: 'PMAY',
+            district: 'District B',
+            block: 'Block 2',
+            panchayat: 'Panchayat 2',
+            village: 'Village Y',
+            status: 'Validated',
+            registrationDate: '14-Jan-2026'
+        },
+        'BEN-2025-003': {
+            id: 'BEN-2025-003',
+            name: 'Ramesh Patel',
+            guardian: 'Mahesh Patel',
+            aadhaar: 'XXXX-XXXX-9012',
+            mobile: '7654321098',
+            dob: '05-May-1982',
+            gender: 'Male',
+            category: 'ST',
+            scheme: 'Swachh Bharat Mission',
+            district: 'District C',
+            block: 'Block 3',
+            panchayat: 'Panchayat 3',
+            village: 'Village Z',
+            status: 'Pending',
+            registrationDate: '13-Jan-2026'
+        },
+        'BEN-2025-004': {
+            id: 'BEN-2025-004',
+            name: 'Meena Sharma',
+            guardian: 'Vikas Sharma',
+            aadhaar: 'XXXX-XXXX-3456',
+            mobile: '6543210987',
+            dob: '12-Dec-1988',
+            gender: 'Female',
+            category: 'OBC',
+            scheme: 'PMGSY',
+            district: 'District D',
+            block: 'Block 4',
+            panchayat: 'Panchayat 4',
+            village: 'Village W',
+            status: 'Validated',
+            registrationDate: '12-Jan-2026'
+        },
+        'BEN-2025-005': {
+            id: 'BEN-2025-005',
+            name: 'Amit Singh',
+            guardian: 'Raj Singh',
+            aadhaar: 'XXXX-XXXX-7890',
+            mobile: '5432109876',
+            dob: '30-Jun-1992',
+            gender: 'Male',
+            category: 'General',
+            scheme: 'MGNREGA',
+            district: 'District E',
+            block: 'Block 5',
+            panchayat: 'Panchayat 5',
+            village: 'Village V',
+            status: 'Rejected',
+            registrationDate: '11-Jan-2026'
+        }
+    };
+
     function viewBeneficiary(id) {
-        SchemeMonitoring.showToast('Viewing beneficiary: ' + id, 'info');
+        const beneficiary = beneficiaries[id];
+        if (!beneficiary) {
+            SchemeMonitoring.showToast('Beneficiary details not found', 'error');
+            return;
+        }
+
+        const statusClass = beneficiary.status === 'Validated' ? 'success' :
+                          beneficiary.status === 'Pending' ? 'warning' : 'danger';
+
+        const content = `
+            <div style="background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%); color: white; padding: 1.5rem; border-radius: 8px 8px 0 0; margin: -2rem -2rem 1.5rem -2rem; display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 64px; height: 64px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                    👤
+                </div>
+                <div style="flex: 1;">
+                    <h3 style="margin: 0; font-size: 1.25rem; color: white;">${beneficiary.name}</h3>
+                    <p style="margin: 0; opacity: 0.9; font-size: 0.875rem;">${beneficiary.id}</p>
+                </div>
+                <span class="badge badge-${statusClass}" style="background: white; color: ${statusClass === 'success' ? '#10b981' : statusClass === 'warning' ? '#f59e0b' : '#ef4444'};">${beneficiary.status}</span>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h4 style="color: #1a237e; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; margin-bottom: 1rem;">Personal Details</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div><span class="text-gray" style="font-size: 0.875rem;">Father/Husband</span><div style="font-weight: 500;">${beneficiary.guardian}</div></div>
+                    <div><span class="text-gray" style="font-size: 0.875rem;">Date of Birth</span><div style="font-weight: 500;">${beneficiary.dob}</div></div>
+                    <div><span class="text-gray" style="font-size: 0.875rem;">Gender</span><div style="font-weight: 500;">${beneficiary.gender}</div></div>
+                    <div><span class="text-gray" style="font-size: 0.875rem;">Category</span><div style="font-weight: 500;">${beneficiary.category}</div></div>
+                    <div><span class="text-gray" style="font-size: 0.875rem;">Aadhaar</span><div style="font-weight: 500;">${beneficiary.aadhaar}</div></div>
+                    <div><span class="text-gray" style="font-size: 0.875rem;">Mobile</span><div style="font-weight: 500;">${beneficiary.mobile}</div></div>
+                </div>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px;">
+                <h4 style="color: #1a237e; border-bottom: 1px solid #e0e0e0; padding-bottom: 0.5rem; margin-bottom: 1rem;">Scheme & Location</h4>
+                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div><span class="text-gray" style="font-size: 0.875rem;">Scheme</span><div style="font-weight: 500;">${beneficiary.scheme}</div></div>
+                    <div><span class="text-gray" style="font-size: 0.875rem;">District</span><div style="font-weight: 500;">${beneficiary.district}</div></div>
+                    <div><span class="text-gray" style="font-size: 0.875rem;">Block</span><div style="font-weight: 500;">${beneficiary.block}</div></div>
+                    <div><span class="text-gray" style="font-size: 0.875rem;">Panchayat</span><div style="font-weight: 500;">${beneficiary.panchayat}</div></div>
+                    <div><span class="text-gray" style="font-size: 0.875rem;">Village</span><div style="font-weight: 500;">${beneficiary.village}</div></div>
+                    <div><span class="text-gray" style="font-size: 0.875rem;">Registration Date</span><div style="font-weight: 500;">${beneficiary.registrationDate}</div></div>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('beneficiaryDetailsContent').innerHTML = content;
+        openModal('viewBeneficiaryModal');
+    }
+
+    function printBeneficiary() {
+        SchemeMonitoring.showToast('Downloading Beneficiary Card...', 'info');
     }
 
     function submitBeneficiary() {

@@ -6,6 +6,7 @@
     <title>Benefit Delivery Status - Scheme Monitoring System</title>
     <link rel="stylesheet" href="../../static/css/main.css">
     <link rel="stylesheet" href="../../static/css/components.css">
+    <link rel="stylesheet" href="../../static/css/modal.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -194,108 +195,8 @@
                             <div style="position: absolute; left: 32px; top: 0; bottom: 0; width: 3px; background: linear-gradient(to bottom, #6a1b9a, #e0e0e0);"></div>
                             
                             <!-- Timeline Items -->
-                            <div style="display: flex; flex-direction: column; gap: 2rem;">
-                                <!-- Item 1 -->
-                                <div style="display: flex; gap: 1.5rem; position: relative;">
-                                    <div style="width: 64px; height: 64px; background: linear-gradient(135deg, #6a1b9a, #8e24aa); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; color: white; box-shadow: 0 4px 12px rgba(106,27,154,0.3); z-index: 1; flex-shrink: 0;">
-                                        ✓
-                                    </div>
-                                    <div style="flex: 1; background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #6a1b9a;">
-                                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
-                                            <div>
-                                                <h4 style="margin: 0; font-size: 1.125rem; font-weight: 600; color: #6a1b9a;">DBT Payment Completed</h4>
-                                                <p style="margin: 0.25rem 0 0 0; color: var(--gray-600); font-size: 0.875rem;">Batch ID: DBT-2026-02-17-001</p>
-                                            </div>
-                                            <span class="badge badge-success">Completed</span>
-                                        </div>
-                                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1rem;">
-                                            <div>
-                                                <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">Amount</div>
-                                                <div style="font-size: 1.125rem; font-weight: 700; color: #6a1b9a;">₹45.2 Lakh</div>
-                                            </div>
-                                            <div>
-                                                <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">Beneficiaries</div>
-                                                <div style="font-size: 1.125rem; font-weight: 700;">1,247</div>
-                                            </div>
-                                            <div>
-                                                <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">District</div>
-                                                <div style="font-size: 1.125rem; font-weight: 700;">Khordha</div>
-                                            </div>
-                                            <div>
-                                                <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">Date</div>
-                                                <div style="font-size: 1.125rem; font-weight: 700;">17-Feb-2026</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Item 2 -->
-                                <div style="display: flex; gap: 1.5rem; position: relative;">
-                                    <div style="width: 64px; height: 64px; background: linear-gradient(135deg, #2196f3, #42a5f5); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; color: white; box-shadow: 0 4px 12px rgba(33,150,243,0.3); z-index: 1; flex-shrink: 0;">
-                                        🔄
-                                    </div>
-                                    <div style="flex: 1; background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #2196f3;">
-                                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
-                                            <div>
-                                                <h4 style="margin: 0; font-size: 1.125rem; font-weight: 600; color: #2196f3;">Material Distribution In Progress</h4>
-                                                <p style="margin: 0.25rem 0 0 0; color: var(--gray-600); font-size: 0.875rem;">Batch ID: MAT-2026-02-16-003</p>
-                                            </div>
-                                            <span class="badge badge-primary">In Progress</span>
-                                        </div>
-                                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1rem;">
-                                            <div>
-                                                <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">Items</div>
-                                                <div style="font-size: 1.125rem; font-weight: 700; color: #2196f3;">3,450 Units</div>
-                                            </div>
-                                            <div>
-                                                <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">Beneficiaries</div>
-                                                <div style="font-size: 1.125rem; font-weight: 700;">876</div>
-                                            </div>
-                                            <div>
-                                                <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">District</div>
-                                                <div style="font-size: 1.125rem; font-weight: 700;">Cuttack</div>
-                                            </div>
-                                            <div>
-                                                <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">Progress</div>
-                                                <div style="font-size: 1.125rem; font-weight: 700;">67%</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Item 3 -->
-                                <div style="display: flex; gap: 1.5rem; position: relative;">
-                                    <div style="width: 64px; height: 64px; background: linear-gradient(135deg, #ff9800, #ffa726); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; color: white; box-shadow: 0 4px 12px rgba(255,152,0,0.3); z-index: 1; flex-shrink: 0;">
-                                        ⏳
-                                    </div>
-                                    <div style="flex: 1; background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #ff9800;">
-                                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
-                                            <div>
-                                                <h4 style="margin: 0; font-size: 1.125rem; font-weight: 600; color: #ff9800;">DBT Payment Pending</h4>
-                                                <p style="margin: 0.25rem 0 0 0; color: var(--gray-600); font-size: 0.875rem;">Batch ID: DBT-2026-02-15-007</p>
-                                            </div>
-                                            <span class="badge badge-warning">Pending</span>
-                                        </div>
-                                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1rem;">
-                                            <div>
-                                                <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">Amount</div>
-                                                <div style="font-size: 1.125rem; font-weight: 700; color: #ff9800;">₹32.8 Lakh</div>
-                                            </div>
-                                            <div>
-                                                <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">Beneficiaries</div>
-                                                <div style="font-size: 1.125rem; font-weight: 700;">945</div>
-                                            </div>
-                                            <div>
-                                                <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">District</div>
-                                                <div style="font-size: 1.125rem; font-weight: 700;">Puri</div>
-                                            </div>
-                                            <div>
-                                                <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">Scheduled</div>
-                                                <div style="font-size: 1.125rem; font-weight: 700;">18-Feb-2026</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div style="display: flex; flex-direction: column; gap: 2rem;" id="timelineContainer">
+                                <!-- Timeline Items will be populated by JS -->
                             </div>
                         </div>
                     </div>
@@ -312,7 +213,7 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label class="form-label">Delivery Type</label>
-                                    <select class="form-control form-select">
+                                    <select class="form-control form-select" id="filterType">
                                         <option value="">All Types</option>
                                         <option value="dbt">DBT Payment</option>
                                         <option value="material">Material Distribution</option>
@@ -321,7 +222,7 @@
                                 
                                 <div class="form-group">
                                     <label class="form-label">District</label>
-                                    <select class="form-control form-select">
+                                    <select class="form-control form-select" id="filterDistrict">
                                         <option value="">All Districts</option>
                                         <option value="khordha">Khordha</option>
                                         <option value="cuttack">Cuttack</option>
@@ -331,12 +232,16 @@
                                 
                                 <div class="form-group">
                                     <label class="form-label">Status</label>
-                                    <select class="form-control form-select">
+                                    <select class="form-control form-select" id="filterStatus">
                                         <option value="">All Status</option>
                                         <option value="completed">Completed</option>
                                         <option value="progress">In Progress</option>
                                         <option value="pending">Pending</option>
                                     </select>
+                                </div>
+                                
+                                <div class="form-group" style="display: flex; align-items: flex-end;">
+                                    <button class="btn btn-primary" onclick="applyFilters()" style="width: 100%;">Apply</button>
                                 </div>
                             </div>
                         </div>
@@ -368,6 +273,218 @@
             </div>
         </main>
     </div>
+    <!-- View Batch Modal -->
+    <div id="viewBatchModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Batch Details</h2>
+                <button class="modal-close" onclick="closeModal('viewBatchModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="batchDetailsContent">
+                    <!-- Dynamic Content -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('viewBatchModal')">Close</button>
+                <button class="btn btn-primary" onclick="SchemeMonitoring.showToast('Downloading Batch Report...', 'info')">Download Report</button>
+            </div>
+        </div>
+    </div>
+
     <script src="../../static/js/main.js"></script>
+    <script src="../../static/js/modal.js"></script>
+    <script>
+        // Mock Data
+        const deliveries = [
+            {
+                id: 'DBT-2026-02-17-001',
+                type: 'dbt',
+                title: 'DBT Payment Completed',
+                amount: '₹45.2 Lakh',
+                items: '',
+                beneficiaries: '1,247',
+                district: 'Khordha',
+                date: '17-Feb-2026',
+                status: 'Completed',
+                icon: '✓',
+                color: '#6a1b9a', // Purple
+                bgGradient: 'linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%)',
+                details: {
+                    processedBy: 'SYSTEM_SCHEDULER',
+                    bank: 'SBI',
+                    successCount: 1240,
+                    failureCount: 7
+                }
+            },
+            {
+                id: 'MAT-2026-02-16-003',
+                type: 'material',
+                title: 'Material Distribution In Progress',
+                amount: '',
+                items: '3,450 Units',
+                beneficiaries: '876',
+                district: 'Cuttack',
+                progress: '67%',
+                status: 'In Progress',
+                icon: '🔄',
+                color: '#2196f3', // Blue
+                bgGradient: 'linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%)',
+                details: {
+                    vendor: 'Odisha Supplies Corp.',
+                    dispatched: '15-Feb-2026',
+                    location: 'Block Warehouse 3'
+                }
+            },
+            {
+                id: 'DBT-2026-02-15-007',
+                type: 'dbt',
+                title: 'DBT Payment Pending',
+                amount: '₹32.8 Lakh',
+                items: '',
+                beneficiaries: '945',
+                district: 'Puri',
+                scheduled: '18-Feb-2026',
+                status: 'Pending',
+                icon: '⏳',
+                color: '#ff9800', // Orange
+                bgGradient: 'linear-gradient(135deg, #fff3e0 0%, #ffffff 100%)',
+                details: {
+                    approvalStatus: 'Pending Finance Dept',
+                    fundSource: 'State Annual Budget'
+                }
+            }
+        ];
+
+        function renderTimeline(data) {
+            const container = document.getElementById('timelineContainer');
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: #666; padding: 2rem;">No delivery records found matching criteria.</div>';
+                return;
+            }
+
+            data.forEach(item => {
+                const statusBadgeClass = item.status === 'Completed' ? 'success' : 
+                                       item.status === 'Pending' ? 'warning' : 'primary';
+                
+                // Determine 4th grid item based on type
+                let fourthItemLabel = item.type === 'dbt' ? (item.status === 'Pending' ? 'Scheduled' : 'Date') : 'Progress';
+                let fourthItemValue = item.type === 'dbt' ? (item.status === 'Pending' ? item.scheduled : item.date) : item.progress;
+
+                // Determine 1st grid item based on type
+                let firstItemLabel = item.type === 'dbt' ? 'Amount' : 'Items';
+                let firstItemValue = item.type === 'dbt' ? item.amount : item.items;
+
+                const html = `
+                    <div style="display: flex; gap: 1.5rem; position: relative; cursor: pointer; transition: transform 0.2s;" 
+                         onclick="viewBatchModal('${item.id}')"
+                         onmouseover="this.style.transform='translateX(5px)'" 
+                         onmouseout="this.style.transform='translateX(0)'">
+                        
+                        <div style="width: 64px; height: 64px; background: linear-gradient(135deg, ${item.color}, ${adjustColor(item.color, -20)}); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1; flex-shrink: 0;">
+                            ${item.icon}
+                        </div>
+                        
+                        <div style="flex: 1; background: ${item.bgGradient}; padding: 1.5rem; border-radius: 12px; border-left: 4px solid ${item.color}; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
+                                <div>
+                                    <h4 style="margin: 0; font-size: 1.125rem; font-weight: 600; color: ${item.color};">${item.title}</h4>
+                                    <p style="margin: 0.25rem 0 0 0; color: var(--gray-600); font-size: 0.875rem;">Batch ID: ${item.id}</p>
+                                </div>
+                                <span class="badge badge-${statusBadgeClass}">${item.status}</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1rem;">
+                                <div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">${firstItemLabel}</div>
+                                    <div style="font-size: 1.125rem; font-weight: 700; color: ${item.color};">${firstItemValue}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">Beneficiaries</div>
+                                    <div style="font-size: 1.125rem; font-weight: 700;">${item.beneficiaries}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">District</div>
+                                    <div style="font-size: 1.125rem; font-weight: 700;">${item.district}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 0.25rem;">${fourthItemLabel}</div>
+                                    <div style="font-size: 1.125rem; font-weight: 700;">${fourthItemValue}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        function applyFilters() {
+            const type = document.getElementById('filterType').value.toLowerCase();
+            const district = document.getElementById('filterDistrict').value.toLowerCase();
+            const status = document.getElementById('filterStatus').value.toLowerCase();
+
+            const filtered = deliveries.filter(item => {
+                const matchType = !type || item.type === type;
+                const matchDistrict = !district || item.district.toLowerCase() === district;
+                const matchStatus = !status || (status === 'progress' ? item.status === 'In Progress' : item.status.toLowerCase() === status);
+                return matchType && matchDistrict && matchStatus;
+            });
+
+            renderTimeline(filtered);
+            SchemeMonitoring.showToast(`Found ${filtered.length} records`, 'info');
+        }
+
+        function viewBatchModal(id) {
+            const batch = deliveries.find(d => d.id === id);
+            if (!batch) return;
+
+            const content = `
+                <div style="background: ${batch.bgGradient}; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #eee;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                        <h3 style="margin: 0; color: ${batch.color};">${batch.title}</h3>
+                        <span class="badge badge-${batch.status === 'Completed' ? 'success' : batch.status === 'Pending' ? 'warning' : 'primary'}">${batch.status}</span>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div><small style="color: #666;">Batch ID</small><div style="font-weight: 600;">${batch.id}</div></div>
+                        <div><small style="color: #666;">District</small><div style="font-weight: 600;">${batch.district}</div></div>
+                        <div><small style="color: #666;">Beneficiaries</small><div style="font-weight: 600;">${batch.beneficiaries}</div></div>
+                        ${batch.type === 'dbt' ? 
+                            `<div><small style="color: #666;">Total Amount</small><div style="font-weight: 600;">${batch.amount}</div></div>` : 
+                            `<div><small style="color: #666;">Items Distributed</small><div style="font-weight: 600;">${batch.items}</div></div>`
+                        }
+                    </div>
+                </div>
+
+                <h4 style="border-bottom: 2px solid #eee; padding-bottom: 0.5rem; margin-bottom: 1rem;">Detailed Information</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    ${Object.entries(batch.details).map(([key, value]) => `
+                        <div>
+                            <small style="color: #666; text-transform: capitalize;">${key.replace(/([A-Z])/g, ' $1').trim()}</small>
+                            <div style="font-weight: 500;">${value}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            document.getElementById('batchDetailsContent').innerHTML = content;
+            openModal('viewBatchModal');
+        }
+
+        // Helper to darken color for gradient
+        function adjustColor(color, percent) {
+            // Simplified return for now as hex manipulation is complex without a library
+            // Assuming the base color works fine for gradient with opacity
+            return color; 
+        }
+
+        // Initial Render
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTimeline(deliveries);
+        });
+
+    </script>
 </body>
 </html>

@@ -463,7 +463,217 @@
             </div>
         </main>
     </div>
+    <!-- View Transaction Modal -->
+    <div id="viewTransactionModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Transaction Details</h2>
+                <button class="modal-close" onclick="closeModal('viewTransactionModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="transactionDetailsContent">
+                    <!-- Content will be populated dynamically -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('viewTransactionModal')">Close</button>
+                <button class="btn btn-primary" onclick="printTransaction()">Print Receipt</button>
+            </div>
+        </div>
+    </div>
+
     <script src="../../static/js/main.js"></script>
     <script src="../../static/js/modal.js"></script>
+    <script>
+        // Mock Data for Transactions
+        const transactions = {
+            'TXN-2025-3456': {
+                id: 'TXN-2025-3456',
+                scheme: 'MGNREGA',
+                district: 'Khordha',
+                block: 'Bhubaneswar',
+                amount: '₹12,50,000',
+                pfmsRef: 'PFMS2025123456',
+                date: '17-Feb-2026 14:30',
+                status: 'Successful',
+                account: 'XXXX-XXXX-4567',
+                bank: 'State Bank of India',
+                purpose: 'Material Payment for Road Construction',
+                utr: 'SBIH1234567890'
+            },
+            'TXN-2025-3455': {
+                id: 'TXN-2025-3455',
+                scheme: 'PMAY',
+                district: 'Cuttack',
+                block: 'Cuttack Sadar',
+                amount: '₹8,75,000',
+                pfmsRef: 'PFMS2025123455',
+                date: '17-Feb-2026 13:15',
+                status: 'Successful',
+                account: 'XXXX-XXXX-8901',
+                bank: 'Odisha Gramya Bank',
+                purpose: 'Beneficiary Installment 1',
+                utr: 'OGBH1234567890'
+            },
+            'TXN-2025-3454': {
+                id: 'TXN-2025-3454',
+                scheme: 'Swachh Bharat Mission',
+                district: 'Puri',
+                block: 'Puri Sadar',
+                amount: '₹5,25,000',
+                pfmsRef: '-',
+                date: '17-Feb-2026 12:00',
+                status: 'Pending',
+                account: 'XXXX-XXXX-2345',
+                bank: 'UCO Bank',
+                purpose: 'Community Toilet Construction',
+                utr: '-'
+            },
+            'TXN-2025-3453': {
+                id: 'TXN-2025-3453',
+                scheme: 'PMGSY',
+                district: 'Ganjam',
+                block: 'Berhampur',
+                amount: '₹15,00,000',
+                pfmsRef: '-',
+                date: '17-Feb-2026 11:30',
+                status: 'Failed',
+                account: 'XXXX-XXXX-6789',
+                bank: 'HDFC Bank',
+                purpose: 'Road Maintenance Contract',
+                utr: '-',
+                failureReason: 'Invalid Account Number'
+            },
+            'TXN-2025-3452': {
+                id: 'TXN-2025-3452',
+                scheme: 'MGNREGA',
+                district: 'Khordha',
+                block: 'Jatni',
+                amount: '₹9,50,000',
+                pfmsRef: 'PFMS2025123452',
+                date: '16-Feb-2026 16:45',
+                status: 'Successful',
+                account: 'XXXX-XXXX-3456',
+                bank: 'State Bank of India',
+                purpose: 'Wages Payment',
+                utr: 'SBIH0987654321'
+            },
+            'TXN-2025-3451': {
+                id: 'TXN-2025-3451',
+                scheme: 'PMAY',
+                district: 'Puri',
+                block: 'Satyabadi',
+                amount: '₹7,25,000',
+                pfmsRef: 'PFMS2025123451',
+                date: '16-Feb-2026 15:20',
+                status: 'Successful',
+                account: 'XXXX-XXXX-7890',
+                bank: 'Punjab National Bank',
+                purpose: 'House Construction Support',
+                utr: 'PNBH1234567890'
+            }
+        };
+
+        function viewTransaction(id) {
+            const txn = transactions[id];
+            if (!txn) {
+                SchemeMonitoring.showToast('Transaction details not found', 'error');
+                return;
+            }
+
+            const statusClass = txn.status === 'Successful' ? 'success' :
+                              txn.status === 'Pending' ? 'warning' : 'danger';
+            
+            const content = `
+                <div style="background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%); color: white; padding: 1.5rem; border-radius: 0; margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h3 style="margin: 0 0 0.5rem 0; font-size: 1.5rem;">${txn.amount}</h3>
+                            <p style="margin: 0; opacity: 0.9;">Transaction Amount</p>
+                        </div>
+                        <div>
+                            <span class="badge badge-${statusClass}" style="font-size: 1rem; padding: 0.5rem 1rem;">${txn.status}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                    <h4 style="margin: 0 0 1rem 0; color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 0.5rem;">Transaction Information</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <div style="font-size: 0.875rem; color: #666;">Transaction ID</div>
+                            <div style="font-weight: 600; color: #333;">${txn.id}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.875rem; color: #666;">PFMS Reference</div>
+                            <div style="font-weight: 600; color: #333;">${txn.pfmsRef}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.875rem; color: #666;">Date & Time</div>
+                            <div style="font-weight: 600; color: #333;">${txn.date}</div>
+                        </div>
+                         <div>
+                            <div style="font-size: 0.875rem; color: #666;">UTR Number</div>
+                            <div style="font-weight: 600; color: #333;">${txn.utr}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                    <h4 style="margin: 0 0 1rem 0; color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 0.5rem;">Beneficiary & Bank Details</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                         <div>
+                            <div style="font-size: 0.875rem; color: #666;">Bank Name</div>
+                            <div style="font-weight: 600; color: #333;">${txn.bank}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.875rem; color: #666;">Account Number</div>
+                            <div style="font-weight: 600; color: #333;">${txn.account}</div>
+                        </div>
+                        <div style="grid-column: span 2;">
+                            <div style="font-size: 0.875rem; color: #666;">Purpose</div>
+                            <div style="font-weight: 600; color: #333;">${txn.purpose}</div>
+                        </div>
+                    </div>
+                </div>
+                 ${txn.status === 'Failed' ? `
+                <div style="background: #ffebee; border: 1px solid #ffcdd2; border-radius: 8px; padding: 1rem;">
+                    <h4 style="margin: 0 0 0.5rem 0; color: #c62828;">Failure Reason</h4>
+                    <p style="margin: 0; color: #b71c1c;">${txn.failureReason}</p>
+                </div>
+                ` : ''}
+            `;
+
+            document.getElementById('transactionDetailsContent').innerHTML = content;
+            openModal('viewTransactionModal');
+        }
+
+        function retryTransaction(id) {
+            SchemeMonitoring.showToast(`Initiating retry for ${id}...`, 'info');
+            setTimeout(() => {
+                SchemeMonitoring.showToast(`Retry request sent for ${id}`, 'success');
+            }, 1000);
+        }
+
+        function syncPFMS() {
+             const btn = document.querySelector('button[onclick="syncPFMS()"]');
+             const originalText = btn.innerHTML;
+             btn.innerHTML = '🔄 Syncing...';
+             btn.disabled = true;
+
+             SchemeMonitoring.showToast('Syncing with PFMS server...', 'info');
+             
+             setTimeout(() => {
+                 btn.innerHTML = originalText;
+                 btn.disabled = false;
+                 SchemeMonitoring.showToast('PFMS Data Synced Successfully', 'success');
+                 document.querySelector('div[style*="Last Sync"] + div + div').innerHTML = '14:56:00'; // Mock update time
+             }, 2000);
+        }
+
+        function printTransaction() {
+             SchemeMonitoring.showToast('Printing Transaction Receipt...', 'info');
+        }
+    </script>
 </body>
 </html>
