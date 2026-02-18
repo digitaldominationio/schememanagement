@@ -9,6 +9,7 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="../static/css/main.css">
     <link rel="stylesheet" href="../static/css/components.css">
+    <link rel="stylesheet" href="../static/css/modal.css">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -396,6 +397,58 @@
                     </div>
                 </div>
 
+                <!-- View Scheme Modal -->
+                <div id="viewSchemeModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title">Scheme Details</h2>
+                            <button class="modal-close" onclick="closeModal('viewSchemeModal')">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="feature-grid" style="grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                <div>
+                                    <label style="font-weight: 600; color: #666; font-size: 0.875rem;">Scheme Name</label>
+                                    <div id="viewSchemeName" style="font-size: 1.1rem; font-weight: 500;">-</div>
+                                </div>
+                                <div>
+                                    <label style="font-weight: 600; color: #666; font-size: 0.875rem;">Status</label>
+                                    <div id="viewSchemeStatus">-</div>
+                                </div>
+                            </div>
+                            <div class="feature-grid" style="grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                <div>
+                                    <label style="font-weight: 600; color: #666; font-size: 0.875rem;">Allocated Budget</label>
+                                    <div id="viewSchemeAllocated" style="font-size: 1rem;">-</div>
+                                </div>
+                                <div>
+                                    <label style="font-weight: 600; color: #666; font-size: 0.875rem;">Utilized Amount</label>
+                                    <div id="viewSchemeUtilized" style="font-size: 1rem;">-</div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 1.5rem;">
+                                <label style="font-weight: 600; color: #666; font-size: 0.875rem;">Progress</label>
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                                    <div class="progress" style="flex: 1; height: 8px;">
+                                        <div id="viewSchemeProgressBar" class="progress-bar" style="width: 0%"></div>
+                                    </div>
+                                    <span id="viewSchemeProgressText" style="font-weight: 600;">0%</span>
+                                </div>
+                            </div>
+                            <hr style="border: 0; border-top: 1px solid #eee; margin: 1rem 0;">
+                            <div>
+                                <label style="font-weight: 600; color: #666; font-size: 0.875rem;">Last Updated Info</label>
+                                <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+                                    <span id="viewSchemeAssignedTo" style="color: #666;">-</span>
+                                    <span id="viewSchemeLastUpdated" style="color: #666; font-size: 0.875rem;">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" onclick="closeModal('viewSchemeModal')">Close</button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- District-wise Performance -->
                 <div class="card admin-only"> <!-- Only Admin sees District Wise full table -->
                     <div class="card-header">
@@ -482,6 +535,7 @@
     </div>
     
     <script src="../static/js/main.js"></script>
+    <script src="../static/js/modal.js"></script>
     <script>
         function viewDistrict(districtName) {
             SchemeMonitoring.showToast(`Loading data for ${districtName}...`, 'info');

@@ -8,6 +8,7 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="static/css/main.css">
     <link rel="stylesheet" href="static/css/components.css">
+    <link rel="stylesheet" href="static/css/modal.css">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,6 +50,7 @@
             position: sticky;
             top: 20px;
             z-index: 100;
+            cursor: default;
         }
         
         .doc-nav h3 {
@@ -146,6 +148,9 @@
             padding: 1rem 1.5rem;
             border-radius: 8px;
             margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
         
         .alert-info {
@@ -215,6 +220,21 @@
             color: #d32f2f;
         }
         
+        pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+        }
+        
         .back-to-top {
             position: fixed;
             bottom: 2rem;
@@ -256,6 +276,7 @@
             <ul>
                 <li><a href="#overview">Overview</a></li>
                 <li><a href="#getting-started">Getting Started</a></li>
+                <li><a href="#roles">Role Based Access</a></li>
                 <li><a href="#financial">Financial Monitoring</a></li>
                 <li><a href="#beneficiary">Beneficiary Management</a></li>
                 <li><a href="#inspection">Inspection & Verification</a></li>
@@ -361,6 +382,84 @@
 
             <div class="alert-box alert-info">
                 <strong>💡 Tip:</strong> Use the search bar in the header to quickly find specific schemes, beneficiaries, or reports.
+            </div>
+        </div>
+
+        </div>
+
+        <!-- Role Based Access -->
+        <div class="doc-section" id="roles">
+            <h2>🔑 Role Based Access & Workflow</h2>
+            
+            <p>The system implements a secure, role-based access control (RBAC) mechanism to ensure data security and appropriate access levels. The workflow and available features adapt dynamically based on the logged-in user's role.</p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>👨‍💼 Admin (State Nodal Officer)</h4>
+                    <ul>
+                        <li><strong>Scope:</strong> State-level access</li>
+                        <li><strong>View:</strong> All 30 Districts & all Schemes</li>
+                        <li><strong>Key Functions:</strong>
+                            <ul>
+                                <li>Monitor overall state progress</li>
+                                <li>Approve Utilization Certificates (UCs)</li>
+                                <li>Manage fund allocations</li>
+                                <li>View aggregator reports</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>👷 User (Block Officer)</h4>
+                    <ul>
+                        <li><strong>Scope:</strong> Block-level access</li>
+                        <li><strong>View:</strong> Assigned Schemes only</li>
+                        <li><strong>Key Functions:</strong>
+                            <ul>
+                                <li>Register beneficiaries</li>
+                                <li>Submit UCs for approval</li>
+                                <li>Update scheme progress</li>
+                                <li>Conduct field inspections</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>🔐 Default Credentials (For Testing)</h3>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+                <thead>
+                    <tr style="background: #f5f5f5; text-align: left;">
+                        <th style="padding: 10px; border: 1px solid #ddd;">Role</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">Username</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">Password</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">Access Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #ddd;"><strong>Admin</strong></td>
+                        <td style="padding: 10px; border: 1px solid #ddd;"><code>admin</code></td>
+                        <td style="padding: 10px; border: 1px solid #ddd;"><code>admin123</code></td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Full System Access</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #ddd;"><strong>User</strong></td>
+                        <td style="padding: 10px; border: 1px solid #ddd;"><code>user</code></td>
+                        <td style="padding: 10px; border: 1px solid #ddd;"><code>user123</code></td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Restricted / Assigned Only</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>🔄 Workflow Differences</h3>
+            
+            <div class="workflow-step">
+                <strong>Admin Workflow:</strong> Logs in → Views State Dashboard (Aggregate Data) → Drills down to District/Block → Approves pending UCs → Reviews Exception Reports.
+            </div>
+            
+            <div class="workflow-step">
+                <strong>User Workflow:</strong> Logs in → Views "My Schemes" (Assigned Tasks) → Updates Physical/Financial Progress → Uploads Inspection Photos → Submits UCs.
             </div>
         </div>
 

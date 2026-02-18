@@ -723,7 +723,7 @@ window.SchemeMonitoring.loadAdminDashboard = function() {
             <td>-</td> <!-- Beneficiaries placeholder -->
             <td><span class="badge badge-success">Active</span></td>
             <td>
-                <button class="btn btn-sm btn-outline">View Details</button>
+                <button class="btn btn-sm btn-outline" onclick="viewDistrict('${dist.name}')">View Details</button>
             </td>
         </tr>
     `}).join('');
@@ -754,7 +754,10 @@ window.SchemeMonitoring.loadAdminDashboard = function() {
                 <td><span class="badge ${getStatusBadgeClass(scheme.status)}">${scheme.status}</span></td>
                 <td>${new Date(scheme.lastUpdated || 0).toLocaleDateString()}</td>
                 <td>
-                    <button class="btn btn-sm btn-outline-primary" onclick="SchemeMonitoring.openUpdateModal(${scheme.id})">Edit</button>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-sm btn-outline-primary" onclick="SchemeMonitoring.openViewModal(${scheme.id})">View</button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="SchemeMonitoring.openUpdateModal(${scheme.id})">Edit</button>
+                    </div>
                 </td>
             </tr>
         `).join('');
@@ -791,10 +794,36 @@ window.SchemeMonitoring.loadUserSchemes = function() {
             <td><span class="badge ${getStatusBadgeClass(scheme.status)}">${scheme.status}</span></td>
             <td>${new Date(scheme.lastUpdated || Date.now()).toLocaleDateString()}</td>
             <td>
-                <button class="btn btn-sm btn-primary" onclick="SchemeMonitoring.openUpdateModal(${scheme.id})">Update</button>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn btn-sm btn-outline-primary" onclick="SchemeMonitoring.openViewModal(${scheme.id})">View</button>
+                    <button class="btn btn-sm btn-primary" onclick="SchemeMonitoring.openUpdateModal(${scheme.id})">Update</button>
+                </div>
             </td>
         </tr>
     `).join('');
+};
+
+window.SchemeMonitoring.openViewModal = function(id) {
+    const scheme = this.SchemeService.getAllSchemes().find(s => s.id === id);
+    if (!scheme) return;
+
+    document.getElementById('viewSchemeName').textContent = scheme.name;
+    document.getElementById('viewSchemeStatus').innerHTML = `<span class="badge ${getStatusBadgeClass(scheme.status)}">${scheme.status}</span>`;
+    document.getElementById('viewSchemeAllocated').textContent = this.formatCurrency(scheme.allocated);
+    document.getElementById('viewSchemeUtilized').textContent = this.formatCurrency(scheme.utilized);
+    
+    // Progress
+    const progressEl = document.getElementById('viewSchemeProgressBar');
+    if (progressEl) {
+        progressEl.style.width = `${scheme.progress}%`;
+        progressEl.className = `progress-bar ${getProgressBarColor(scheme.progress)}`;
+    }
+    document.getElementById('viewSchemeProgressText').textContent = `${scheme.progress}%`;
+
+    document.getElementById('viewSchemeAssignedTo').textContent = `Assigned To: ${scheme.assignedTo || 'N/A'}`;
+    document.getElementById('viewSchemeLastUpdated').textContent = `Date: ${new Date(scheme.lastUpdated || Date.now()).toLocaleDateString()}`;
+
+    openModal('viewSchemeModal');
 };
 
 window.SchemeMonitoring.openUpdateModal = function(id) {
@@ -829,11 +858,14 @@ window.SchemeMonitoring.submitProgressUpdate = function() {
 
     this.showToast('Progress updated successfully!', 'success');
     closeModal('updateProgressModal');
-    this.loadUserSchemes(); // Refresh table
     
-    // Refresh admin stats if visible (mock update)
-    // In a real app, admin view would fetch fresh data. 
-    // Here, if we were on admin view, we'd reload. 
+    // Refresh tables based on current view
+    const user = this.AuthService.getCurrentUser();
+    if (user?.role === 'user') {
+        this.loadUserSchemes();
+    } else {
+        this.loadAdminDashboard();
+    }
 };
 
 // Helper functions for UI
