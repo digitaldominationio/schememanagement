@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Task Assignment - Scheme Monitoring System">
+    <title>Task Assignment - Scheme Monitoring System</title>
+
+    <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="../static/css/components.css">
+    <link rel="stylesheet" href="../static/css/modal.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ── Priority badges ── */
+        .priority-high   { background:#fdecea; color:#c62828; border:1px solid #ef9a9a; }
+        .priority-medium { background:#fff8e1; color:#f57f17; border:1px solid #ffe082; }
+        .priority-low    { background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7; }
+        .priority-badge  { padding:2px 10px; border-radius:12px; font-size:0.75rem; font-weight:700; display:inline-block; }
+
+        /* ── Status badges ── */
+        .status-pending     { background:#f3f4f6; color:#6b7280; border:1px solid #d1d5db; }
+        .status-inprogress  { background:#eff6ff; color:#1d4ed8; border:1px solid #93c5fd; }
+        .status-completed   { background:#f0fdf4; color:#15803d; border:1px solid #86efac; }
+        .status-overdue     { background:#fef2f2; color:#b91c1c; border:1px solid #fca5a5; }
+        .status-badge { padding:3px 11px; border-radius:12px; font-size:0.78rem; font-weight:600; display:inline-block; }
+
+        /* ── Task cards (user view) ── */
+        .task-card {
+            background:#fff;
+            border:1.5px solid #e8eaf6;
+            border-radius:12px;
+            padding:1.25rem 1.5rem;
+            margin-bottom:1rem;
+            transition:box-shadow 0.2s, border-color 0.2s;
+            border-left:5px solid #1a237e;
+        }
+        .task-card:hover { box-shadow:0 4px 16px rgba(26,35,126,0.10); }
+        .task-card.high-priority  { border-left-color:#c62828; }
+        .task-card.medium-priority{ border-left-color:#f57f17; }
+        .task-card.low-priority   { border-left-color:#2e7d32; }
+        .task-card .task-title    { font-size:1.05rem; font-weight:700; color:#1a237e; margin:0 0 0.4rem; }
+        .task-card .task-meta     { font-size:0.82rem; color:#888; margin-bottom:0.6rem; }
+        .task-card .task-desc     { font-size:0.87rem; color:#555; line-height:1.6; margin-bottom:0.75rem; }
+
+        /* ── Progress bar ── */
+        .progress-wrap { background:#f0f0f0; border-radius:6px; height:8px; margin:0.5rem 0; overflow:hidden; }
+        .progress-fill { height:100%; border-radius:6px; background:linear-gradient(90deg,#1a237e,#3949ab); transition:width 0.4s; }
+
+        /* ── Empty state ── */
+        .empty-state { text-align:center; padding:3rem 1rem; color:#aaa; }
+        .empty-state .empty-icon { font-size:3rem; margin-bottom:1rem; }
+        .empty-state p { font-size:1rem; }
+
+        /* ── Update log inside task ── */
+        .update-log { background:#f8f9ff; border-radius:8px; padding:0.75rem 1rem; margin-top:0.75rem; }
+        .update-log-entry { border-bottom:1px solid #e8eaf6; padding:0.4rem 0; font-size:0.82rem; color:#555; }
+        .update-log-entry:last-child { border-bottom:none; }
+        .update-log-entry .log-time { font-size:0.75rem; color:#aaa; margin-left:0.5rem; }
+
+        /* ── Admin table actions ── */
+        .action-btns { display:flex; gap:0.4rem; flex-wrap:wrap; }
+
+        /* ── Role banner ── */
+        .role-banner {
+            display:flex; align-items:center; gap:1rem;
+            background:linear-gradient(135deg,#1a237e,#3949ab);
+            color:#fff; padding:0.75rem 1.5rem; border-radius:10px;
+            margin-bottom:1.5rem; font-size:0.9rem;
+        }
+        .role-banner .role-icon { font-size:1.6rem; }
+        .role-banner strong { font-size:1rem; }
+
+        /* ── Stat mini cards ── */
+        .task-stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:1rem; margin-bottom:1.5rem; }
+        .task-stat-card { background:#fff; border:1.5px solid #e8eaf6; border-radius:10px; padding:1rem 1.25rem; text-align:center; }
+        .task-stat-card .ts-num { font-size:1.8rem; font-weight:800; color:#1a237e; }
+        .task-stat-card .ts-label { font-size:0.78rem; color:#888; margin-top:0.2rem; }
+
+        /* ── Modal field group ── */
+        .modal-field-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+        @media(max-width:600px){ .modal-field-row{ grid-template-columns:1fr; } }
+    </style>
+</head>
+<body>
+<div class="app-container">
+
+    <!-- ══ Sidebar ══ -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">&#128202;</div>
+                <div class="sidebar-logo-text"><h1>Scheme Monitoring System</h1></div>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <div class="nav-item">
+                    <a href="dashboard.html" class="nav-link">
+                        <span class="nav-icon">🏠</span><span>Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="create_scheme.html" class="nav-link">
+                        <span class="nav-icon">➕</span><span>Create New Scheme</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="set_target.html" class="nav-link">
+                        <span class="nav-icon">🎯</span><span>Set Target</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="task_assignment.html" class="nav-link active">
+                        <span class="nav-icon">🗂️</span><span>Task Assignment</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Financial Monitoring</div>
+                <div class="nav-item admin-only">
+                    <a href="financial/fund_allocation.html" class="nav-link">
+                        <span class="nav-icon">💰</span><span>Fund Allocation &amp; Release</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="financial/expenditure.html" class="nav-link">
+                        <span class="nav-icon">📉</span><span>Expenditure (Panchayat-wise)</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="financial/uc_generation.html" class="nav-link">
+                        <span class="nav-icon">📄</span><span>UC Generation</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="financial/pfms_status.html" class="nav-link">
+                        <span class="nav-icon">🏦</span><span>PFMS / Treasury Status</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Beneficiary Management</div>
+                <div class="nav-item">
+                    <a href="beneficiary/registration.html" class="nav-link">
+                        <span class="nav-icon">👥</span><span>Registration &amp; Validation</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="beneficiary/category_coverage.html" class="nav-link">
+                        <span class="nav-icon">📊</span><span>Category-wise Coverage</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="beneficiary/benefit_delivery.html" class="nav-link">
+                        <span class="nav-icon">🚚</span><span>Benefit Delivery Status</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Inspection &amp; Verification</div>
+                <div class="nav-item">
+                    <a href="inspection/field_inspection.html" class="nav-link">
+                        <span class="nav-icon">🔎</span><span>Field Inspection</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="inspection/mobile_reports.html" class="nav-link">
+                        <span class="nav-icon">📱</span><span>Mobile Inspection Reports</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="inspection/third_party_verification.html" class="nav-link">
+                        <span class="nav-icon">✅</span><span>3rd Party Verification</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Reports &amp; MIS</div>
+                <div class="nav-item">
+                    <a href="reports/mis_reports.html" class="nav-link">
+                        <span class="nav-icon">📑</span><span>MIS Reports (M/Q/Y)</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="reports/physical_financial.html" class="nav-link">
+                        <span class="nav-icon">📈</span><span>Physical vs Financial</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- ══ Main Content ══ -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left" style="gap:1.5rem;">
+                <button class="menu-toggle" onclick="toggleSidebar()" style="color:#1a237e;">☰</button>
+                <div class="header-branding">
+                    <span class="header-gov-text">Government of Odisha</span>
+                    <h2 class="header-title-text">Scheme Monitoring System</h2>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="header-search" style="background:#f8f9fa;border:1px solid #dee2e6;position:relative;">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search tasks..." style="background:transparent;">
+                </div>
+                <div class="header-notifications">
+                    <button class="notification-btn" id="notificationBtn" style="color:#1a237e;">🔔<span class="notification-badge" id="notifCount">0</span></button>
+                </div>
+                <div class="user-profile" style="border-left:1px solid #dee2e6;padding-left:1rem;cursor:pointer;position:relative;" onclick="document.getElementById('userDropdown').classList.toggle('show')">
+                    <div class="user-avatar" style="background:#1a237e;color:white;" id="headerAvatar">AU</div>
+                    <div class="user-info">
+                        <h4 style="color:#333;" id="headerName">Admin User</h4>
+                        <p id="headerDesig">State Nodal Officer</p>
+                    </div>
+                    <div class="dropdown-menu" id="userDropdown" style="position:absolute;top:100%;right:0;background:white;border:1px solid #ddd;border-radius:4px;display:none;margin-top:10px;width:150px;box-shadow:0 4px 6px rgba(0,0,0,0.1);z-index:1000;">
+                        <a href="#" class="dropdown-item" style="display:block;padding:10px;color:#333;text-decoration:none;border-bottom:1px solid #eee;">Profile</a>
+                        <a href="#" id="logoutBtn" class="dropdown-item" style="display:block;padding:10px;color:#d32f2f;text-decoration:none;">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="page-content">
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+                    <div>
+                        <h1 class="page-title">🗂️ Task Assignment</h1>
+                        <p class="page-description" id="pageDesc">Manage and track task assignments for scheme officers.</p>
+                    </div>
+                    <!-- Admin only: create task button -->
+                    <button class="btn btn-primary admin-view" id="createTaskBtn" onclick="openCreateModal()" style="display:none;">
+                        ➕ Assign New Task
+                    </button>
+                </div>
+            </div>
+
+            <!-- Role Banner -->
+            <div class="role-banner" id="roleBanner">
+                <span class="role-icon">👤</span>
+                <div>
+                    <strong id="bannerName">Loading...</strong>
+                    <div id="bannerRole" style="opacity:0.85;font-size:0.82rem;"></div>
+                </div>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="task-stats" id="statsRow">
+                <div class="task-stat-card">
+                    <div class="ts-num" id="statTotal">0</div>
+                    <div class="ts-label">Total Tasks</div>
+                </div>
+                <div class="task-stat-card">
+                    <div class="ts-num" style="color:#f57f17;" id="statPending">0</div>
+                    <div class="ts-label">Pending</div>
+                </div>
+                <div class="task-stat-card">
+                    <div class="ts-num" style="color:#1d4ed8;" id="statInProgress">0</div>
+                    <div class="ts-label">In Progress</div>
+                </div>
+                <div class="task-stat-card">
+                    <div class="ts-num" style="color:#15803d;" id="statCompleted">0</div>
+                    <div class="ts-label">Completed</div>
+                </div>
+                <div class="task-stat-card">
+                    <div class="ts-num" style="color:#b91c1c;" id="statOverdue">0</div>
+                    <div class="ts-label">Overdue</div>
+                </div>
+            </div>
+
+            <!-- ── ADMIN VIEW: Filter + Table ── -->
+            <div id="adminView" style="display:none;">
+                <!-- Filters -->
+                <div class="card mb-3">
+                    <div class="card-body" style="padding:1rem 1.5rem;">
+                        <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;">
+                            <div class="form-group" style="margin:0;flex:1;min-width:160px;">
+                                <label class="form-label" style="font-size:0.82rem;">Filter by Status</label>
+                                <select class="form-control form-select" id="filterStatus" onchange="renderAdminTable()">
+                                    <option value="">All Statuses</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Overdue">Overdue</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin:0;flex:1;min-width:160px;">
+                                <label class="form-label" style="font-size:0.82rem;">Filter by Priority</label>
+                                <select class="form-control form-select" id="filterPriority" onchange="renderAdminTable()">
+                                    <option value="">All Priorities</option>
+                                    <option value="High">High</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Low">Low</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin:0;flex:1;min-width:160px;">
+                                <label class="form-label" style="font-size:0.82rem;">Assigned To</label>
+                                <select class="form-control form-select" id="filterAssignee" onchange="renderAdminTable()">
+                                    <option value="">All Officers</option>
+                                    <option value="Block Officer">Block Officer</option>
+                                    <option value="Admin User">Admin User</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-outline" onclick="clearFilters()" style="margin-bottom:0;">↺ Reset</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">All Assigned Tasks</h3>
+                        <span class="text-gray" id="tableCount" style="font-size:0.85rem;"></span>
+                    </div>
+                    <div class="card-body" style="padding:0;">
+                        <div class="table-container">
+                            <table class="table" id="taskTable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Task Title</th>
+                                        <th>Assigned To</th>
+                                        <th>Scheme</th>
+                                        <th>Priority</th>
+                                        <th>Due Date</th>
+                                        <th>Progress</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="taskTableBody">
+                                    <tr><td colspan="9" style="text-align:center;color:#aaa;padding:2rem;">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── USER VIEW: My Task Cards ── -->
+            <div id="userView" style="display:none;">
+                <div id="userTaskCards">
+                    <div class="empty-state">
+                        <div class="empty-icon">📋</div>
+                        <p>Loading your tasks...</p>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /page-content -->
+    </main>
+</div><!-- /app-container -->
+
+<!-- ══════════════════════════════════════════
+     ADMIN: Create / Edit Task Modal
+══════════════════════════════════════════ -->
+<div id="taskModal" class="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9000;align-items:center;justify-content:center;">
+    <div class="modal-content" style="max-width:640px;width:95%;background:#fff;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,0.2);overflow:hidden;">
+        <div class="modal-header" style="background:linear-gradient(135deg,#1a237e,#3949ab);color:#fff;padding:1.25rem 1.5rem;display:flex;justify-content:space-between;align-items:center;">
+            <h3 class="modal-title" style="margin:0;color:#fff;" id="modalHeading">Assign New Task</h3>
+            <button onclick="closeTaskModal()" style="background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;line-height:1;">✕</button>
+        </div>
+        <div class="modal-body" style="padding:1.5rem;max-height:70vh;overflow-y:auto;">
+            <input type="hidden" id="editTaskId">
+            <div class="form-group">
+                <label class="form-label required">Task Title</label>
+                <input type="text" class="form-control" id="taskTitle" placeholder="e.g. Field Inspection – Khordha District">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Description / Instructions</label>
+                <textarea class="form-control" id="taskDesc" rows="3" placeholder="Describe what needs to be done..."></textarea>
+            </div>
+            <div class="modal-field-row">
+                <div class="form-group">
+                    <label class="form-label required">Assign To</label>
+                    <select class="form-control form-select" id="taskAssignee">
+                        <option value="">-- Select Officer --</option>
+                        <option value="Block Officer">Block Officer (user)</option>
+                        <option value="Admin User">Admin User (self)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Priority</label>
+                    <select class="form-control form-select" id="taskPriority">
+                        <option value="High">🔴 High</option>
+                        <option value="Medium" selected>🟡 Medium</option>
+                        <option value="Low">🟢 Low</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-field-row">
+                <div class="form-group">
+                    <label class="form-label">Linked Scheme</label>
+                    <select class="form-control form-select" id="taskScheme">
+                        <option value="">-- None --</option>
+                        <option value="Biju Pucca Ghar Yojana">Biju Pucca Ghar Yojana</option>
+                        <option value="Prdhanmatri Krushi Samrudhi">Prdhanmatri Krushi Samrudhi</option>
+                        <option value="Subhadra Yojna">Subhadra Yojna</option>
+                        <option value="Mamata Scheme">Mamata Scheme</option>
+                        <option value="Mo Kudia">Mo Kudia</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Due Date</label>
+                    <input type="date" class="form-control" id="taskDueDate">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" style="padding:1rem 1.5rem;display:flex;justify-content:flex-end;gap:0.75rem;border-top:1px solid #eee;">
+            <button class="btn btn-outline" onclick="closeTaskModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveTask()">💾 Save Task</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ADMIN: View Task Detail Modal
+══════════════════════════════════════════ -->
+<div id="viewTaskModal" class="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9000;align-items:center;justify-content:center;">
+    <div class="modal-content" style="max-width:580px;width:95%;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+        <div class="modal-header" style="background:linear-gradient(135deg,#1a237e,#3949ab);color:#fff;padding:1.25rem 1.5rem;display:flex;justify-content:space-between;align-items:center;">
+            <h3 style="margin:0;color:#fff;">📋 Task Details</h3>
+            <button onclick="closeViewModal()" style="background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;">✕</button>
+        </div>
+        <div class="modal-body" style="padding:1.5rem;max-height:72vh;overflow-y:auto;" id="viewTaskContent"></div>
+        <div class="modal-footer" style="padding:1rem 1.5rem;display:flex;justify-content:flex-end;gap:0.75rem;border-top:1px solid #eee;">
+            <button class="btn btn-outline" onclick="closeViewModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     USER: Update Task Status Modal
+══════════════════════════════════════════ -->
+<div id="updateModal" class="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9000;align-items:center;justify-content:center;">
+    <div class="modal-content" style="max-width:520px;width:95%;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+        <div class="modal-header" style="background:linear-gradient(135deg,#2e7d32,#388e3c);color:#fff;padding:1.25rem 1.5rem;display:flex;justify-content:space-between;align-items:center;">
+            <h3 style="margin:0;color:#fff;">✏️ Update Task Progress</h3>
+            <button onclick="closeUpdateModal()" style="background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;">✕</button>
+        </div>
+        <div class="modal-body" style="padding:1.5rem;">
+            <input type="hidden" id="updateTaskId">
+            <div class="form-group">
+                <label class="form-label required">Update Status</label>
+                <select class="form-control form-select" id="updateStatus">
+                    <option value="Pending">Pending</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label required">Progress (0–100%)</label>
+                <input type="range" id="updateProgress" min="0" max="100" step="5" value="0"
+                    oninput="document.getElementById('progressVal').textContent = this.value + '%'"
+                    style="width:100%;accent-color:#1a237e;">
+                <div style="text-align:center;font-weight:700;color:#1a237e;margin-top:0.25rem;" id="progressVal">0%</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label required">What did you do? (Remark)</label>
+                <textarea class="form-control" id="updateRemark" rows="3" placeholder="Describe what work was completed..."></textarea>
+            </div>
+        </div>
+        <div class="modal-footer" style="padding:1rem 1.5rem;display:flex;justify-content:flex-end;gap:0.75rem;border-top:1px solid #eee;">
+            <button class="btn btn-outline" onclick="closeUpdateModal()">Cancel</button>
+            <button class="btn btn-primary" style="background:#2e7d32;border-color:#2e7d32;" onclick="submitUpdate()">✅ Submit Update</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div id="toastContainer" style="position:fixed;top:1.5rem;right:1.5rem;z-index:99999;display:flex;flex-direction:column;gap:0.5rem;"></div>
+
+<script src="../static/js/main.js"></script>
+<script src="../static/js/modal.js"></script>
+<script>
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+function fmtDate(d) {
+    if (!d) return '-';
+    const dt = new Date(d);
+    return dt.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+}
+function daysLeft(dueDate) {
+    const diff = new Date(dueDate) - new Date();
+    return Math.ceil(diff / 86400000);
+}
+function toast(msg, type='success') {
+    try { SchemeMonitoring.showToast(msg, type); return; } catch(e){}
+    const t = document.createElement('div');
+    t.style.cssText = `background:${type==='success'?'#2e7d32':'#c62828'};color:#fff;padding:0.75rem 1.25rem;border-radius:8px;font-size:0.9rem;box-shadow:0 4px 12px rgba(0,0,0,0.2);`;
+    t.textContent = msg;
+    document.getElementById('toastContainer').appendChild(t);
+    setTimeout(() => t.remove(), 3000);
+}
+function statusClass(s) {
+    if (s === 'Completed') return 'status-completed';
+    if (s === 'In Progress') return 'status-inprogress';
+    if (s === 'Overdue') return 'status-overdue';
+    return 'status-pending';
+}
+function priorityClass(p) {
+    if (p === 'High') return 'priority-high';
+    if (p === 'Low') return 'priority-low';
+    return 'priority-medium';
+}
+
+// ─── Task Storage ─────────────────────────────────────────────────────────────
+const TASK_KEY = 'smsTasks';
+const SEED_TASKS = [
+    { id: 1, title: 'Field Inspection – Khordha District', desc: 'Conduct a physical field inspection of housing scheme beneficiaries in Khordha district and submit a detailed report.', assignedTo: 'Block Officer', assignedBy: 'Admin User', scheme: 'Biju Pucca Ghar Yojana', priority: 'High', dueDate: '2026-02-28', status: 'In Progress', progress: 40, createdAt: '2026-02-10', updates: [{ remark: 'Visited 30 out of 80 beneficiary locations. Roads are accessible.', progress: 40, status: 'In Progress', time: '2026-02-15 10:30 AM' }] },
+    { id: 2, title: 'Submit UC Report – Ganjam Block', desc: 'Prepare and submit the Utilization Certificate for Q3 fund releases in Ganjam Block under the Mamata Scheme.', assignedTo: 'Block Officer', assignedBy: 'Admin User', scheme: 'Mamata Scheme', priority: 'Medium', dueDate: '2026-02-20', status: 'Pending', progress: 0, createdAt: '2026-02-12', updates: [] },
+    { id: 3, title: 'Beneficiary Registration Drive – Puri', desc: 'Organise a beneficiary registration camp in Puri Sadar and validate at least 200 new registrations.', assignedTo: 'Block Officer', assignedBy: 'Admin User', scheme: 'Subhadra Yojna', priority: 'High', dueDate: '2026-03-05', status: 'Pending', progress: 0, createdAt: '2026-02-14', updates: [] },
+    { id: 4, title: 'Fund Utilisation Verification – Cuttack', desc: 'Cross-verify fund utilisation data reported by Cuttack district against PFMS records for FY 2025-26.', assignedTo: 'Admin User', assignedBy: 'Admin User', scheme: 'Prdhanmatri Krushi Samrudhi', priority: 'Low', dueDate: '2026-03-15', status: 'Pending', progress: 0, createdAt: '2026-02-16', updates: [] },
+];
+
+function loadTasks() {
+    const saved = localStorage.getItem(TASK_KEY);
+    if (!saved) { localStorage.setItem(TASK_KEY, JSON.stringify(SEED_TASKS)); return SEED_TASKS; }
+    return JSON.parse(saved);
+}
+function saveTasks(tasks) { localStorage.setItem(TASK_KEY, JSON.stringify(tasks)); }
+
+// ─── Auto-flag overdue ────────────────────────────────────────────────────────
+function checkOverdue(tasks) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    return tasks.map(t => {
+        if (t.status !== 'Completed' && new Date(t.dueDate) < today) t.status = 'Overdue';
+        return t;
+    });
+}
+
+// ─── Stats ────────────────────────────────────────────────────────────────────
+function renderStats(tasks) {
+    document.getElementById('statTotal').textContent     = tasks.length;
+    document.getElementById('statPending').textContent   = tasks.filter(t=>t.status==='Pending').length;
+    document.getElementById('statInProgress').textContent= tasks.filter(t=>t.status==='In Progress').length;
+    document.getElementById('statCompleted').textContent = tasks.filter(t=>t.status==='Completed').length;
+    document.getElementById('statOverdue').textContent   = tasks.filter(t=>t.status==='Overdue').length;
+}
+
+// ─── ADMIN: Render Table ──────────────────────────────────────────────────────
+function renderAdminTable() {
+    let tasks = checkOverdue(loadTasks());
+    const fs = document.getElementById('filterStatus').value;
+    const fp = document.getElementById('filterPriority').value;
+    const fa = document.getElementById('filterAssignee').value;
+    if (fs) tasks = tasks.filter(t => t.status === fs);
+    if (fp) tasks = tasks.filter(t => t.priority === fp);
+    if (fa) tasks = tasks.filter(t => t.assignedTo === fa);
+
+    renderStats(checkOverdue(loadTasks()));
+    document.getElementById('tableCount').textContent = `${tasks.length} task(s)`;
+
+    const tbody = document.getElementById('taskTableBody');
+    if (tasks.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#aaa;padding:2rem;">No tasks found.</td></tr>';
+        return;
+    }
+    tbody.innerHTML = tasks.map((t,i) => {
+        const dl = daysLeft(t.dueDate);
+        const dueTxt = t.status === 'Completed' ? `<span style="color:#2e7d32;">✓ Done</span>` :
+            dl < 0 ? `<span style="color:#c62828;">Overdue by ${Math.abs(dl)}d</span>` :
+            dl === 0 ? `<span style="color:#f57f17;">Due Today</span>` :
+            `${dl}d left`;
+        return `<tr>
+            <td style="font-weight:700;color:#1a237e;">${i+1}</td>
+            <td><strong style="color:#1a237e;">${t.title}</strong><br><span style="font-size:0.78rem;color:#888;">${t.scheme || '-'}</span></td>
+            <td><span style="background:#e8eaf6;color:#1a237e;padding:2px 8px;border-radius:8px;font-size:0.8rem;font-weight:600;">${t.assignedTo}</span></td>
+            <td style="font-size:0.82rem;">${t.scheme || '-'}</td>
+            <td><span class="priority-badge ${priorityClass(t.priority)}">${t.priority}</span></td>
+            <td style="font-size:0.82rem;">${fmtDate(t.dueDate)}<br><span style="font-size:0.75rem;">${dueTxt}</span></td>
+            <td style="min-width:110px;">
+                <div class="progress-wrap" style="margin:0.25rem 0;">
+                    <div class="progress-fill" style="width:${t.progress}%;"></div>
+                </div>
+                <span style="font-size:0.78rem;color:#666;">${t.progress}%</span>
+            </td>
+            <td><span class="status-badge ${statusClass(t.status)}">${t.status}</span></td>
+            <td>
+                <div class="action-btns">
+                    <button class="btn btn-sm btn-outline" onclick="adminViewTask(${t.id})" title="View Details">👁 View</button>
+                    <button class="btn btn-sm btn-outline" onclick="editTask(${t.id})" title="Edit Task">✏️</button>
+                    <button class="btn btn-sm btn-outline" style="color:#c62828;border-color:#c62828;" onclick="deleteTask(${t.id})" title="Delete">🗑</button>
+                </div>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+function clearFilters() {
+    document.getElementById('filterStatus').value = '';
+    document.getElementById('filterPriority').value = '';
+    document.getElementById('filterAssignee').value = '';
+    renderAdminTable();
+}
+
+// ─── ADMIN: View Task Detail ──────────────────────────────────────────────────
+function adminViewTask(id) {
+    const tasks = loadTasks();
+    const t = tasks.find(tk => tk.id === id);
+    if (!t) return;
+    const logsHtml = t.updates && t.updates.length > 0
+        ? t.updates.map(u => `
+            <div class="update-log-entry">
+                <strong>${u.status}</strong> — ${u.progress}% progress
+                <span class="log-time">${u.time}</span><br>
+                <span style="color:#666;">${u.remark}</span>
+            </div>`).join('')
+        : '<div style="color:#aaa;font-size:0.85rem;">No updates yet from the officer.</div>';
+
+    document.getElementById('viewTaskContent').innerHTML = `
+        <div style="background:linear-gradient(135deg,#1a237e,#3949ab);color:#fff;padding:1rem 1.25rem;border-radius:10px;margin-bottom:1.25rem;">
+            <div style="font-size:1.1rem;font-weight:700;">${t.title}</div>
+            <div style="font-size:0.82rem;opacity:0.85;margin-top:0.25rem;">${t.scheme || 'No linked scheme'}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.25rem;">
+            <div style="background:#f8f9ff;padding:0.75rem 1rem;border-radius:8px;">
+                <div style="font-size:0.75rem;color:#888;">Assigned To</div>
+                <div style="font-weight:700;color:#1a237e;">${t.assignedTo}</div>
+            </div>
+            <div style="background:#f8f9ff;padding:0.75rem 1rem;border-radius:8px;">
+                <div style="font-size:0.75rem;color:#888;">Priority</div>
+                <span class="priority-badge ${priorityClass(t.priority)}">${t.priority}</span>
+            </div>
+            <div style="background:#f8f9ff;padding:0.75rem 1rem;border-radius:8px;">
+                <div style="font-size:0.75rem;color:#888;">Due Date</div>
+                <div style="font-weight:600;">${fmtDate(t.dueDate)}</div>
+            </div>
+            <div style="background:#f8f9ff;padding:0.75rem 1rem;border-radius:8px;">
+                <div style="font-size:0.75rem;color:#888;">Status</div>
+                <span class="status-badge ${statusClass(t.status)}">${t.status}</span>
+            </div>
+        </div>
+        <div style="margin-bottom:1.25rem;">
+            <div style="font-size:0.82rem;color:#888;margin-bottom:0.4rem;">Progress</div>
+            <div class="progress-wrap" style="height:12px;">
+                <div class="progress-fill" style="width:${t.progress}%;"></div>
+            </div>
+            <div style="font-size:0.82rem;color:#1a237e;font-weight:700;margin-top:0.3rem;">${t.progress}% Complete</div>
+        </div>
+        <div style="margin-bottom:1rem;">
+            <div style="font-size:0.82rem;color:#888;margin-bottom:0.4rem;">Description</div>
+            <div style="font-size:0.87rem;color:#444;line-height:1.6;">${t.desc || '-'}</div>
+        </div>
+        <div>
+            <div style="font-size:0.85rem;font-weight:700;color:#1a237e;margin-bottom:0.5rem;">📝 Officer Updates</div>
+            <div class="update-log">${logsHtml}</div>
+        </div>`;
+    document.getElementById('viewTaskModal').style.display = 'flex';
+}
+function closeViewModal() { document.getElementById('viewTaskModal').style.display = 'none'; }
+
+// ─── ADMIN: Create / Edit Task Modal ─────────────────────────────────────────
+function openCreateModal() {
+    document.getElementById('editTaskId').value = '';
+    document.getElementById('taskTitle').value = '';
+    document.getElementById('taskDesc').value = '';
+    document.getElementById('taskAssignee').value = '';
+    document.getElementById('taskPriority').value = 'Medium';
+    document.getElementById('taskScheme').value = '';
+    document.getElementById('taskDueDate').value = '';
+    document.getElementById('modalHeading').textContent = 'Assign New Task';
+    document.getElementById('taskModal').style.display = 'flex';
+}
+function editTask(id) {
+    const tasks = loadTasks();
+    const t = tasks.find(tk => tk.id === id);
+    if (!t) return;
+    document.getElementById('editTaskId').value = t.id;
+    document.getElementById('taskTitle').value = t.title;
+    document.getElementById('taskDesc').value = t.desc || '';
+    document.getElementById('taskAssignee').value = t.assignedTo;
+    document.getElementById('taskPriority').value = t.priority;
+    document.getElementById('taskScheme').value = t.scheme || '';
+    document.getElementById('taskDueDate').value = t.dueDate;
+    document.getElementById('modalHeading').textContent = 'Edit Task';
+    document.getElementById('taskModal').style.display = 'flex';
+}
+function closeTaskModal() { document.getElementById('taskModal').style.display = 'none'; }
+
+function saveTask() {
+    const title    = document.getElementById('taskTitle').value.trim();
+    const desc     = document.getElementById('taskDesc').value.trim();
+    const assignee = document.getElementById('taskAssignee').value;
+    const priority = document.getElementById('taskPriority').value;
+    const scheme   = document.getElementById('taskScheme').value;
+    const dueDate  = document.getElementById('taskDueDate').value;
+    const editId   = document.getElementById('editTaskId').value;
+
+    if (!title || !assignee || !dueDate) { toast('Please fill all required fields.', 'error'); return; }
+
+    let tasks = loadTasks();
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    if (editId) {
+        // Edit existing
+        const idx = tasks.findIndex(t => t.id === parseInt(editId));
+        if (idx > -1) {
+            tasks[idx] = { ...tasks[idx], title, desc, assignedTo: assignee, priority, scheme, dueDate };
+        }
+        toast('Task updated successfully!');
+    } else {
+        // Create new
+        const newTask = {
+            id: Date.now(),
+            title, desc,
+            assignedTo: assignee,
+            assignedBy: currentUser ? currentUser.name : 'Admin User',
+            scheme, priority, dueDate,
+            status: 'Pending', progress: 0,
+            createdAt: new Date().toISOString().split('T')[0],
+            updates: []
+        };
+        tasks.push(newTask);
+        toast('Task assigned successfully! 🎉');
+    }
+    saveTasks(tasks);
+    closeTaskModal();
+    renderAdminTable();
+}
+
+function deleteTask(id) {
+    if (!confirm('Delete this task? This cannot be undone.')) return;
+    let tasks = loadTasks();
+    tasks = tasks.filter(t => t.id !== id);
+    saveTasks(tasks);
+    toast('Task deleted.');
+    renderAdminTable();
+    renderStats(checkOverdue(loadTasks()));
+}
+
+// ─── USER: Render Task Cards ──────────────────────────────────────────────────
+function renderUserCards() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) return;
+
+    const allTasks = checkOverdue(loadTasks());
+    const myTasks  = allTasks.filter(t => t.assignedTo === currentUser.name);
+
+    renderStats(myTasks);
+
+    const container = document.getElementById('userTaskCards');
+    if (myTasks.length === 0) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-icon">🎉</div><p>No tasks assigned to you right now. You're all caught up!</p></div>`;
+        return;
+    }
+
+    container.innerHTML = myTasks.map(t => {
+        const dl = daysLeft(t.dueDate);
+        const dueTxt = t.status === 'Completed'
+            ? `<span style="color:#2e7d32;font-weight:600;">✓ Completed</span>`
+            : dl < 0 ? `<span style="color:#c62828;font-weight:600;">⚠ Overdue by ${Math.abs(dl)} day(s)</span>`
+            : dl === 0 ? `<span style="color:#f57f17;font-weight:600;">⏰ Due Today!</span>`
+            : `<span style="color:#555;">📅 ${dl} day(s) left</span>`;
+
+        const logsHtml = t.updates && t.updates.length > 0
+            ? `<div class="update-log" style="margin-top:0.75rem;">
+                <div style="font-size:0.8rem;font-weight:700;color:#1a237e;margin-bottom:0.4rem;">📝 My Updates</div>
+                ${t.updates.slice().reverse().map(u => `
+                    <div class="update-log-entry">
+                        <strong>${u.status}</strong> — ${u.progress}%
+                        <span class="log-time">${u.time}</span><br>
+                        <span>${u.remark}</span>
+                    </div>`).join('')}
+               </div>`
+            : '';
+
+        return `<div class="task-card ${t.priority.toLowerCase()}-priority">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.5rem;">
+                <div class="task-title">${t.title}</div>
+                <div style="display:flex;gap:0.5rem;flex-shrink:0;">
+                    <span class="priority-badge ${priorityClass(t.priority)}">${t.priority}</span>
+                    <span class="status-badge ${statusClass(t.status)}">${t.status}</span>
+                </div>
+            </div>
+            <div class="task-meta">
+                Assigned by <strong>${t.assignedBy || 'Admin'}</strong> on ${fmtDate(t.createdAt)}
+                ${t.scheme ? ` &nbsp;·&nbsp; <span style="color:#1a237e;font-weight:600;">${t.scheme}</span>` : ''}
+            </div>
+            <div class="task-desc">${t.desc || ''}</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;">
+                <div style="flex:1;">
+                    <div style="font-size:0.78rem;color:#888;margin-bottom:0.3rem;">Progress: <strong>${t.progress}%</strong></div>
+                    <div class="progress-wrap">
+                        <div class="progress-fill" style="width:${t.progress}%;"></div>
+                    </div>
+                </div>
+                <div style="margin-left:1rem;">${dueTxt}</div>
+            </div>
+            ${logsHtml}
+            ${t.status !== 'Completed' ? `
+            <div style="margin-top:0.85rem;">
+                <button class="btn btn-primary" style="padding:0.45rem 1.25rem;font-size:0.85rem;" onclick="openUpdateModal(${t.id}, ${t.progress}, '${t.status}')">
+                    ✏️ Update Progress
+                </button>
+            </div>` : `
+            <div style="margin-top:0.85rem;">
+                <span style="font-size:0.85rem;color:#2e7d32;font-weight:600;">✅ This task is marked as Completed</span>
+            </div>`}
+        </div>`;
+    }).join('');
+}
+
+// ─── USER: Update Task Modal ──────────────────────────────────────────────────
+function openUpdateModal(id, progress, status) {
+    document.getElementById('updateTaskId').value = id;
+    document.getElementById('updateProgress').value = progress;
+    document.getElementById('progressVal').textContent = progress + '%';
+    document.getElementById('updateStatus').value = status;
+    document.getElementById('updateRemark').value = '';
+    document.getElementById('updateModal').style.display = 'flex';
+}
+function closeUpdateModal() { document.getElementById('updateModal').style.display = 'none'; }
+
+function submitUpdate() {
+    const id      = parseInt(document.getElementById('updateTaskId').value);
+    const status  = document.getElementById('updateStatus').value;
+    const progress= parseInt(document.getElementById('updateProgress').value);
+    const remark  = document.getElementById('updateRemark').value.trim();
+
+    if (!remark) { toast('Please enter a remark describing what you did.', 'error'); return; }
+
+    let tasks = loadTasks();
+    const idx = tasks.findIndex(t => t.id === id);
+    if (idx === -1) return;
+
+    const now = new Date();
+    const timeStr = now.toLocaleDateString('en-IN') + ' ' + now.toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit'});
+
+    tasks[idx].status   = status;
+    tasks[idx].progress = progress;
+    if (!tasks[idx].updates) tasks[idx].updates = [];
+    tasks[idx].updates.push({ remark, progress, status, time: timeStr });
+
+    saveTasks(tasks);
+    closeUpdateModal();
+    toast('Task progress updated successfully! ✅');
+    renderUserCards();
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    // Update header
+    if (currentUser) {
+        document.getElementById('headerAvatar').textContent = currentUser.avatar || currentUser.name.slice(0,2).toUpperCase();
+        document.getElementById('headerName').textContent   = currentUser.name;
+        document.getElementById('headerDesig').textContent  = currentUser.designation;
+    }
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', e => {
+        e.preventDefault();
+        localStorage.removeItem('currentUser');
+        window.location.href = '../index.html';
+    });
+
+    const isAdmin = currentUser && currentUser.role === 'admin';
+
+    // Role banner
+    const banner = document.getElementById('roleBanner');
+    if (isAdmin) {
+        banner.innerHTML = `<span class="role-icon">👨‍💼</span><div><strong>${currentUser.name} (Admin)</strong><div style="opacity:.85;font-size:.82rem;">You can assign, edit and monitor all tasks.</div></div>`;
+        banner.style.background = 'linear-gradient(135deg,#1a237e,#3949ab)';
+    } else {
+        const name = currentUser ? currentUser.name : 'Officer';
+        banner.innerHTML = `<span class="role-icon">👤</span><div><strong>${name}</strong><div style="opacity:.85;font-size:.82rem;">View your assigned tasks and update progress below.</div></div>`;
+        banner.style.background = 'linear-gradient(135deg,#2e7d32,#388e3c)';
+    }
+
+    // Show correct view
+    if (isAdmin) {
+        document.getElementById('adminView').style.display = 'block';
+        document.getElementById('createTaskBtn').style.display = 'inline-flex';
+        document.getElementById('pageDesc').textContent = 'Create tasks, assign them to officers, and monitor progress.';
+        renderAdminTable();
+    } else {
+        document.getElementById('userView').style.display = 'block';
+        document.getElementById('pageDesc').textContent = 'View tasks assigned to you and update your progress.';
+        renderUserCards();
+    }
+});
+</script>
+</body>
+</html>
